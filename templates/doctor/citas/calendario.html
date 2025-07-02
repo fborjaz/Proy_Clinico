@@ -1,0 +1,238 @@
+{% extends 'home.html' %}
+<title>{% block title %}Calendario de Citas{% endblock %}</title>
+{% block content %}
+    {% load static %}
+    {% include 'components/messages.html' %}
+    <section class="dark:bg-principal mt-2">
+        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="sm:pt-8 lg:pt-4">
+                <h1 class="rounded-2xl bg-emerald-600 px-2 py-1 text-blue-800 uppercase text-4xl">
+                    Calendario de Citas
+                </h1>
+            </div>
+
+            <div class="lg:p-2 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+                <!-- Calendar Navigation -->
+                <div class="flex justify-between items-center p-4">
+                    <button id="prevMonth" class="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 id="currentMonth" class="text-2xl font-semibold text-gray-800 dark:text-gray-200"></h2>
+                    <button id="nextMonth" class="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="p-4">
+                    <!-- Days of Week -->
+                    <div class="grid grid-cols-7 gap-2 mb-2">
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Dom</div>
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Lun</div>
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Mar</div>
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Mié</div>
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Jue</div>
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Vie</div>
+                        <div class="text-center font-semibold text-gray-600 dark:text-gray-400">Sáb</div>
+                    </div>
+
+                    <!-- Calendar Days -->
+                    <div id="calendarDays" class="grid grid-cols-7 gap-2">
+                        <!-- Days will be inserted here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Time Slots Modal -->
+                <div id="timeSlotsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 id="modalDate" class="text-xl font-semibold text-gray-900 dark:text-gray-100"></h3>
+                            <button onclick="closeTimeSlotsModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div id="timeSlots" class="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+                            <!-- Time slots will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col md:flex-row justify-center items-center gap-3 p-6">
+                    <a class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        href="{% url 'doctor:cita_list' %}">
+                        <i class="fa-solid fa-list-ul mr-2"></i> Ver Lista de Citas
+                    </a>
+
+                    <a class="bg-gray-600 hover:bg-gray-700 text-white py-3 px-4 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        href="{% url 'home' %}">
+                        <i class="fa-solid fa-house"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let currentDate = new Date();
+        const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        
+        // Initialize calendar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCalendar();
+            
+            // Event listeners for navigation
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+        });
+
+        function updateCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Update header
+            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            // Fetch availability data
+            fetch(`{% url 'doctor:api_disponibilidad_calendario' %}?anio=${year}&mes=${month + 1}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderCalendar(data.calendario);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function renderCalendar(disponibilidad) {
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Add empty cells for days before first of month
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                calendarDays.appendChild(createEmptyDay());
+            }
+            
+            // Add days of month
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayData = disponibilidad[dateStr] || { disponibles: 0, ocupadas: 0, atendidas: 0, total: 0 };
+                calendarDays.appendChild(createDayCell(day, dayData, dateStr));
+            }
+        }
+
+        function createEmptyDay() {
+            const div = document.createElement('div');
+            div.className = 'h-24 bg-gray-50 dark:bg-gray-900 rounded-lg';
+            return div;
+        }
+
+        function createDayCell(day, data, dateStr) {
+            const div = document.createElement('div');
+            div.className = `h-24 bg-white dark:bg-gray-800 rounded-lg p-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
+                ${data.disponibles > 0 ? 'border-2 border-emerald-500' : 'border border-gray-200 dark:border-gray-700'}`;
+            
+            div.innerHTML = `
+                <div class="text-right text-sm text-gray-600 dark:text-gray-400">${day}</div>
+                <div class="mt-2 text-center">
+                    ${data.total > 0 ? `
+                        <div class="text-xs space-y-1">
+                            <div class="text-emerald-600 dark:text-emerald-400">
+                                <i class="fas fa-check-circle"></i> ${data.disponibles} disponibles
+                            </div>
+                            <div class="text-yellow-600 dark:text-yellow-400">
+                                <i class="fas fa-clock"></i> ${data.ocupadas} ocupadas
+                            </div>
+                            <div class="text-blue-600 dark:text-blue-400">
+                                <i class="fas fa-calendar-check"></i> ${data.atendidas} atendidas
+                            </div>
+                        </div>
+                    ` : '<div class="text-xs text-gray-400">No disponible</div>'}
+                </div>
+            `;
+            
+            if (data.total > 0) {
+                div.addEventListener('click', () => showTimeSlots(dateStr));
+            }
+            
+            return div;
+        }
+
+        function showTimeSlots(dateStr) {
+            fetch(`{% url 'doctor:api_horarios_disponibles' %}?fecha=${dateStr}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modal = document.getElementById('timeSlotsModal');
+                        const modalDate = document.getElementById('modalDate');
+                        const timeSlots = document.getElementById('timeSlots');
+                        
+                        // Format date for display
+                        const date = new Date(dateStr);
+                        modalDate.textContent = `${date.getDate()} de ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+                        
+                        // Clear and populate time slots
+                        timeSlots.innerHTML = '';
+                        data.horarios.forEach(slot => {
+                            const button = document.createElement('button');
+                            button.className = `p-2 rounded-lg text-center ${
+                                slot.disponible
+                                    ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-200'
+                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700'
+                            }`;
+                            button.disabled = !slot.disponible;
+                            button.textContent = slot.hora;
+                            
+                            if (slot.disponible) {
+                                button.addEventListener('click', () => agendarCita(dateStr, slot.hora));
+                            }
+                            
+                            // Add better visual feedback
+                            button.addEventListener('mouseenter', function() {
+                                if (this.disabled) return;
+                                this.style.transform = 'scale(1.05)';
+                                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+                            });
+                            
+                            button.addEventListener('mouseleave', function() {
+                                this.style.transform = 'scale(1)';
+                                this.style.boxShadow = 'none';
+                            });
+                            
+                            timeSlots.appendChild(button);
+                        });
+                        
+                        modal.classList.remove('hidden');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function closeTimeSlotsModal() {
+            document.getElementById('timeSlotsModal').classList.add('hidden');
+        }
+
+        function agendarCita(fecha, hora) {
+            window.location.href = `{% url 'doctor:cita_create' %}?fecha=${fecha}&hora=${hora}`;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('timeSlotsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTimeSlotsModal();
+            }
+        });
+    </script>
+{% endblock %}
