@@ -5,229 +5,275 @@
 {% endblock %}
 
 {% block content %}
-    {% load static %}
+{% load static %}
 
-    <!-- Contenedor principal con altura controlada -->
-    <div class="min-h-screen bg-gray-50 dark:bg-white-900">
-        <div class="w-full px-6 py-8">
-            <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 rounded-lg shadow-lg mb-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                    <div class="flex-1">
-                        <h1 class="text-2xl sm:text-3xl font-bold">
-                            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
-                            {% if object %}Editar Grupo{% else %}Nuevo Grupo{% endif %}
-                        </h1>
-                        <p class="text-blue-100 mt-1 text-sm sm:text-base">
+<div class="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
+    <!-- Medical Pattern Background -->
+    <div class="fixed inset-0 opacity-5 dark:opacity-10 z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="medical-cross" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#medical-cross)" class="text-blue-600 dark:text-blue-400"/>
+        </svg>
+    </div>
+
+    <div class="container mx-auto px-4 py-6 relative z-10">
+        <!-- Header Médico Mejorado -->
+        <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-teal-600 dark:from-blue-700 dark:via-blue-800 dark:to-teal-700 text-white p-8 rounded-2xl shadow-2xl mb-6 relative overflow-hidden">
+            <!-- Medical Icons Background -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-4 right-4">
+                    <i class="fas fa-users-cog text-6xl"></i>
+                </div>
+                <div class="absolute bottom-4 left-4">
+                    <i class="fas fa-shield-alt text-4xl"></i>
+                </div>
+                <div class="absolute top-1/2 right-1/4 transform -translate-y-1/2">
+                    <i class="fas fa-user-friends text-5xl"></i>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between relative z-10">
+                <div class="flex items-center">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-{% if object %}users-cog{% else %}user-plus{% endif %} text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl font-bold mb-2">{% if object %}Editar Grupo{% else %}Nuevo Grupo{% endif %}</h1>
+                        <p class="text-blue-100 text-lg">
                             {% if object %}
                                 Modifica la información del grupo "{{ object.name }}"
                             {% else %}
-                                Crea un nuevo grupo de usuarios en el sistema
+                                Crea un nuevo grupo de usuarios médicos
                             {% endif %}
                         </p>
                     </div>
-                    <div class="text-right mt-4 sm:mt-0">
-                        <div class="text-xl sm:text-2xl font-bold">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="text-xs sm:text-sm text-blue-100">Grupo</div>
+                </div>
+                <div class="text-right hidden md:block">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 text-white text-sm">
+                        <i class="fas fa-heartbeat mr-2"></i>
+                        Sistema Activo
                     </div>
                 </div>
             </div>
+            
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
+            <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mb-16"></div>
+            <div class="absolute top-1/2 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12"></div>
+        </div>
 
-            <!-- Formulario -->
-            <form method="post" class="space-y-6" id="groupForm">
-                {% csrf_token %}
+        <!-- Formulario -->
+        <form method="post" class="space-y-6" id="groupForm">
+            {% csrf_token %}
 
-                <!-- Contenedor principal del formulario -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                    <!-- Vista previa del grupo -->
-                    <div class="bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                        <div class="text-center">
-                            <div class="bg-white dark:bg-gray-800 rounded-full w-12 sm:w-16 h-12 sm:h-16 mx-auto flex items-center justify-center shadow-sm border border-gray-200 dark:border-gray-600 mb-3">
-                                <i class="fas fa-users text-xl sm:text-2xl text-blue-600"></i>
-                            </div>
-                            <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-                                Vista previa del grupo
-                            </h3>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                {% if object %}{{ object.name }}{% else %}Nuevo grupo{% endif %}
-                            </p>
+            <!-- Vista previa del grupo mejorada -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
+                <div class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 px-6 py-6">
+                    <div class="text-center">
+                        <div class="bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 rounded-full w-20 h-20 mx-auto flex items-center justify-center shadow-lg border-2 border-white dark:border-gray-600 mb-4 transform hover:scale-105 transition-all duration-300">
+                            <i class="fas fa-users text-3xl text-blue-600 dark:text-blue-400"></i>
                         </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            Vista previa del grupo
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            {% if object %}{{ object.name }}{% else %}Nuevo grupo{% endif %}
+                        </p>
                     </div>
+                </div>
 
-                    <!-- Campos del formulario -->
-                    <div class="p-4 sm:p-6">
+                <!-- Campos del formulario -->
+                <div class="p-6">
+                    <!-- Sección de Información Básica -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <i class="fas fa-tag text-blue-500 mr-2"></i>
+                            Información del Grupo
+                        </h3>
+                        
                         <!-- Campo Name -->
-                        <div class="mb-6">
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-tag text-blue-500 mr-1"></i>
+                                <i class="fas fa-users text-blue-500 mr-1"></i>
                                 {{ form.name.label }}
                                 <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <div class="relative">{{ form.name }}</div>
+                            <div class="relative">
+                                {{ form.name }}
+                            </div>
                             {% if form.name.errors %}
                                 <div class="mt-1 text-red-600 text-sm">
                                     {% for error in form.name.errors %}
-                                        <p>{{ error }}</p>
+                                        <p><i class="fas fa-exclamation-circle mr-1"></i>{{ error }}</p>
                                     {% endfor %}
                                 </div>
                             {% endif %}
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                 <i class="fas fa-info-circle mr-1"></i>
-                                Nombre único para identificar el grupo de usuarios
+                                Nombre único para identificar el grupo de usuarios médicos
                             </p>
                         </div>
+                    </div>
 
-                        <!-- Información adicional del grupo existente -->
-                        {% if object %}
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                                <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
+                    <!-- Estadísticas del grupo existente -->
+                    {% if object %}
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-chart-bar text-blue-500 mr-2"></i>
+                                Estadísticas del Grupo
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- Usuarios asignados -->
+                                <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 p-6 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                                     <div class="text-center">
-                                        <div class="text-2xl font-bold text-blue-600 dark:text-blue-300">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                            <i class="fas fa-user text-white text-xl"></i>
+                                        </div>
+                                        <div class="text-3xl font-bold text-blue-600 dark:text-blue-300">
                                             {{ object.user_set.count }}
                                         </div>
-                                        <div class="text-xs text-blue-600 dark:text-blue-300 mt-1">
-                                            <i class="fas fa-user mr-1"></i>
-                                            Usuarios asignados
+                                        <div class="text-sm text-blue-600 dark:text-blue-300 mt-1 font-medium">
+                                            Usuarios Asignados
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg border border-purple-200 dark:border-purple-700">
+                                <!-- Módulos con permisos -->
+                                <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 p-6 rounded-2xl border border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                                     <div class="text-center">
-                                        <div class="text-2xl font-bold text-purple-600 dark:text-purple-300">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                            <i class="fas fa-cube text-white text-xl"></i>
+                                        </div>
+                                        <div class="text-3xl font-bold text-purple-600 dark:text-purple-300">
                                             {{ object.module_permissions.count }}
                                         </div>
-                                        <div class="text-xs text-purple-600 dark:text-purple-300 mt-1">
-                                            <i class="fas fa-cube mr-1"></i>
-                                            Módulos con permisos
+                                        <div class="text-sm text-purple-600 dark:text-purple-300 mt-1 font-medium">
+                                            Módulos con Permisos
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="bg-orange-50 dark:bg-orange-900 p-4 rounded-lg border border-orange-200 dark:border-orange-700">
+                                <!-- Total permisos -->
+                                <div class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 p-6 rounded-2xl border border-orange-200 dark:border-orange-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                                     <div class="text-center">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                            <i class="fas fa-shield-alt text-white text-xl"></i>
+                                        </div>
                                         {% with total_permissions=0 %}
                                             {% for mp in object.module_permissions.all %}
                                                 {% with total_permissions=total_permissions|add:mp.permissions.count %}
                                                 {% endwith %}
                                             {% endfor %}
-                                            <div class="text-2xl font-bold text-orange-600 dark:text-orange-300">
+                                            <div class="text-3xl font-bold text-orange-600 dark:text-orange-300">
                                                 {{ total_permissions }}
                                             </div>
                                         {% endwith %}
-                                        <div class="text-xs text-orange-600 dark:text-orange-300 mt-1">
-                                            <i class="fas fa-lock mr-1"></i>
-                                            Total permisos
+                                        <div class="text-sm text-orange-600 dark:text-orange-300 mt-1 font-medium">
+                                            Total Permisos
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 </div>
+            </div>
 
-                <!-- Botones de acción -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 sticky bottom-0 z-10">
-                    <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                        <a href="{% url 'security:group_list' %}" 
-                           class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                            <i class="fas fa-times mr-2"></i>
-                            Cancelar
-                        </a>
-                        <button type="submit" 
-                                id="submitBtn"
-                                class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-sm">
-                            <i class="fas fa-save mr-2"></i>
-                            {% if object %}Actualizar Grupo{% else %}Crear Grupo{% endif %}
-                        </button>
-                    </div>
+            <!-- Botones de acción -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sticky bottom-4 border border-gray-100 dark:border-gray-700 z-10">
+                <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                    <a href="{% url 'security:group_list' %}"
+                       class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Volver
+                    </a>
+                    <button type="submit"
+                            id="submitBtn"
+                            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-xl hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg hover:shadow-xl">
+                        <i class="fas fa-save mr-2"></i>
+                        {% if object %}Actualizar Grupo{% else %}Crear Grupo{% endif %}
+                    </button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+</div>
 
-    <style>
-        /* Estilos adicionales para mejorar la responsividad */
-        @media (max-height: 600px) {
-            .container {
-                padding-top: 1rem;
-                padding-bottom: 1rem;
-            }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Referencias a elementos
+        const form = document.getElementById("groupForm");
+        const submitBtn = document.getElementById("submitBtn");
 
-            .bg-gradient-to-r {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
+        // Manejar envío del formulario
+        if (form && submitBtn) {
+            form.addEventListener("submit", function (e) {
+                // Deshabilitar el botón para evitar doble envío
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
 
-            .space-y-6 > * + * {
-                margin-top: 1rem;
-            }
+                // Re-habilitar después de 3 segundos por si hay errores
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '{% if object %}<i class="fas fa-save mr-2"></i>Actualizar Grupo{% else %}<i class="fas fa-save mr-2"></i>Crear Grupo{% endif %}';
+                }, 3000);
+            });
         }
 
-        /* Asegurar que los inputs se adapten correctamente */
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            min-width: 0;
+        // Auto-focus en el primer campo con error
+        const firstError = document.querySelector(".text-red-600");
+        if (firstError) {
+            const errorField = firstError.closest("div").querySelector("input, select, textarea");
+            if (errorField) {
+                errorField.focus();
+                errorField.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        } else {
+            // Si no hay errores, focus en el primer campo
+            const firstField = document.querySelector("#{{ form.name.id_for_label }}");
+            if (firstField) {
+                firstField.focus();
+            }
         }
+    });
+</script>
 
-        /* Mejorar el scroll en dispositivos móviles */
-        .overflow-y-auto {
-            -webkit-overflow-scrolling: touch;
+<style>
+    /* Medical-themed improvements */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Mejoras para inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    textarea {
+        @apply bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md w-full;
+    }
+
+    /* Animaciones médicas */
+    @keyframes pulse-medical {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
         }
-    </style>
+        50% {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+    }
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Referencias a elementos
-            const form = document.getElementById("groupForm");
-            const submitBtn = document.getElementById("submitBtn");
-
-            // Manejar envío del formulario
-            if (form && submitBtn) {
-                form.addEventListener("submit", function (e) {
-                    // Deshabilitar el botón para evitar doble envío
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-
-                    // Re-habilitar después de 3 segundos por si hay errores
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '{% if object %}<i class="fas fa-save mr-2"></i>Actualizar Grupo{% else %}<i class="fas fa-save mr-2"></i>Crear Grupo{% endif %}';
-                    }, 3000);
-                });
-            }
-
-            // Auto-focus en el primer campo con error
-            const firstError = document.querySelector(".text-red-600");
-            if (firstError) {
-                const errorField = firstError.closest("div").querySelector("input, select, textarea");
-                if (errorField) {
-                    errorField.focus();
-                    errorField.scrollIntoView({ behavior: "smooth", block: "center" });
-                }
-            } else {
-                // Si no hay errores, focus en el primer campo
-                const firstField = document.querySelector("#{{ form.name.id_for_label }}");
-                if (firstField) {
-                    firstField.focus();
-                }
-            }
-
-            // Función para ajustar la altura de la página dinámicamente
-            function adjustViewport() {
-                const vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty("--vh", `${vh}px`);
-            }
-
-            // Ejecutar al cargar y al cambiar el tamaño
-            adjustViewport();
-            window.addEventListener("resize", adjustViewport);
-            window.addEventListener("orientationchange", adjustViewport);
-        });
-    </script>
+    .hover\:scale-105:hover {
+        animation: pulse-medical 2s infinite;
+    }
+</style>
 {% endblock %}

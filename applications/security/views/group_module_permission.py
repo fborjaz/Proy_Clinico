@@ -96,40 +96,45 @@ class GroupModulePermissionDeleteView(PermissionMixin, DeleteViewMixin, DeleteVi
 
 
 class GetModulePermissionsView(View):
-    """Vista AJAX para obtener los permisos asociados a un módulo específico"""
+    """Vista AJAX para obtener los permisos asociados a un módulo específico y grupo"""
     # Temporalmente removemos el PermissionMixin para debugging
     # permission_required = 'view_groupmodulepermission'
     
     def get(self, request, *args, **kwargs):
         print("=== GetModulePermissionsView llamada ===")
         module_id = request.GET.get('module_id')
-        print(f"module_id recibido: {module_id}")
+        group_id = request.GET.get('group_id')
+        print(f"module_id recibido: {module_id}, group_id recibido: {group_id}")
         
-        if not module_id:
-            print("Error: No se proporcionó ID del módulo")
-            return JsonResponse({'error': 'No se proporcionó ID del módulo'}, status=400)
+        if not module_id or not group_id:
+            print("Error: No se proporcionó ID del módulo o grupo")
+            return JsonResponse({'error': 'No se proporcionó ID del módulo o grupo'}, status=400)
         
         try:
             print(f"Buscando módulo con ID: {module_id}")
             module = Module.objects.get(id=module_id)
             print(f"Módulo encontrado: {module.name}")
             
+            print(f"Buscando grupo con ID: {group_id}")
+            from django.contrib.auth.models import Group
+            group = Group.objects.get(id=group_id)
+            print(f"Grupo encontrado: {group.name}")
+            
+            # Obtener permisos del módulo
             module_permissions = module.permissions.all()
             print(f"Permisos del módulo encontrados: {module_permissions.count()}")
             
-            # Si el módulo no tiene permisos específicos, devolver lista vacía
-            if not module_permissions.exists():
-                print("El módulo no tiene permisos específicos")
-                return JsonResponse({
-                    'permissions': [],
-                    'message': f'El módulo "{module.name}" no tiene permisos específicos asignados.',
-                    'module_name': module.name,
-                    'total_permissions': 0
-                })
+            # Obtener permisos del grupo
+            group_permissions = group.permissions.all()
+            print(f"Permisos del grupo encontrados: {group_permissions.count()}")
+            
+            # Filtrar permisos que estén en ambos conjuntos
+            filtered_permissions = module_permissions.filter(id__in=group_permissions.values_list('id', flat=True))
+            print(f"Permisos filtrados: {filtered_permissions.count()}")
             
             # Formatear los permisos para enviar al frontend
             permissions_data = []
-            for permission in module_permissions.order_by('content_type__model', 'name'):
+            for permission in filtered_permissions.order_by('content_type__model', 'name'):
                 perm_data = {
                     'id': permission.id,
                     'name': permission.name,
@@ -143,6 +148,7 @@ class GetModulePermissionsView(View):
             response_data = {
                 'permissions': permissions_data,
                 'module_name': module.name,
+                'group_name': group.name,
                 'total_permissions': len(permissions_data)
             }
             print(f"Respuesta a enviar: {response_data}")
@@ -151,6 +157,9 @@ class GetModulePermissionsView(View):
         except Module.DoesNotExist:
             print(f"Error: Módulo con ID {module_id} no encontrado")
             return JsonResponse({'error': 'Módulo no encontrado'}, status=404)
+        except Group.DoesNotExist:
+            print(f"Error: Grupo con ID {group_id} no encontrado")
+            return JsonResponse({'error': 'Grupo no encontrado'}, status=404)
         except Exception as e:
             print(f"Error interno: {str(e)}")
             import traceback

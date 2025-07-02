@@ -4,75 +4,102 @@
     {% if object %}Editar Asignación de Permisos{% else %}Nueva Asignación de Permisos{% endif %} - SaludTotal
 {% endblock %}
 
-{% block extra_css %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/group_module_permissions_form.css' %}" />
-{% endblock %}
-
 {% block content %}
-    {% load static %}
+{% load static %}
 
-    <!-- Contenedor principal con altura controlada -->
-    <div class="min-h-screen bg-gray-50 dark:bg-white-900">
-        <div class="w-full px-6 py-8">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 rounded-lg shadow-lg mb-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                    <div class="flex-1">
-                        <h1 class="text-2xl sm:text-3xl font-bold">
-                            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
-                            {% if object %}
-                                Editar Asignación de Permisos
-                            {% else %}
-                                Nueva Asignación de Permisos
-                            {% endif %}
-                        </h1>
-                        <p class="text-blue-100 mt-1 text-sm sm:text-base">
+<div class="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
+    <!-- Medical Pattern Background -->
+    <div class="fixed inset-0 opacity-5 dark:opacity-10 z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="medical-cross" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#medical-cross)" class="text-blue-600 dark:text-blue-400"/>
+        </svg>
+    </div>
+
+    <div class="container mx-auto px-4 py-6 relative z-10">
+        <!-- Header Médico Mejorado -->
+        <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-teal-600 dark:from-blue-700 dark:via-blue-800 dark:to-teal-700 text-white p-8 rounded-2xl shadow-2xl mb-6 relative overflow-hidden">
+            <!-- Medical Icons Background -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-4 right-4">
+                    <i class="fas fa-shield-alt text-6xl"></i>
+                </div>
+                <div class="absolute bottom-4 left-4">
+                    <i class="fas fa-key text-4xl"></i>
+                </div>
+                <div class="absolute top-1/2 right-1/4 transform -translate-y-1/2">
+                    <i class="fas fa-lock text-5xl"></i>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between relative z-10">
+                <div class="flex items-center">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-{% if object %}shield-alt{% else %}key{% endif %} text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl font-bold mb-2">{% if object %}Editar Asignación{% else %}Nueva Asignación{% endif %}</h1>
+                        <p class="text-blue-100 text-lg">
                             {% if object %}
                                 Modifica los permisos del grupo "{{ object.group.name }}" para el módulo "{{ object.module.name }}"
                             {% else %}
-                                Crea una nueva asignación de permisos grupo-módulo
+                                Asigna permisos a un grupo sobre un módulo del sistema médico
                             {% endif %}
                         </p>
                     </div>
-                    <div class="text-right mt-4 sm:mt-0">
-                        <div class="text-xl sm:text-2xl font-bold">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <div class="text-xs sm:text-sm text-blue-100">Permisos</div>
+                </div>
+                <div class="text-right hidden md:block">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 text-white text-sm">
+                        <i class="fas fa-heartbeat mr-2"></i>
+                        Sistema Activo
                     </div>
                 </div>
             </div>
+            
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
+            <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mb-16"></div>
+            <div class="absolute top-1/2 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12"></div>
+        </div>
 
-            <!-- Formulario -->
-            <form method="post" class="space-y-6" id="permissionForm">
-                {% csrf_token %}
+        <!-- Formulario -->
+        <form method="post" class="space-y-6" id="permissionForm">
+            {% csrf_token %}
 
-                <!-- Contenedor principal del formulario -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                    <!-- Vista previa de la asignación -->
-                    <div class="bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                        <div class="text-center">
-                            <div class="bg-white dark:bg-gray-800 rounded-full w-12 sm:w-16 h-12 sm:h-16 mx-auto flex items-center justify-center shadow-sm border border-gray-200 dark:border-gray-600 mb-3">
-                                <i class="fas fa-lock text-xl sm:text-2xl text-blue-600"></i>
-                            </div>
-                            <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-                                Vista previa de la asignación
-                            </h3>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                {% if object %}
-                                    {{ object.group.name }} - {{ object.module.name }}
-                                {% else %}
-                                    Nueva asignación
-                                {% endif %}
-                            </p>
+            <!-- Vista previa de la asignación mejorada -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
+                <div class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 px-6 py-6">
+                    <div class="text-center">
+                        <div class="bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 rounded-full w-20 h-20 mx-auto flex items-center justify-center shadow-lg border-2 border-white dark:border-gray-600 mb-4 transform hover:scale-105 transition-all duration-300">
+                            <i class="fas fa-shield-alt text-3xl text-blue-600 dark:text-blue-400"></i>
                         </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            Vista previa de la asignación
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            {% if object %}
+                                {{ object.group.name }} - {{ object.module.name }}
+                            {% else %}
+                                Configura los permisos del grupo sobre el módulo
+                            {% endif %}
+                        </p>
                     </div>
+                </div>
 
-                    <!-- Campos del formulario -->
-                    <div class="p-4 sm:p-6">
-                        <!-- Grid de campos principales -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
+                <!-- Campos del formulario -->
+                <div class="p-6">
+                    <!-- Sección de Selección -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <i class="fas fa-cogs text-blue-500 mr-2"></i>
+                            Configuración de Acceso
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <!-- Campo Group -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -80,23 +107,20 @@
                                     {{ form.group.label }}
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <div class="relative">
-                                    {{ form.group }}
+                                <div class="flex gap-2">
+                                    <div class="flex-1">
+                                        {{ form.group }}
+                                    </div>
                                     <a href="{% url 'security:group_create' %}?next={{ request.get_full_path|urlencode }}"
-                                       class="absolute right-8 top-1/2 transform -translate-y-1/2 btn-sm btn-create"
+                                       class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 rounded-lg hover:from-blue-200 hover:to-blue-300 transition-all duration-300 text-xs font-medium whitespace-nowrap"
                                        title="Crear nuevo grupo">
                                         <i class="fas fa-plus mr-1"></i>Nuevo
                                     </a>
                                 </div>
-                                {% if form.group.help_text %}
-                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                        {{ form.group.help_text }}
-                                    </p>
-                                {% endif %}
                                 {% if form.group.errors %}
                                     <div class="mt-1 text-red-600 text-sm">
                                         {% for error in form.group.errors %}
-                                            <p>{{ error }}</p>
+                                            <p><i class="fas fa-exclamation-circle mr-1"></i>{{ error }}</p>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
@@ -109,200 +133,410 @@
                                     {{ form.module.label }}
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <div class="relative">
-                                    {{ form.module }}
+                                <div class="flex gap-2">
+                                    <div class="flex-1">
+                                        {{ form.module }}
+                                    </div>
                                     <a href="{% url 'security:module_create' %}?next={{ request.get_full_path|urlencode }}"
-                                       class="absolute right-8 top-1/2 transform -translate-y-1/2 btn-sm btn-create-module"
+                                       class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 rounded-lg hover:from-blue-200 hover:to-blue-300 transition-all duration-300 text-xs font-medium whitespace-nowrap"
                                        title="Crear nuevo módulo">
                                         <i class="fas fa-plus mr-1"></i>Nuevo
                                     </a>
                                 </div>
-                                {% if form.module.help_text %}
-                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                        {{ form.module.help_text }}
-                                    </p>
-                                {% endif %}
                                 {% if form.module.errors %}
                                     <div class="mt-1 text-red-600 text-sm">
                                         {% for error in form.module.errors %}
-                                            <p>{{ error }}</p>
+                                            <p><i class="fas fa-exclamation-circle mr-1"></i>{{ error }}</p>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Campo Permissions -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                                <i class="fas fa-key text-blue-500 mr-1"></i>
-                                {{ form.permissions.label }}
-                                <span class="text-red-500 ml-1">*</span>
-                            </label>
-                            {% if form.permissions.help_text %}
-                                <p class="mb-3 text-xs text-gray-500 dark:text-gray-400">
-                                    <i class="fas fa-info-circle mr-1"></i>
-                                    {{ form.permissions.help_text }}
-                                </p>
-                            {% endif %}
+                    <!-- Sección de Permisos -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <i class="fas fa-key text-blue-500 mr-2"></i>
+                            Permisos Disponibles
+                        </h3>
 
-                            <!-- Contenedor de permisos con grid mejorado -->
-                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
-                                <div class="p-4">
-                                    <!-- Controles de selección -->
-                                    <div class="mb-4 pb-3 border-b border-gray-200 dark:border-gray-600">
-                                        <div class="flex justify-between items-center">
-                                            <div>
-                                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    Seleccionar permisos:
-                                                </span>
-                                                <span id="permission-counter" class="permission-counter ml-2">
-                                                    (0 seleccionados)
-                                                </span>
-                                            </div>
-                                            <!-- Botones de selección -->
-                                            <div class="flex space-x-2">
-                                                <button type="button" id="select-all"
-                                                        class="px-3 py-1 text-xs bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-md transition-colors">
-                                                    <i class="fas fa-check-double mr-1"></i>Todos
-                                                </button>
-                                                <button type="button" id="select-none"
-                                                        class="px-3 py-1 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-md transition-colors">
-                                                    <i class="fas fa-times mr-1"></i>Ninguno
-                                                </button>
-                                            </div>
-                                        </div>
+                        <!-- Contenedor de permisos mejorado -->
+                        <div class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-6">
+                            <!-- Controles de selección -->
+                            <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-600">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Seleccionar permisos:
+                                        </span>
+                                        <span id="permission-counter" class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                            0 seleccionados
+                                        </span>
                                     </div>
-
-                                    <!-- Grid de checkboxes -->
-                                    <div id="permissions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-64 overflow-y-auto">
-                                        {% if form.permissions %}
-                                            {% for permission in form.permissions %}
-                                                <div class="permission-item flex items-start space-x-2 p-2 hover:bg-white dark:hover:bg-gray-600 rounded-md">
-                                                    <div class="flex items-center h-5">
-                                                        {{ permission.tag }}
-                                                    </div>
-                                                    <label for="{{ permission.id_for_label }}"
-                                                           class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer flex-1">
-                                                        <div class="font-medium">
-                                                            {{ permission.choice_label|title }}
-                                                        </div>
-                                                        {% if permission.data.value %}
-                                                            <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                                Permiso: {{ permission.data.value }}
-                                                            </div>
-                                                        {% endif %}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <div class="col-span-full text-center p-8">
-                                                <div class="text-gray-400 mb-2">
-                                                    <i class="fas fa-cube text-3xl"></i>
-                                                </div>
-                                                <p class="text-gray-600 dark:text-gray-400">
-                                                    Selecciona un módulo para ver los permisos disponibles
-                                                </p>
-                                            </div>
-                                        {% endif %}
+                                    <!-- Botones de selección -->
+                                    <div class="flex space-x-2">
+                                        <button type="button" id="select-all"
+                                                class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 rounded-lg hover:from-blue-200 hover:to-blue-300 transition-all duration-300 text-xs font-medium shadow-sm hover:shadow-md transform hover:scale-105">
+                                            <i class="fas fa-check-double mr-1"></i>Seleccionar Todos
+                                        </button>
+                                        <button type="button" id="select-none"
+                                                class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-lg hover:from-gray-200 hover:to-gray-300 transition-all duration-300 text-xs font-medium shadow-sm hover:shadow-md transform hover:scale-105">
+                                            <i class="fas fa-times mr-1"></i>Ninguno
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
-                            {% if form.permissions.errors %}
-                                <div class="mt-2 text-red-600 text-sm">
-                                    {% for error in form.permissions.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
+                            <!-- Grid de permisos -->
+                            <div id="permissions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                                <div class="col-span-full">
+                                    <div class="flex flex-col items-center justify-center py-12 px-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+                                        <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 rounded-full flex items-center justify-center mb-4">
+                                            <i class="fas fa-cube text-blue-600 dark:text-blue-400 text-2xl"></i>
+                                        </div>
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                            Sin permisos disponibles
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
+                                            Selecciona un grupo y un módulo para ver los permisos disponibles
+                                        </p>
+                                    </div>
                                 </div>
-                            {% endif %}
+                            </div>
                         </div>
 
-                        <!-- Información adicional para edición -->
-                        {% if object %}
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                                <div class="bg-green-50 dark:bg-green-900 p-4 rounded-lg border border-green-200 dark:border-green-700">
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-green-600 dark:text-green-300">
-                                            {{ object.group.user_set.count }}
-                                        </div>
-                                        <div class="text-xs text-green-600 dark:text-green-300 mt-1">
-                                            <i class="fas fa-user mr-1"></i>
-                                            Usuarios en el grupo
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-blue-600 dark:text-blue-300">
-                                            {{ object.module.permissions.count }}
-                                        </div>
-                                        <div class="text-xs text-blue-600 dark:text-blue-300 mt-1">
-                                            <i class="fas fa-key mr-1"></i>
-                                            Permisos disponibles
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg border border-purple-200 dark:border-purple-700">
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-purple-600 dark:text-purple-300">
-                                            {{ object.permissions.count }}
-                                        </div>
-                                        <div class="text-xs text-purple-600 dark:text-purple-300 mt-1">
-                                            <i class="fas fa-check mr-1"></i>
-                                            Permisos asignados
-                                        </div>
-                                    </div>
-                                </div>
+                        {% if form.permissions.errors %}
+                            <div class="mt-2 text-red-600 text-sm">
+                                {% for error in form.permissions.errors %}
+                                    <p><i class="fas fa-exclamation-circle mr-1"></i>{{ error }}</p>
+                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
-                </div>
 
-                <!-- Botones de acción -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 sticky bottom-0 z-10">
-                    <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                        <a href="{% url 'security:group_module_permission_list' %}"
-                           class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                            <i class="fas fa-times mr-2"></i>
-                            Cancelar
-                        </a>
-                        <button type="submit" id="submitBtn"
-                                data-is-edit="{% if object %}true{% else %}false{% endif %}"
-                                class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-sm">
-                            <i class="fas fa-save mr-2"></i>
-                            {% if object %}
-                                Actualizar Asignación
-                            {% else %}
-                                Crear Asignación
-                            {% endif %}
-                        </button>
+                    <!-- Estadísticas de la asignación -->
+                    {% if object %}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Usuarios en el grupo -->
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-6 rounded-2xl border border-green-200 dark:border-green-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                    <i class="fas fa-users text-white text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-bold text-green-600 dark:text-green-300">
+                                    {{ object.group.user_set.count }}
+                                </div>
+                                <div class="text-sm text-green-600 dark:text-green-300 mt-1 font-medium">
+                                    Usuarios en el Grupo
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Permisos disponibles -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 p-6 rounded-2xl border border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                    <i class="fas fa-key text-white text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-bold text-blue-600 dark:text-blue-300">
+                                    {{ object.module.permissions.count }}
+                                </div>
+                                <div class="text-sm text-blue-600 dark:text-blue-300 mt-1 font-medium">
+                                    Permisos Disponibles
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Permisos asignados -->
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 p-6 rounded-2xl border border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                                </div>
+                                <div class="text-3xl font-bold text-purple-600 dark:text-purple-300">
+                                    {{ object.permissions.count }}
+                                </div>
+                                <div class="text-sm text-purple-600 dark:text-purple-300 mt-1 font-medium">
+                                    Permisos Asignados
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    {% endif %}
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sticky bottom-4 border border-gray-100 dark:border-gray-700 z-10">
+                <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                    <a href="{% url 'security:group_module_permission_list' %}"
+                       class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Volver
+                    </a>
+                    <button type="submit"
+                            id="submitBtn"
+                            data-is-edit="{% if object %}true{% else %}false{% endif %}"
+                            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-xl hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg hover:shadow-xl">
+                        <i class="fas fa-save mr-2"></i>
+                        {% if object %}Actualizar Permisos{% else %}Asignar Permisos{% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Configuración JavaScript -->
-    <script>
-        // Configuración de URLs y datos para el JavaScript
-        window.modulePermissionsUrl = "{% url 'security:get_module_permissions' %}";
+<!-- Configuración JavaScript -->
+<script>
+    // Configuración de URLs y datos para el JavaScript
+    window.modulePermissionsUrl = "{% url 'security:get_module_permissions' %}";
 
-        {% if object %}
-            // Permisos ya seleccionados para preservar en edición
-            window.selectedPermissionIds = [
-                {% for permission in object.permissions.all %}
-                    {{ permission.id }}{% if not forloop.last %},{% endif %}
-                {% endfor %}
-            ];
-        {% else %}
-            window.selectedPermissionIds = [];
-        {% endif %}
-    </script>
+    {% if object %}
+        // Permisos ya seleccionados para preservar en edición
+        window.selectedPermissionIds = [
+            {% for permission in object.permissions.all %}
+                {{ permission.id }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+    {% else %}
+        window.selectedPermissionIds = [];
+    {% endif %}
 
-    <!-- Cargar el archivo JavaScript externo -->
-    <script src="{% static 'js/group_module_permissions_form.js' %}"></script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('permissionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const selectAllBtn = document.getElementById('select-all');
+        const selectNoneBtn = document.getElementById('select-none');
+        const permissionCounter = document.getElementById('permission-counter');
+        const permissionsGrid = document.getElementById('permissions-grid');
+        const groupSelect = document.querySelector('select[name="group"]');
+        const moduleSelect = document.querySelector('select[name="module"]');
+
+        // Función para actualizar el contador de permisos
+        function updatePermissionCounter() {
+            const checkedBoxes = permissionsGrid.querySelectorAll('input[type="checkbox"]:checked').length;
+            permissionCounter.textContent = checkedBoxes + ' seleccionados';
+        }
+
+        // Función para cargar permisos filtrados
+        async function loadFilteredPermissions() {
+            const groupId = groupSelect.value;
+            const moduleId = moduleSelect.value;
+
+            if (!groupId || !moduleId) {
+                permissionsGrid.innerHTML = `
+                    <div class="col-span-full">
+                        <div class="flex flex-col items-center justify-center py-12 px-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-cube text-blue-600 dark:text-blue-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                Sin permisos disponibles
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
+                                Selecciona un grupo y un módulo para ver los permisos disponibles
+                            </p>
+                        </div>
+                    </div>
+                `;
+                updatePermissionCounter();
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/api/module-permissions/?module_id=' + moduleId + '&group_id=' + groupId);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Error al cargar permisos');
+                }
+
+                if (!data.permissions || !data.permissions.length) {
+                    permissionsGrid.innerHTML = `
+                        <div class="col-span-full">
+                            <div class="flex flex-col items-center justify-center py-12 px-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+                                <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-cube text-blue-600 dark:text-blue-400 text-2xl"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                    No hay permisos disponibles
+                                </h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
+                                    No se encontraron permisos para el grupo "${data.group_name}" en el módulo "${data.module_name}"
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    updatePermissionCounter();
+                    return;
+                }
+
+                // Generar HTML para los permisos
+                let permissionsHTML = '';
+                data.permissions.forEach(function(permission) {
+                    const isChecked = window.selectedPermissionIds.includes(permission.id) ? 'checked' : '';
+                    permissionsHTML += `
+                        <div class="permission-item bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]">
+                            <div class="flex items-start space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="permissions" value="${permission.id}" 
+                                           id="permission_${permission.id}"
+                                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-all duration-300 cursor-pointer"
+                                           ${isChecked}>
+                                </div>
+                                <label for="permission_${permission.id}"
+                                       class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer flex-1">
+                                    <div class="font-medium">
+                                        ${permission.name}
+                                    </div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        <i class="fas fa-key mr-1"></i>${permission.codename}
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                permissionsGrid.innerHTML = permissionsHTML;
+                updatePermissionCounter();
+
+            } catch (error) {
+                console.error('Error:', error);
+                permissionsGrid.innerHTML = `
+                    <div class="col-span-full">
+                        <div class="flex flex-col items-center justify-center py-12 px-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-red-300 dark:border-red-700">
+                            <div class="w-16 h-16 bg-gradient-to-br from-red-100 to-red-200 dark:from-red-800 dark:to-red-700 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-red-900 dark:text-red-300 mb-2">
+                                Error al cargar permisos
+                            </h3>
+                            <p class="text-sm text-red-500 dark:text-red-400 text-center max-w-sm">
+                                ${error.message}
+                            </p>
+                        </div>
+                    </div>
+                `;
+                updatePermissionCounter();
+            }
+        }
+
+        // Escuchar cambios en los selects
+        if (groupSelect) {
+            groupSelect.addEventListener('change', loadFilteredPermissions);
+        }
+        if (moduleSelect) {
+            moduleSelect.addEventListener('change', loadFilteredPermissions);
+        }
+
+        // Manejar selección de todos/ninguno
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener('click', function() {
+                const checkboxes = permissionsGrid.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = true;
+                });
+                updatePermissionCounter();
+            });
+        }
+
+        if (selectNoneBtn) {
+            selectNoneBtn.addEventListener('click', function() {
+                const checkboxes = permissionsGrid.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = false;
+                });
+                updatePermissionCounter();
+            });
+        }
+
+        // Actualizar contador cuando cambie cualquier checkbox
+        permissionsGrid.addEventListener('change', function(e) {
+            if (e.target.type === 'checkbox') {
+                updatePermissionCounter();
+            }
+        });
+
+        // Inicializar contador
+        updatePermissionCounter();
+
+        // Cargar permisos iniciales si hay grupo y módulo seleccionados
+        if (groupSelect.value && moduleSelect.value) {
+            loadFilteredPermissions();
+        }
+
+        // Manejar envío del formulario
+        if (form && submitBtn) {
+            form.addEventListener('submit', function(e) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
+                
+                setTimeout(function() {
+                    submitBtn.disabled = false;
+                    const isEdit = submitBtn.getAttribute('data-is-edit') === 'true';
+                    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>' + (isEdit ? 'Actualizar Permisos' : 'Asignar Permisos');
+                }, 3000);
+            });
+        }
+    });
+</script>
+
+<style>
+    /* Medical-themed improvements */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Mejoras para inputs */
+    input[type="text"],
+    select {
+        @apply bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md w-full;
+    }
+
+    input[type="checkbox"] {
+        @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-all duration-300 cursor-pointer;
+    }
+
+    /* Scroll personalizado */
+    .max-h-96 {
+        scrollbar-width: thin;
+        scrollbar-color: #3b82f6 #f1f5f9;
+    }
+
+    .max-h-96::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .max-h-96::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+
+    .max-h-96::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #3b82f6, #06b6d4);
+        border-radius: 4px;
+    }
+
+    /* Animaciones médicas */
+    @keyframes pulse-medical {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+    }
+
+    .hover\:scale-105:hover {
+        animation: pulse-medical 2s infinite;
+    }
+</style>
 
 {% endblock %}
