@@ -2,15 +2,14 @@
 <title>{% block title %}{{title}}{% endblock %}</title>
 
 {% block content %}
-    <div class="min-h-screen -mx-1000 -my-70 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-10">
+    <div class="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <!-- Header -->
         
-
         <!-- Contenido Principal -->
-        <main class="max-w-7.5xl.5 mx-auto px-6 py-8">
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Welcome Section -->
-            <div class="mb-8">
-            <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg shadow-lg mb-6">
+            <div class="mb-8 w-full">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white p-6 rounded-lg shadow-lg mb-6 relative overflow-hidden">
                     <div class="relative z-10">
                         <h2 class="text-3xl font-bold mb-2">¡Bienvenido a SaludTotal!</h2>
                         <p class="text-blue-100 text-lg">Gestiona tu citas y atenciones</p>
@@ -22,56 +21,56 @@
 
             <!-- Quick Stats -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Total Usuarios</p>
-                            <p class="text-2xl font-bold text-gray-900">1,234</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Usuarios</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">1,234</p>
                         </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Atenciones Hoy</p>
-                            <p class="text-2xl font-bold text-gray-900">89</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Atenciones Hoy</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">89</p>
                         </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Consultas Pendientes</p>
-                            <p class="text-2xl font-bold text-gray-900">23</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Consultas Pendientes</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">23</p>
                         </div>
-                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Mantenimientos</p>
-                            <p class="text-2xl font-bold text-gray-900">5</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Mantenimientos</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">5</p>
                         </div>
-                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
@@ -95,40 +94,40 @@
                                 </div>
                             {% endif %}
                             <div>
-                                <h2 class="text-3xl font-bold text-gray-900">{{ menu_item.menu.name }}</h2>
+                                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ menu_item.menu.name }}</h2>
                                 {% if menu_item.menu.description %}
-                                    <p class="text-gray-600 mt-1">{{ menu_item.menu.description }}</p>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ menu_item.menu.description }}</p>
                                 {% endif %}
                             </div>
                         </div>
-                        <hr class="border-0 h-1 bg-gradient-to-r from-transparent via-gray-400 to-transparent my-4 rounded">
+                        <hr class="border-0 h-1 bg-gradient-to-r from-transparent via-gray-400 dark:via-gray-600 to-transparent my-4 rounded">
                         <!-- Cards de Módulos del Menú -->
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {% for module_permission in menu_item.group_module_permission_list %}
                                 <a href="{% if module_permission.module.url %}{{ module_permission.module.url }}{% else %}#{% endif %}" 
-                                class="module-card bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 group cursor-pointer block text-decoration-none">
+                                class="module-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 group cursor-pointer block text-decoration-none">
                                     <!-- Icono del Módulo -->
                                     <div class="flex items-center justify-center w-14 h-14 bg-gradient-to-r 
-                                        {% cycle 'from-blue-100 to-blue-200 group-hover:from-blue-200 group-hover:to-blue-300' 'from-orange-100 to-red-100 group-hover:from-orange-200 group-hover:to-red-200' 'from-green-100 to-emerald-100 group-hover:from-green-200 group-hover:to-emerald-200' 'from-purple-100 to-indigo-100 group-hover:from-purple-200 group-hover:to-indigo-200' 'from-pink-100 to-rose-100 group-hover:from-pink-200 group-hover:to-rose-200' 'from-teal-100 to-cyan-100 group-hover:from-teal-200 group-hover:to-cyan-200' %}
+                                        {% cycle 'from-blue-100 to-blue-200 group-hover:from-blue-200 group-hover:to-blue-300 dark:from-blue-800 dark:to-blue-700 dark:group-hover:from-blue-700 dark:group-hover:to-blue-600' 'from-orange-100 to-red-100 group-hover:from-orange-200 group-hover:to-red-200 dark:from-orange-800 dark:to-red-800 dark:group-hover:from-orange-700 dark:group-hover:to-red-700' 'from-green-100 to-emerald-100 group-hover:from-green-200 group-hover:to-emerald-200 dark:from-green-800 dark:to-emerald-800 dark:group-hover:from-green-700 dark:group-hover:to-emerald-700' 'from-purple-100 to-indigo-100 group-hover:from-purple-200 group-hover:to-indigo-200 dark:from-purple-800 dark:to-indigo-800 dark:group-hover:from-purple-700 dark:group-hover:to-indigo-700' 'from-pink-100 to-rose-100 group-hover:from-pink-200 group-hover:to-rose-200 dark:from-pink-800 dark:to-rose-800 dark:group-hover:from-pink-700 dark:group-hover:to-rose-700' 'from-teal-100 to-cyan-100 group-hover:from-teal-200 group-hover:to-cyan-200 dark:from-teal-800 dark:to-cyan-800 dark:group-hover:from-teal-700 dark:group-hover:to-cyan-700' %}
                                         rounded-xl mb-4 transition-all duration-300">
                                         
                                         {% if module_permission.module.icon %}
                                             <i class="{{ module_permission.module.icon }} 
-                                            {% cycle 'text-blue-600' 'text-orange-600' 'text-green-600' 'text-purple-600' 'text-pink-600' 'text-teal-600' %} 
+                                            {% cycle 'text-blue-600 dark:text-blue-400' 'text-orange-600 dark:text-orange-400' 'text-green-600 dark:text-green-400' 'text-purple-600 dark:text-purple-400' 'text-pink-600 dark:text-pink-400' 'text-teal-600 dark:text-teal-400' %} 
                                             text-lg"></i>
                                         {% else %}
                                             <!-- Icono por defecto para módulos -->
                                             <i class="fas fa-cube 
-                                            {% cycle 'text-blue-600' 'text-orange-600' 'text-green-600' 'text-purple-600' 'text-pink-600' 'text-teal-600' %} 
+                                            {% cycle 'text-blue-600 dark:text-blue-400' 'text-orange-600 dark:text-orange-400' 'text-green-600 dark:text-green-400' 'text-purple-600 dark:text-purple-400' 'text-pink-600 dark:text-pink-400' 'text-teal-600 dark:text-teal-400' %} 
                                             text-lg"></i>
                                         {% endif %}
                                     </div>
                                     
                                     <!-- Nombre del Módulo -->
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ module_permission.module.name }}</h3>
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ module_permission.module.name }}</h3>
                                     
                                     <!-- Descripción del Módulo -->
-                                    <p class="text-gray-600 text-sm mb-4 leading-relaxed">
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
                                         {% if module_permission.module.description %}
                                             {{ module_permission.module.description }}
                                         {% else %}
@@ -138,14 +137,14 @@
                                     
                                     <!-- Botón de Acceso -->
                                     <div class="w-full font-medium py-2 px-4 rounded-lg transition-all duration-300 text-sm text-center
-                                        {% cycle 'bg-blue-50 hover:bg-blue-100 text-blue-700 group-hover:bg-blue-600 group-hover:text-white' 'bg-orange-50 hover:bg-orange-100 text-orange-700 group-hover:bg-orange-600 group-hover:text-white' 'bg-green-50 hover:bg-green-100 text-green-700 group-hover:bg-green-600 group-hover:text-white' 'bg-purple-50 hover:bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white' 'bg-pink-50 hover:bg-pink-100 text-pink-700 group-hover:bg-pink-600 group-hover:text-white' 'bg-teal-50 hover:bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white' %}">
+                                        {% cycle 'bg-blue-50 hover:bg-blue-100 text-blue-700 group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 dark:group-hover:bg-blue-600' 'bg-orange-50 hover:bg-orange-100 text-orange-700 group-hover:bg-orange-600 group-hover:text-white dark:bg-orange-900 dark:text-orange-300 dark:hover:bg-orange-800 dark:group-hover:bg-orange-600' 'bg-green-50 hover:bg-green-100 text-green-700 group-hover:bg-green-600 group-hover:text-white dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800 dark:group-hover:bg-green-600' 'bg-purple-50 hover:bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white dark:bg-purple-900 dark:text-purple-300 dark:hover:bg-purple-800 dark:group-hover:bg-purple-600' 'bg-pink-50 hover:bg-pink-100 text-pink-700 group-hover:bg-pink-600 group-hover:text-white dark:bg-pink-900 dark:text-pink-300 dark:hover:bg-pink-800 dark:group-hover:bg-pink-600' 'bg-teal-50 hover:bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white dark:bg-teal-900 dark:text-teal-300 dark:hover:bg-teal-800 dark:group-hover:bg-teal-600' %}">
                                         Acceder
                                     </div>
                                 </a>
                             {% empty %}
                                 <!-- Mensaje cuando no hay módulos en este menú -->
                                 <div class="col-span-full text-center py-8">
-                                    <div class="text-gray-400">No hay módulos disponibles en este menú</div>
+                                    <div class="text-gray-400 dark:text-gray-500">No hay módulos disponibles en este menú</div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -153,19 +152,34 @@
                 {% empty %}
                     <!-- Mensaje cuando no hay menús disponibles -->
                     <div class="text-center py-12">
-                        <div class="text-gray-400 text-lg">No hay módulos disponibles para este grupo</div>
+                        <div class="text-gray-400 dark:text-gray-500 text-lg">No hay módulos disponibles para este grupo</div>
                     </div>
                 {% endfor %}
             {% else %}
                 <!-- Mensaje para usuarios no autentificados -->
                 <div class="text-center py-12">
-                    <div class="text-gray-500 text-lg">Debes iniciar sesión para acceder a los módulos</div>
+                    <div class="text-gray-500 dark:text-gray-400 text-lg">Debes iniciar sesión para acceder a los módulos</div>
                 </div>
             {% endif %}
         </main>
     </div>
 
     <style>
+        /* Prevent horizontal overflow */
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
+        .container {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         /* Custom animations */
         @keyframes fadeInUp {
             from {
@@ -200,6 +214,7 @@
 
         .module-card {
             animation: fadeInUp 0.6s ease-out;
+            max-width: 100%;
         }
 
         .module-card:nth-child(1) { animation-delay: 0.1s; }
@@ -217,6 +232,22 @@
         /* Backdrop blur effect */
         .backdrop-blur-lg {
             backdrop-filter: blur(16px);
+        }
+
+        /* Responsive grid improvements */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .grid.md\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid.lg\:grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 
