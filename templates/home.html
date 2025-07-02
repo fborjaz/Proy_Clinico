@@ -1,190 +1,254 @@
 {% extends 'base.html' %} 
-<title>{% block title %}{{title}}{% endblock %}</title>
+{% block title %}{{title}}{% endblock %}
 
 {% block content %}
-    <div class="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <!-- Header -->
+    <div class="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
+        <!-- Medical Pattern Background -->
+        <div class="fixed inset-0 opacity-5 dark:opacity-10 z-0">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="medical-cross" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#medical-cross)" class="text-blue-600 dark:text-blue-400"/>
+            </svg>
+        </div>
         
         <!-- Contenido Principal -->
-        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Welcome Section -->
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+            <!-- Welcome Section Mejorada -->
             <div class="mb-8 w-full">
-                <div class="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white p-6 rounded-lg shadow-lg mb-6 relative overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-teal-600 dark:from-blue-700 dark:via-blue-800 dark:to-teal-700 text-white p-8 rounded-2xl shadow-2xl mb-6 relative overflow-hidden">
+                    <!-- Medical Icons Background -->
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="absolute top-4 right-4">
+                            <i class="fas fa-heartbeat text-6xl"></i>
+                        </div>
+                        <div class="absolute bottom-4 left-4">
+                            <i class="fas fa-stethoscope text-4xl"></i>
+                        </div>
+                        <div class="absolute top-1/2 right-1/4 transform -translate-y-1/2">
+                            <i class="fas fa-user-md text-5xl"></i>
+                        </div>
+                    </div>
+                    
                     <div class="relative z-10">
-                        <h2 class="text-3xl font-bold mb-2">¡Bienvenido a SaludTotal!</h2>
-                        <p class="text-blue-100 text-lg">Gestiona tu citas y atenciones</p>
-                    </div>
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                    <div class="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-12 -mb-12"></div>
-                </div>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Usuarios</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">1,234</p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Atenciones Hoy</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">89</p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Consultas Pendientes</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">23</p>
-                        </div>
-                        <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Mantenimientos</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">5</p>
-                        </div>
-                        <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Menus del sistema -->
-            {% if user.is_authenticated %}
-                <!-- Iterar por cada menú -->
-                {% for menu_item in menu_list %}
-                    <div class="mb-12">
-                        <!-- Título del Menú -->
-                        <div class="flex items-center mb-2">
-                            {% if menu_item.menu.icon %}
-                                <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-r 
-                                    {% cycle 'from-blue-500 to-blue-600' 'from-orange-500 to-red-500' 'from-green-500 to-emerald-500' 'from-purple-500 to-indigo-500' 'from-pink-500 to-rose-500' 'from-teal-500 to-cyan-500' %}
-                                    rounded-xl mr-4">
-                                    <i class="{{ menu_item.menu.icon }} text-white text-xl"></i>
-                                </div>
-                            {% endif %}
+                        <div class="flex items-center mb-4">
+                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-hospital text-2xl text-white"></i>
+                            </div>
                             <div>
-                                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ menu_item.menu.name }}</h2>
-                                {% if menu_item.menu.description %}
-                                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ menu_item.menu.description }}</p>
-                                {% endif %}
+                                <h2 class="text-4xl font-bold mb-2">¡Bienvenido a SaludTotal!</h2>
+                                <p class="text-blue-100 text-lg">Sistema Integral de Gestión Médica</p>
                             </div>
                         </div>
-                        <hr class="border-0 h-1 bg-gradient-to-r from-transparent via-gray-400 dark:via-gray-600 to-transparent my-4 rounded">
-                        <!-- Cards de Módulos del Menú -->
+                        <div class="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                            <p class="text-sm text-blue-50">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Gestiona citas, atenciones médicas, historiales clínicos y más desde una plataforma unificada
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative elements -->
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20"></div>
+                    <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mb-16"></div>
+                    <div class="absolute top-1/2 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12"></div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats Mejoradas -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-blue-50 dark:bg-blue-900/30 rounded-full -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Total Pacientes</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">1,234</p>
+                            <p class="text-xs text-green-600 dark:text-green-400 mt-1">
+                                <i class="fas fa-arrow-up mr-1"></i>+12% este mes
+                            </p>
+                        </div>
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-green-50 dark:bg-green-900/30 rounded-full -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Citas Hoy</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">89</p>
+                            <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                                <i class="fas fa-calendar-check mr-1"></i>67 completadas
+                            </p>
+                        </div>
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-calendar-alt text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-50 dark:bg-yellow-900/30 rounded-full -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">En Espera</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">23</p>
+                            <p class="text-xs text-orange-600 dark:text-orange-400 mt-1">
+                                <i class="fas fa-clock mr-1"></i>Tiempo promedio: 15min
+                            </p>
+                        </div>
+                        <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-hourglass-half text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-red-50 dark:bg-red-900/30 rounded-full -mr-10 -mt-10"></div>
+                    <div class="flex items-center justify-between relative z-10">
+                        <div>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Urgencias</p>
+                            <p class="text-3xl font-bold text-gray-900 dark:text-white">5</p>
+                            <p class="text-xs text-red-600 dark:text-red-400 mt-1">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>2 críticas
+                            </p>
+                        </div>
+                        <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-ambulance text-white text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resto del contenido original -->
+            {% if user.is_authenticated %}
+                {% for menu_item in menu_list %}
+                    <div class="mb-12">
+                        <!-- Título del Menú Mejorado -->
+                        <div class="flex items-center mb-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
+                            {% if menu_item.menu.icon %}
+                                <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br 
+                                    {% cycle 'from-blue-500 to-blue-600' 'from-teal-500 to-cyan-600' 'from-green-500 to-emerald-600' 'from-purple-500 to-indigo-600' 'from-pink-500 to-rose-600' 'from-orange-500 to-red-500' %}
+                                    rounded-2xl mr-6 shadow-lg">
+                                    <i class="{{ menu_item.menu.icon }} text-white text-2xl"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-1">
+                                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ menu_item.menu.name }}</h2>
+                                {% if menu_item.menu.description %}
+                                    <p class="text-gray-600 dark:text-gray-400 text-lg">{{ menu_item.menu.description }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="hidden md:flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Sistema activo</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards de Módulos Mejoradas -->
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {% for module_permission in menu_item.group_module_permission_list %}
                                 <a href="{% if module_permission.module.url %}{{ module_permission.module.url }}{% else %}#{% endif %}" 
-                                class="module-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 group cursor-pointer block text-decoration-none">
-                                    <!-- Icono del Módulo -->
-                                    <div class="flex items-center justify-center w-14 h-14 bg-gradient-to-r 
-                                        {% cycle 'from-blue-100 to-blue-200 group-hover:from-blue-200 group-hover:to-blue-300 dark:from-blue-800 dark:to-blue-700 dark:group-hover:from-blue-700 dark:group-hover:to-blue-600' 'from-orange-100 to-red-100 group-hover:from-orange-200 group-hover:to-red-200 dark:from-orange-800 dark:to-red-800 dark:group-hover:from-orange-700 dark:group-hover:to-red-700' 'from-green-100 to-emerald-100 group-hover:from-green-200 group-hover:to-emerald-200 dark:from-green-800 dark:to-emerald-800 dark:group-hover:from-green-700 dark:group-hover:to-emerald-700' 'from-purple-100 to-indigo-100 group-hover:from-purple-200 group-hover:to-indigo-200 dark:from-purple-800 dark:to-indigo-800 dark:group-hover:from-purple-700 dark:group-hover:to-indigo-700' 'from-pink-100 to-rose-100 group-hover:from-pink-200 group-hover:to-rose-200 dark:from-pink-800 dark:to-rose-800 dark:group-hover:from-pink-700 dark:group-hover:to-rose-700' 'from-teal-100 to-cyan-100 group-hover:from-teal-200 group-hover:to-cyan-200 dark:from-teal-800 dark:to-cyan-800 dark:group-hover:from-teal-700 dark:group-hover:to-cyan-700' %}
-                                        rounded-xl mb-4 transition-all duration-300">
+                                class="module-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 dark:border-gray-700 group cursor-pointer block text-decoration-none relative overflow-hidden">
+                                    
+                                    <!-- Background Pattern -->
+                                    <div class="absolute inset-0 opacity-5">
+                                        <div class="absolute top-2 right-2">
+                                            <i class="fas fa-plus text-2xl 
+                                            {% cycle 'text-blue-600' 'text-teal-600' 'text-green-600' 'text-purple-600' 'text-pink-600' 'text-orange-600' %}"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Icono del Módulo Mejorado -->
+                                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br 
+                                        {% cycle 'from-blue-100 to-blue-200 group-hover:from-blue-500 group-hover:to-blue-600 dark:from-blue-800 dark:to-blue-700 dark:group-hover:from-blue-600 dark:group-hover:to-blue-500' 'from-teal-100 to-cyan-200 group-hover:from-teal-500 group-hover:to-cyan-600 dark:from-teal-800 dark:to-cyan-700 dark:group-hover:from-teal-600 dark:group-hover:to-cyan-500' 'from-green-100 to-emerald-200 group-hover:from-green-500 group-hover:to-emerald-600 dark:from-green-800 dark:to-emerald-700 dark:group-hover:from-green-600 dark:group-hover:to-emerald-500' 'from-purple-100 to-indigo-200 group-hover:from-purple-500 group-hover:to-indigo-600 dark:from-purple-800 dark:to-indigo-700 dark:group-hover:from-purple-600 dark:group-hover:to-indigo-500' 'from-pink-100 to-rose-200 group-hover:from-pink-500 group-hover:to-rose-600 dark:from-pink-800 dark:to-rose-700 dark:group-hover:from-pink-600 dark:group-hover:to-rose-500' 'from-orange-100 to-red-200 group-hover:from-orange-500 group-hover:to-red-600 dark:from-orange-800 dark:to-red-700 dark:group-hover:from-orange-600 dark:group-hover:to-red-500' %}
+                                        rounded-2xl mb-4 transition-all duration-300 shadow-md group-hover:shadow-lg relative z-10">
                                         
                                         {% if module_permission.module.icon %}
                                             <i class="{{ module_permission.module.icon }} 
-                                            {% cycle 'text-blue-600 dark:text-blue-400' 'text-orange-600 dark:text-orange-400' 'text-green-600 dark:text-green-400' 'text-purple-600 dark:text-purple-400' 'text-pink-600 dark:text-pink-400' 'text-teal-600 dark:text-teal-400' %} 
-                                            text-lg"></i>
+                                            {% cycle 'text-blue-600 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white' 'text-teal-600 group-hover:text-white dark:text-teal-400 dark:group-hover:text-white' 'text-green-600 group-hover:text-white dark:text-green-400 dark:group-hover:text-white' 'text-purple-600 group-hover:text-white dark:text-purple-400 dark:group-hover:text-white' 'text-pink-600 group-hover:text-white dark:text-pink-400 dark:group-hover:text-white' 'text-orange-600 group-hover:text-white dark:text-orange-400 dark:group-hover:text-white' %} 
+                                            text-xl transition-all duration-300"></i>
                                         {% else %}
-                                            <!-- Icono por defecto para módulos -->
-                                            <i class="fas fa-cube 
-                                            {% cycle 'text-blue-600 dark:text-blue-400' 'text-orange-600 dark:text-orange-400' 'text-green-600 dark:text-green-400' 'text-purple-600 dark:text-purple-400' 'text-pink-600 dark:text-pink-400' 'text-teal-600 dark:text-teal-400' %} 
-                                            text-lg"></i>
+                                            <i class="fas fa-stethoscope 
+                                            {% cycle 'text-blue-600 group-hover:text-white dark:text-blue-400 dark:group-hover:text-white' 'text-teal-600 group-hover:text-white dark:text-teal-400 dark:group-hover:text-white' 'text-green-600 group-hover:text-white dark:text-green-400 dark:group-hover:text-white' 'text-purple-600 group-hover:text-white dark:text-purple-400 dark:group-hover:text-white' 'text-pink-600 group-hover:text-white dark:text-pink-400 dark:group-hover:text-white' 'text-orange-600 group-hover:text-white dark:text-orange-400 dark:group-hover:text-white' %} 
+                                            text-xl transition-all duration-300"></i>
                                         {% endif %}
                                     </div>
                                     
                                     <!-- Nombre del Módulo -->
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ module_permission.module.name }}</h3>
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 relative z-10">{{ module_permission.module.name }}</h3>
                                     
                                     <!-- Descripción del Módulo -->
-                                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed relative z-10">
                                         {% if module_permission.module.description %}
                                             {{ module_permission.module.description }}
                                         {% else %}
-                                            Accede a las funcionalidades de {{ module_permission.module.name|lower }}.
+                                            Gestiona y administra {{ module_permission.module.name|lower }} de manera eficiente y segura.
                                         {% endif %}
                                     </p>
                                     
-                                    <!-- Botón de Acceso -->
-                                    <div class="w-full font-medium py-2 px-4 rounded-lg transition-all duration-300 text-sm text-center
-                                        {% cycle 'bg-blue-50 hover:bg-blue-100 text-blue-700 group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 dark:group-hover:bg-blue-600' 'bg-orange-50 hover:bg-orange-100 text-orange-700 group-hover:bg-orange-600 group-hover:text-white dark:bg-orange-900 dark:text-orange-300 dark:hover:bg-orange-800 dark:group-hover:bg-orange-600' 'bg-green-50 hover:bg-green-100 text-green-700 group-hover:bg-green-600 group-hover:text-white dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800 dark:group-hover:bg-green-600' 'bg-purple-50 hover:bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white dark:bg-purple-900 dark:text-purple-300 dark:hover:bg-purple-800 dark:group-hover:bg-purple-600' 'bg-pink-50 hover:bg-pink-100 text-pink-700 group-hover:bg-pink-600 group-hover:text-white dark:bg-pink-900 dark:text-pink-300 dark:hover:bg-pink-800 dark:group-hover:bg-pink-600' 'bg-teal-50 hover:bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white dark:bg-teal-900 dark:text-teal-300 dark:hover:bg-teal-800 dark:group-hover:bg-teal-600' %}">
-                                        Acceder
+                                    <!-- Botón de Acceso Mejorado -->
+                                    <div class="w-full font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm text-center relative z-10
+                                        {% cycle 'bg-blue-50 hover:bg-blue-100 text-blue-700 group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-800 dark:group-hover:bg-blue-600' 'bg-teal-50 hover:bg-teal-100 text-teal-700 group-hover:bg-teal-600 group-hover:text-white dark:bg-teal-900/50 dark:text-teal-300 dark:hover:bg-teal-800 dark:group-hover:bg-teal-600' 'bg-green-50 hover:bg-green-100 text-green-700 group-hover:bg-green-600 group-hover:text-white dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-800 dark:group-hover:bg-green-600' 'bg-purple-50 hover:bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white dark:bg-purple-900/50 dark:text-purple-300 dark:hover:bg-purple-800 dark:group-hover:bg-purple-600' 'bg-pink-50 hover:bg-pink-100 text-pink-700 group-hover:bg-pink-600 group-hover:text-white dark:bg-pink-900/50 dark:text-pink-300 dark:hover:bg-pink-800 dark:group-hover:bg-pink-600' 'bg-orange-50 hover:bg-orange-100 text-orange-700 group-hover:bg-orange-600 group-hover:text-white dark:bg-orange-900/50 dark:text-orange-300 dark:hover:bg-orange-800 dark:group-hover:bg-orange-600' %}
+                                        shadow-sm group-hover:shadow-md">
+                                        <i class="fas fa-arrow-right mr-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                                        Acceder al Módulo
                                     </div>
                                 </a>
                             {% empty %}
-                                <!-- Mensaje cuando no hay módulos en este menú -->
-                                <div class="col-span-full text-center py-8">
-                                    <div class="text-gray-400 dark:text-gray-500">No hay módulos disponibles en este menú</div>
+                                <div class="col-span-full text-center py-12 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+                                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fas fa-folder-open text-gray-400 text-2xl"></i>
+                                    </div>
+                                    <div class="text-gray-500 dark:text-gray-400 text-lg font-medium">No hay módulos disponibles</div>
+                                    <div class="text-gray-400 dark:text-gray-500 text-sm mt-2">Contacta al administrador para obtener acceso</div>
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
                 {% empty %}
-                    <!-- Mensaje cuando no hay menús disponibles -->
-                    <div class="text-center py-12">
-                        <div class="text-gray-400 dark:text-gray-500 text-lg">No hay módulos disponibles para este grupo</div>
+                    <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+                        <div class="w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-user-shield text-blue-600 dark:text-blue-400 text-3xl"></i>
+                        </div>
+                        <div class="text-gray-600 dark:text-gray-400 text-xl font-semibold mb-2">Sin módulos asignados</div>
+                        <div class="text-gray-500 dark:text-gray-500">Contacta al administrador para obtener permisos de acceso</div>
                     </div>
                 {% endfor %}
             {% else %}
-                <!-- Mensaje para usuarios no autentificados -->
-                <div class="text-center py-12">
-                    <div class="text-gray-500 dark:text-gray-400 text-lg">Debes iniciar sesión para acceder a los módulos</div>
+                <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+                    <div class="w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-sign-in-alt text-blue-600 dark:text-blue-400 text-3xl"></i>
+                    </div>
+                    <div class="text-gray-600 dark:text-gray-400 text-xl font-semibold mb-2">Acceso Requerido</div>
+                    <div class="text-gray-500 dark:text-gray-500 mb-6">Debes iniciar sesión para acceder al sistema médico</div>
+                    <a href="{% url 'security:signin' %}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Iniciar Sesión
+                    </a>
                 </div>
             {% endif %}
         </main>
     </div>
 
     <style>
-        /* Prevent horizontal overflow */
-        * {
-            box-sizing: border-box;
-        }
+        /* Medical-themed improvements */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
-        html, body {
-            overflow-x: hidden;
-            max-width: 100%;
-        }
-        
-        .container {
-            max-width: 100%;
-            overflow-x: hidden;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Custom animations */
+        /* Medical animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translate3d(0, 40px, 0);
+                transform: translate3d(0, 30px, 0);
             }
             to {
                 opacity: 1;
@@ -192,86 +256,37 @@
             }
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translate3d(30px, 0, 0);
-            }
-            to {
-                opacity: 1;
-                transform: translate3d(0, 0, 0);
-            }
-        }
-
-        @keyframes pulse {
+        @keyframes pulse-medical {
             0%, 100% {
                 opacity: 1;
+                transform: scale(1);
             }
             50% {
-                opacity: .8;
+                opacity: 0.8;
+                transform: scale(1.02);
             }
         }
 
+        /* Remove fadeInUp animation from module cards and add hover scale effect like Quick Stats */
         .module-card {
-            animation: fadeInUp 0.6s ease-out;
-            max-width: 100%;
+            transition: all 0.3s ease;
         }
 
-        .module-card:nth-child(1) { animation-delay: 0.1s; }
-        .module-card:nth-child(2) { animation-delay: 0.2s; }
-        .module-card:nth-child(3) { animation-delay: 0.3s; }
-        .module-card:nth-child(4) { animation-delay: 0.4s; }
-        .module-card:nth-child(5) { animation-delay: 0.5s; }
-        .module-card:nth-child(6) { animation-delay: 0.6s; }
-
-        /* Hover effects */
-        .module-card:hover .gradient-icon {
-            animation: pulse 2s infinite;
+        .module-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         /* Backdrop blur effect */
-        .backdrop-blur-lg {
-            backdrop-filter: blur(16px);
+        .backdrop-blur-sm {
+            backdrop-filter: blur(4px);
         }
 
-        /* Responsive grid improvements */
+        /* Responsive improvements */
         @media (max-width: 768px) {
             .grid {
                 grid-template-columns: 1fr;
             }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .grid.md\:grid-cols-4 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .grid.lg\:grid-cols-3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
-
-    <!-- Ripple effect styles -->
-    <style>
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        button {
-            position: relative;
-            overflow: hidden;
         }
     </style>
 {% endblock content %}
