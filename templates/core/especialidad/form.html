@@ -5,44 +5,76 @@
         Editar Especialidad Médica
     {% else %}
         Nueva Especialidad Médica
-    {% endif %}
-    - SaludTotal
+    {% endif %} - SaludTotal
 {% endblock %}
 
 {% block content %}
     {% load static %}
 
-    <!-- Contenedor principal con altura controlada -->
-    <div class="min-h-screen bg-gray-50 dark:bg-white-900">
-        <div class="w-full px-6 py-8">
+    <div class="w-full min-h-screen relative">
+        <!-- Medical pattern background -->
+        <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="medical-cross-form" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#medical-cross-form)" class="text-purple-500"/>
+            </svg>
+        </div>
+
+        <div class="relative z-10 w-full px-6 py-8 max-w-4xl mx-auto">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 rounded-lg shadow-lg mb-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                    <div class="flex-1">
-                        <h1 class="text-2xl sm:text-3xl font-bold">
-                            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
-                            {% if object %}
-                                Editar Especialidad Médica
-                            {% else %}
-                                Nueva Especialidad Médica
-                            {% endif %}
-                        </h1>
-                        <p class="text-green-100 mt-1 text-sm sm:text-base">
-                            {% if object %}
-                                Modifica la información de la especialidad médica "{{ object.nombre }}"
-                            {% else %}
-                                Crea una nueva especialidad médica en el sistema
-                            {% endif %}
-                        </p>
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-700 dark:to-indigo-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-purple-200 dark:border-purple-600 overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="medical-cross-header-form" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#medical-cross-header-form)" class="text-white"/>
+                    </svg>
+                </div>
+                <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                    <div class="flex items-center space-x-4 flex-1">
+                        <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-bold flex items-center">
+                                <i class="fas fa-stethoscope mr-3"></i>
+                                {% if object %}
+                                    Editar Especialidad Médica
+                                {% else %}
+                                    Nueva Especialidad Médica
+                                {% endif %}
+                            </h1>
+                            <p class="text-purple-100 mt-1 text-sm sm:text-base flex items-center">
+                                <i class="fas fa-user-md mr-2"></i>
+                                {% if object %}
+                                    Modifica la información de la especialidad médica "{{ object.nombre }}"
+                                {% else %}
+                                    Crea una nueva especialidad médica en el sistema
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
                     <div class="text-right mt-4 sm:mt-0">
-                        <div class="text-xl sm:text-2xl font-bold">
-                            <i class="fas fa-stethoscope"></i>
-                        </div>
-                        <div class="text-xs sm:text-sm text-green-100">
-                            Especialidad Médica
+                        <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                            <div class="text-xl sm:text-2xl font-bold">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <div class="text-xs text-purple-100">Especialidad</div>
                         </div>
                     </div>
+                </div>
+                <div class="absolute top-4 right-4 opacity-20">
+                    <i class="fas fa-plus text-white text-lg"></i>
+                </div>
+                <div class="absolute bottom-4 left-4 opacity-20">
+                    <i class="fas fa-plus text-white text-lg"></i>
                 </div>
             </div>
 
@@ -50,124 +82,189 @@
             <form method="post" class="space-y-6" id="especialidadForm">
                 {% csrf_token %}
 
-                <!-- Contenedor principal del formulario -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                    <!-- Vista previa de la especialidad -->
-                    <div class="bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-                        <div class="text-center">
-                            <div class="bg-white dark:bg-gray-800 rounded-full w-16 sm:w-20 h-16 sm:h-20 mx-auto flex items-center justify-center shadow-sm border border-gray-200 dark:border-gray-600 mb-3">
+                <!-- Vista previa -->
+                <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="absolute inset-0 opacity-5 dark:opacity-10">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="medical-cross-preview" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#medical-cross-preview)" class="text-purple-500"/>
+                        </svg>
+                    </div>
+                    <div class="relative z-10 text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <div class="w-full h-full rounded-full overflow-hidden shadow-xl border-4 border-white dark:border-gray-700 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900 dark:to-indigo-900 flex items-center justify-center transform transition-all duration-300 hover:scale-105">
                                 <div class="text-center">
-                                    <i class="fas fa-stethoscope text-2xl sm:text-3xl text-blue-600 dark:text-blue-400"></i>
-                                    <div id="nombrePreview" class="text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 mt-1">
+                                    <i class="fas fa-stethoscope text-4xl text-purple-600 dark:text-purple-400 mb-2"></i>
+                                    <div id="nombrePreview" class="text-xs font-bold text-purple-600 dark:text-purple-400">
                                         {% if object %}
                                             {{ object.nombre|truncatechars:12 }}
                                         {% else %}
-                                            --
+                                            Nueva
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
-                            <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-                                Vista previa de la especialidad
-                            </h3>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                El nombre se actualizará mientras escribes
-                            </p>
                         </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                            Vista previa de la especialidad
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            El nombre se actualizará mientras escribes
+                        </p>
                     </div>
+                </div>
 
-                    <!-- Campos del formulario -->
-                    <div class="p-4 sm:p-6">
-                        <!-- Grid de campos principales -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
-                            <!-- Campo Nombre -->
+                <!-- Información -->
+                <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="absolute inset-0 opacity-5 dark:opacity-10">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="medical-cross-info" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#medical-cross-info)" class="text-purple-500"/>
+                        </svg>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg mr-3">
+                                <i class="fas fa-stethoscope text-white"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                                Información de la Especialidad
+                            </h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    <i class="fas fa-stethoscope text-blue-500 mr-1"></i>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                    <i class="fas fa-stethoscope text-purple-500 mr-2"></i>
                                     {{ form.nombre.label }}
-                                    <span class="text-red-500 ml-1">*</span>
+                                    <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    {{ form.nombre }}
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div class="w-6 h-6 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-stethoscope text-white text-xs"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" 
+                                           id="{{ form.nombre.id_for_label }}" 
+                                           name="{{ form.nombre.name }}" 
+                                           value="{% if form.nombre.value %}{{ form.nombre.value }}{% endif %}"
+                                           class="block w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all duration-300 shadow-sm hover:shadow-md"
+                                           placeholder="Ej: Cardiología, Pediatría, Ginecología"
+                                           required>
                                 </div>
                                 {% if form.nombre.errors %}
-                                    <div class="mt-1 text-red-600 text-sm">
-                                        {% for error in form.nombre.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
+                                <div class="mt-2 text-red-600 text-sm bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                                    {% for error in form.nombre.errors %}
+                                    <p class="flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>
+                                        {{ error }}
+                                    </p>
+                                    {% endfor %}
+                                </div>
                                 {% endif %}
                                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                     <i class="fas fa-info-circle mr-1"></i>
-                                    Ejemplo: Cardiología, Pediatría, Ginecología
+                                    Nombre único de la especialidad médica
                                 </p>
                             </div>
 
-                            <!-- Campo Estado -->
-                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                <div class="flex-1">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fas fa-toggle-on text-green-500 mr-1"></i>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                    <i class="fas fa-toggle-on text-purple-500 mr-2"></i>
+                                    Estado de la Especialidad
+                                </label>
+                                <div class="flex items-center p-4 bg-gradient-to-r from-gray-50 to-purple-50 dark:from-gray-700 dark:to-purple-900 rounded-xl border border-gray-200 dark:border-gray-600">
+                                    <input type="checkbox" 
+                                           id="{{ form.activo.id_for_label }}" 
+                                           name="{{ form.activo.name }}" 
+                                           {% if form.activo.value %}checked{% endif %}
+                                           class="w-5 h-5 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="{{ form.activo.id_for_label }}" class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                        <i class="fas fa-check-circle text-purple-500 mr-2"></i>
                                         {{ form.activo.label }}
                                     </label>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Determina si la especialidad estará disponible en el sistema
+                                </div>
+                                {% if form.activo.errors %}
+                                <div class="mt-2 text-red-600 text-sm bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                                    {% for error in form.activo.errors %}
+                                    <p class="flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>
+                                        {{ error }}
                                     </p>
+                                    {% endfor %}
                                 </div>
-                                <div class="ml-4">
-                                    {{ form.activo }}
-                                </div>
+                                {% endif %}
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Determina si la especialidad estará disponible
+                                </p>
                             </div>
                         </div>
 
-                        <!-- Campo Descripción (ancho completo) -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-align-left text-green-500 mr-1"></i>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-align-left text-purple-500 mr-2"></i>
                                 {{ form.descripcion.label }}
                                 <span class="text-gray-400 ml-1">(Opcional)</span>
                             </label>
                             <div class="relative">
-                                {{ form.descripcion }}
+                                <div class="absolute top-3 left-3 flex items-center pointer-events-none">
+                                    <div class="w-6 h-6 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-align-left text-white text-xs"></i>
+                                    </div>
+                                </div>
+                                <textarea id="{{ form.descripcion.id_for_label }}" 
+                                          name="{{ form.descripcion.name }}" 
+                                          rows="4"
+                                          class="block w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all duration-300 shadow-sm hover:shadow-md resize-none"
+                                          placeholder="Descripción detallada de la especialidad médica...">{% if form.descripcion.value %}{{ form.descripcion.value }}{% endif %}</textarea>
                             </div>
                             {% if form.descripcion.errors %}
-                                <div class="mt-1 text-red-600 text-sm">
-                                    {% for error in form.descripcion.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
+                            <div class="mt-2 text-red-600 text-sm bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                                {% for error in form.descripcion.errors %}
+                                <p class="flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    {{ error }}
+                                </p>
+                                {% endfor %}
+                            </div>
                             {% endif %}
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                 <i class="fas fa-info-circle mr-1"></i>
                                 Descripción opcional de la especialidad médica
                             </p>
                         </div>
-
-                        <!-- Información adicional -->
-                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
-                            <div class="flex items-start">
-                                <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
-                                <div class="text-sm text-blue-700 dark:text-blue-300">
-                                    <p class="font-medium mb-1">Información importante:</p>
-                                    <ul class="text-xs space-y-1">
-                                        <li>• Las especialidades médicas son asignadas a los doctores del sistema</li>
-                                        <li>• Una especialidad inactiva no estará disponible para asignar a nuevos doctores</li>
-                                        <li>• El nombre de la especialidad debe ser único en el sistema</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Botones de acción - Barra estática -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 sticky bottom-0 z-10">
-                    <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                        <a href="{{ back_url }}" class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="absolute inset-0 opacity-5 dark:opacity-10">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="medical-cross-actions" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#medical-cross-actions)" class="text-purple-500"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="relative z-10 flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        <a href="{{ back_url }}" class="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                             <i class="fas fa-times mr-2"></i>
                             Cancelar
                         </a>
-                        <button type="submit" id="submitBtn" class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-sm">
+                        <button type="submit" id="submitBtn" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                             <i class="fas fa-save mr-2"></i>
                             {{ grabar }}
                         </button>
@@ -176,108 +273,4 @@
             </form>
         </div>
     </div>
-
-    <style>
-        /* Estilos adicionales para mejorar la responsividad */
-        @media (max-height: 600px) {
-            .container {
-                padding-top: 1rem;
-                padding-bottom: 1rem;
-            }
-
-            .sticky {
-                position: relative;
-            }
-        }
-
-        /* Asegurar que el contenido no se superponga con la barra fija */
-        body {
-            padding-bottom: 80px;
-        }
-
-        /* Ajustar el espaciado en pantallas pequeñas */
-        @media (max-width: 640px) {
-            body {
-                padding-bottom: 120px;
-            }
-        }
-    </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const nombreInput = document.getElementById("id_nombre");
-            const nombrePreview = document.getElementById("nombrePreview");
-            const form = document.getElementById("especialidadForm");
-            const submitBtn = document.getElementById("submitBtn");
-
-            // Actualizar vista previa mientras se escribe
-            if (nombreInput && nombrePreview) {
-                function updatePreview() {
-                    const value = nombreInput.value.trim();
-                    if (value) {
-                        // Limitar a 12 caracteres para la vista previa
-                        const displayValue = value.length > 12 ? value.substring(0, 12) + "..." : value;
-                        nombrePreview.textContent = displayValue;
-                    } else {
-                        nombrePreview.textContent = "--";
-                    }
-                }
-
-                nombreInput.addEventListener("input", updatePreview);
-                nombreInput.addEventListener("keyup", updatePreview);
-                nombreInput.addEventListener("change", updatePreview);
-            }
-
-            // Manejar envío del formulario
-            if (form && submitBtn) {
-                form.addEventListener("submit", function (e) {
-                    // Deshabilitar botón de envío
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-
-                    // Si hay errores, restaurar botón después de 3 segundos
-                    setTimeout(function () {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>{{ grabar }}';
-                    }, 3000);
-                });
-            }
-
-            // Validación en tiempo real
-            if (nombreInput) {
-                nombreInput.addEventListener("blur", function () {
-                    if (this.value.trim().length < 3 && this.value.trim().length > 0) {
-                        this.classList.add("border-red-500");
-                        this.classList.remove("border-gray-300");
-                    } else {
-                        this.classList.remove("border-red-500");
-                        this.classList.add("border-gray-300");
-                    }
-                });
-            }
-        });
-
-        // Confirmar antes de salir si hay cambios no guardados
-        let formChanged = false;
-        const formInputs = document.querySelectorAll("#especialidadForm input, #especialidadForm textarea, #especialidadForm select");
-
-        formInputs.forEach((input) => {
-            input.addEventListener("change", () => {
-                formChanged = true;
-            });
-        });
-
-        window.addEventListener("beforeunload", function (e) {
-            if (formChanged) {
-                e.preventDefault();
-                e.returnValue = "¿Estás seguro de que quieres salir? Los cambios no guardados se perderán.";
-                return e.returnValue;
-            }
-        });
-
-        // Resetear flag al enviar el formulario
-        document.getElementById("especialidadForm")?.addEventListener("submit", () => {
-            formChanged = false;
-        });
-    </script>
 {% endblock %}
