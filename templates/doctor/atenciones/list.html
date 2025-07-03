@@ -1,313 +1,416 @@
-{% extends 'home.html' %}
-<title>{% block title %}{{title}}{% endblock %}</title>
+{% extends 'base.html' %}
+{% block title %}Lista de Atenciones Médicas - SaludTotal{% endblock %}
 {% block content %}
-    {% load static %}
-    {% include 'components/messages.html' %}
-    <section class="dark:bg-principal mt-2">
-        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-            <div class="sm:pt-8 lg:pt-4">
-                <h1 class="rounded-2xl bg-emerald-600 px-2 py-1 text-blue-800 uppercase text-4xl">
-                    {{ title1 }}
-                </h1>
-            </div>
+{% load static %}
 
-            <div class="lg:p-2 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
-                <!-- Search Bar -->
-                <div class="p-4 flex justify-center">
-                    <label for="table-search" class="sr-only">Buscar Atenciones</label>
-                    <div class="relative mt-1">
-                        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
-                        </div>
-                        <form method="GET">
-                            <input type="text" name="q" id="table-search"
-                                class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-emerald-500 dark:focus:border-emerald-500 dark:shadow-sm-light"
-                                placeholder="Buscar por paciente, diagnóstico o motivo..." value="{{ request.GET.q }}">
-                        </form>
+<div class="w-full min-h-screen relative">
+    <!-- Medical pattern background que cubre toda la pantalla -->
+    <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="medical-cross-list" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#medical-cross-list)" class="text-blue-500"/>
+        </svg>
+    </div>
+    
+    <!-- Contenido principal con padding -->
+    <div class="relative z-10 px-4 py-6 max-w-7xl mx-auto">
+        <!-- Header con diseño médico profesional -->
+        <div class="relative z-10 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-blue-200 dark:border-blue-600 overflow-hidden">
+            <!-- Medical pattern overlay -->
+            <div class="absolute inset-0 opacity-10">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="medical-cross-header" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
+                </svg>
+            </div>
+            
+            <div class="relative z-10 flex items-center justify-between flex-wrap">
+                <div class="flex items-center space-x-4 flex-wrap">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                        <i class="fas fa-stethoscope text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold flex items-center flex-wrap">
+                            <i class="fas fa-heartbeat mr-3"></i>
+                            {{ title1 }}
+                        </h1>
+                        <p class="text-blue-100 mt-1 flex items-center flex-wrap">
+                            <i class="fas fa-hospital mr-2"></i>
+                            Gestión de atenciones médicas
+                        </p>
                     </div>
                 </div>
-
-                <!-- Medical Attentions Table -->
-                <div class="overflow-x-auto shadow-lg rounded-lg">
-                    <table class="w-full text-center text-sm">
-                        <thead class="uppercase font-Tiny5 bg-emerald-50 dark:bg-secundario dark:text-emerald-300 text-emerald-800">
-                            <tr>
-                                <th scope="col" class="px-4 py-4">ID</th>
-                                <th scope="col" class="px-4 py-4">Paciente</th>
-                                <th scope="col" class="px-4 py-4">Fecha de Atención</th>
-                                <th scope="col" class="px-4 py-4">Motivo de Consulta</th>
-                                <th scope="col" class="px-4 py-4">Síntomas</th>
-                                <th scope="col" class="px-4 py-4">Diagnósticos</th>
-                                <th scope="col" class="px-4 py-4">Tratamiento</th>
-                                <th scope="col" class="px-4 py-4">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for atencion in atenciones %}
-                            <tr class="dark:text-gray-300 bg-white border-b dark:bg-[#0b1121] dark:border-secundario hover:bg-emerald-50 dark:hover:bg-[#121c33] transition-colors duration-200">
-                                <td class="px-4 py-4 font-medium text-emerald-600 dark:text-emerald-400">
-                                    #{{ atencion.id }}
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="flex flex-col">
-                                        <span class="font-semibold text-gray-900 dark:text-gray-100">
-                                            {{ atencion.paciente.nombres }} {{ atencion.paciente.apellidos }}
-                                        </span>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ atencion.paciente.numero_identificacion }}
-                                        </span>
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="flex flex-col">
-                                        <span class="font-medium text-gray-900 dark:text-gray-100">
-                                            {{ atencion.fecha_atencion|date:"d/m/Y" }}
-                                        </span>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ atencion.fecha_atencion|time:"H:i" }}
-                                        </span>
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="max-w-xs">
-                                        {% if atencion.motivo_consulta %}
-                                            <p class="text-sm text-gray-700 dark:text-gray-300 text-left">
-                                                {{ atencion.motivo_consulta|truncatechars:80 }}
-                                            </p>
-                                        {% else %}
-                                            <span class="text-gray-400 italic text-xs">Sin especificar</span>
-                                        {% endif %}
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="max-w-xs">
-                                        {% if atencion.sintomas %}
-                                            <p class="text-sm text-gray-700 dark:text-gray-300 text-left">
-                                                {{ atencion.sintomas|truncatechars:60 }}
-                                            </p>
-                                        {% else %}
-                                            <span class="text-gray-400 italic text-xs">Sin registrar</span>
-                                        {% endif %}
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="flex flex-wrap gap-1 justify-center">
-                                        {% for diagnostico in atencion.diagnostico.all %}
-                                            <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs">
-                                                {{ diagnostico.codigo }}
-                                            </span>
-                                        {% empty %}
-                                            <span class="text-gray-400 italic text-xs">Sin diagnóstico</span>
-                                        {% endfor %}
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="max-w-xs">
-                                        {% if atencion.tratamiento %}
-                                            <p class="text-sm text-gray-700 dark:text-gray-300 text-left">
-                                                {{ atencion.tratamiento|truncatechars:60 }}
-                                            </p>
-                                        {% else %}
-                                            <span class="text-gray-400 italic text-xs">Sin tratamiento</span>
-                                        {% endif %}
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="flex justify-center space-x-2">
-                                        {% if permissions.view_atencion %}
-                                        <a href="#"
-                                            class="text-emerald-600 dark:text-emerald-500 hover:text-emerald-800 p-1 rounded transition-colors"
-                                            title="Ver Detalle">
-                                            <i class="fa-solid fa-eye text-lg"></i>
-                                        </a>
-                                        {% endif %}
-
-                                        {% if permissions.change_atencion %}
-                                        <a href="{% url 'doctor:atencion_update' atencion.id %}"
-                                            class="text-blue-600 dark:text-blue-500 hover:text-blue-800 p-1 rounded transition-colors"
-                                            title="Editar">
-                                            <i class="fa-solid fa-edit text-lg"></i>
-                                        </a>
-                                        {% endif %}
-
-                                        {% if permissions.delete_atencion %}
-                                        <a href="#"
-                                            class="text-red-600 dark:text-red-500 hover:text-red-800 p-1 rounded transition-colors"
-                                            onclick="openDeleteModal('{{ atencion.id }}', '{{ atencion.paciente.nombres }} {{ atencion.paciente.apellidos }}')"
-                                            title="Eliminar">
-                                            <i class="fa-solid fa-trash text-lg"></i>
-                                        </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="8" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                    <div class="flex flex-col items-center">
-                                        <i class="fa-solid fa-stethoscope text-4xl mb-2 text-gray-300"></i>
-                                        <p class="text-lg">No se encontraron atenciones médicas</p>
-                                        <p class="text-sm">Intenta con otros términos de búsqueda</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                {% if page_obj.paginator.num_pages > 1 %}
-                <div class="flex justify-center mt-6">
-                    <nav aria-label="Navegación de páginas">
-                        <ul class="inline-flex -space-x-px shadow-sm rounded-lg">
-                            {% if page_obj.has_previous %}
-                            <li>
-                                <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                                    class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white transition-colors">
-                                    <i class="fa-solid fa-chevron-left mr-1"></i>Anterior
-                                </a>
-                            </li>
-                            {% endif %}
-
-                            {% for num in page_obj.paginator.page_range %}
-                            <li>
-                                <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                                    class="flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}text-emerald-600 bg-emerald-50 border border-gray-300 hover:bg-emerald-100 hover:text-emerald-700 dark:bg-secundario dark:border-principal dark:text-emerald-300{% else %}text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white{% endif %} transition-colors">
-                                    {{ num }}
-                                </a>
-                            </li>
-                            {% endfor %}
-
-                            {% if page_obj.has_next %}
-                            <li>
-                                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-[#0b1121] dark:border-secundario dark:text-gray-400 dark:hover:bg-[#121c33] dark:hover:text-white transition-colors">
-                                    Siguiente<i class="fa-solid fa-chevron-right ml-1"></i>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </div>
-                {% endif %}
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col md:flex-row justify-center items-center gap-3 p-6">
-                    {% if permissions.add_atencion %}
-                    <a class="bg-emerald-700 hover:bg-emerald-800 text-black py-3 px-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                        href="{% url 'doctor:atencion_create' %}">
-                        <i class="fa-solid fa-plus mr-2"></i> Nueva Atención Médica
-                    </a>
-                    {% endif %}
-
-                    <a class="bg-gray-600 hover:bg-gray-700 text-black py-3 px-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                        href="{% url 'doctor:atencion_list' %}">
-                        <i class="fa-solid fa-users mr-2"></i> Ver Pacientes
-                    </a>
-
-                    <a class="bg-blue-600 hover:bg-blue-700 text-black py-3 px-4 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                        href="{% url 'home' %}">
-                        <i class="fa-solid fa-house"></i>
-                    </a>
-                </div>
-
-                <!-- Statistics Summary -->
-                <div class="mt-6 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
-                            <h4 class="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                                Total Atenciones
-                            </h4>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                {{ page_obj.paginator.count }}
-                            </p>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
-                            <h4 class="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                                Página Actual
-                            </h4>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                            </p>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
-                            <h4 class="text-lg font-semibold text-purple-600 dark:text-purple-400">
-                                Mostrando
-                            </h4>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                {{ atenciones|length }} registros
-                            </p>
-                        </div>
+                <div class="text-right mt-4 sm:mt-0">
+                    <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                        <div class="text-2xl font-bold">{{ atenciones|length }}</div>
+                        <div class="text-xs text-blue-100">Atenciones</div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    {% include 'components/delete.html' %}
+        <!-- Barra de búsqueda y acciones con diseño médico -->
+        <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <!-- Medical pattern background -->
+            <div class="absolute inset-0 opacity-5 dark:opacity-10">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="medical-cross-search" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                            <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#medical-cross-search)" class="text-green-500"/>
+                </svg>
+            </div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 flex-wrap">
+                <!-- Búsqueda con diseño médico -->
+                <div class="flex-1 max-w-md min-w-[280px]">
+                    <form method="GET" class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center shadow-md">
+                                <i class="fas fa-search text-white text-sm"></i>
+                            </div>
+                        </div>
+                        <input
+                            type="text"
+                            name="q"
+                            id="table-search"
+                            value="{{ request.GET.q }}"
+                            placeholder="Buscar por paciente, diagnóstico o motivo..."
+                            class="block w-full pl-14 pr-4 py-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
+                        />
+                    </form>
+                </div>
 
-    <script>
-    function openDeleteModal(id, patientName) {
-        const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = `{% url 'doctor:atencion_delete' 0 %}`.replace('0', id);
-        document.getElementById('Description').textContent = `Atención médica #${id} - Paciente: `;
-        document.getElementById('deleteModal').classList.remove('hidden');
+                <!-- Botón crear con diseño médico -->
+                {% if permissions.add_atencion %}
+                <a href="{% url 'doctor:atencion_create' %}"
+                   class="inline-flex items-center px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold whitespace-nowrap">
+                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-3 shadow-md">
+                        <i class="fas fa-plus text-white"></i>
+                    </div>
+                    Nueva Atención
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Lista de atenciones con diseño médico -->
+        <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+            <!-- Medical pattern background -->
+            <div class="absolute inset-0 opacity-5 dark:opacity-10">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="medical-cross-table" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M20 12h10v6h6v10h-6v6h-10v-6h-6v-10h6z" fill="currentColor" opacity="0.1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#medical-cross-table)" class="text-blue-500"/>
+                </svg>
+            </div>
+
+            <div class="relative z-10 overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 border-b-2 border-blue-200 dark:border-blue-700">
+                        <tr>
+                            <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider w-16">
+                                <div class="flex items-center justify-center">
+                                    <i class="fas fa-hashtag mr-1"></i>
+                                    ID
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user-injured mr-2 text-green-600"></i>
+                                    Paciente
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-2 text-purple-600"></i>
+                                    Fecha
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-clipboard-list mr-2 text-orange-600"></i>
+                                    Motivo
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-notes-medical mr-2 text-red-600"></i>
+                                    Síntomas
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-diagnoses mr-2 text-yellow-600"></i>
+                                    Diagnósticos
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-pills mr-2 text-pink-600"></i>
+                                    Tratamiento
+                                </div>
+                            </th>
+                            <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                                <div class="flex items-center justify-center">
+                                    <i class="fas fa-cog mr-2 text-gray-600"></i>
+                                    Acciones
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {% for atencion in atenciones %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                    #{{ atencion.id }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        {% if atencion.paciente.foto %}
+                                            <img class="h-10 w-10 rounded-full object-cover" src="{{ atencion.paciente.foto.url }}" alt="{{ atencion.paciente.nombres }}">
+                                        {% else %}
+                                            <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                                <i class="fas fa-user-injured text-blue-600 dark:text-blue-400"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ atencion.paciente.nombres }} {{ atencion.paciente.apellidos }}
+                                        </div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ atencion.paciente.numero_identificacion }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">
+                                    {{ atencion.fecha_atencion|date:"d/m/Y" }}
+                                </div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ atencion.fecha_atencion|time:"H:i" }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900 dark:text-white line-clamp-2">
+                                    {{ atencion.motivo_consulta|default:"Sin especificar" }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900 dark:text-white line-clamp-2">
+                                    {{ atencion.sintomas|default:"Sin registrar" }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    {% for diagnostico in atencion.diagnostico.all %}
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                            {{ diagnostico.codigo }}
+                                        </span>
+                                    {% empty %}
+                                        <span class="text-gray-400 dark:text-gray-500 text-sm italic">Sin diagnóstico</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900 dark:text-white line-clamp-2">
+                                    {{ atencion.tratamiento|default:"Sin tratamiento" }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                <div class="flex items-center justify-center space-x-2">
+                                    {% if permissions.view_atencion %}
+                                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300" title="Ver Detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    {% endif %}
+
+                                    {% if permissions.change_atencion %}
+                                    <a href="{% url 'doctor:atencion_update' atencion.id %}" 
+                                       class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-300" 
+                                       title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+
+                                    {% if permissions.delete_atencion %}
+                                    <button onclick="openDeleteModal('{{ atencion.id }}', '{{ atencion.paciente.nombres }} {{ atencion.paciente.apellidos }}')"
+                                            class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                                            title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fas fa-stethoscope text-3xl text-gray-400 dark:text-gray-500"></i>
+                                    </div>
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                        No hay atenciones médicas registradas
+                                    </h3>
+                                    <p class="text-gray-500 dark:text-gray-400 mb-4">
+                                        Comienza registrando una nueva atención médica
+                                    </p>
+                                    {% if permissions.add_atencion %}
+                                    <a href="{% url 'doctor:atencion_create' %}"
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Nueva Atención
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Paginación -->
+        {% include 'components/pagination.html' %}
+
+        <!-- Botones de navegación -->
+        <div class="flex justify-center items-center mt-6 space-x-4">
+            {% if permissions.add_atencion %}
+            <a href="{% url 'doctor:atencion_create' %}"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-plus-circle mr-2"></i>
+                Nueva Atención
+            </a>
+            {% endif %}
+
+            <a href="{% url 'doctor:atencion_list' %}"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-users mr-2"></i>
+                Ver Pacientes
+            </a>
+
+            <a href="{% url 'home' %}"
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-home mr-2"></i>
+                Inicio
+            </a>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-2xl border border-green-200 dark:border-green-800">
+                <h4 class="text-lg font-semibold text-green-800 dark:text-green-300 mb-2 flex items-center">
+                    <i class="fas fa-clipboard-check mr-2"></i>
+                    Total Atenciones
+                </h4>
+                <p class="text-3xl font-bold text-green-600 dark:text-green-400">
+                    {{ page_obj.paginator.count }}
+                </p>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-800">
+                <h4 class="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-2 flex items-center">
+                    <i class="fas fa-file-medical mr-2"></i>
+                    Página Actual
+                </h4>
+                <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </p>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-6 rounded-2xl border border-purple-200 dark:border-purple-800">
+                <h4 class="text-lg font-semibold text-purple-800 dark:text-purple-300 mb-2 flex items-center">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    Mostrando
+                </h4>
+                <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                    {{ atenciones|length }} registros
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de eliminación -->
+{% include 'components/delete.html' %}
+
+<script>
+function openDeleteModal(id, patientName) {
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.action = `{% url 'doctor:atencion_delete' 0 %}`.replace('0', id);
+    document.getElementById('itemName').textContent = `la atención médica #${id} del paciente ${patientName}`;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
+// Cerrar modal con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
     }
+});
 
-    function closeModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
-    }
+// Auto submit del formulario de búsqueda con debounce
+const searchInput = document.getElementById('table-search');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+            this.form.submit();
+        }, 800);
+    });
+}
 
-    // Enhanced delete form handling
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteForm = document.getElementById('deleteForm');
-
-        if (deleteForm) {
-            deleteForm.addEventListener('submit', function(e) {
-                const submitBtn = deleteForm.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Eliminando...';
-                    submitBtn.disabled = true;
-                }
-            });
-        }
-
-        // Enhanced search functionality
-        const searchInput = document.getElementById('table-search');
-        if (searchInput) {
-            searchInput.addEventListener('keyup', function(e) {
-                if (e.key === 'Enter') {
-                    this.form.submit();
-                }
-            });
-        }
-
-        // Add loading state for action buttons
-        document.querySelectorAll('a[href*="atencion"]').forEach(link => {
-            link.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                if (icon && !this.href.includes('#')) {
-                    const originalClass = icon.className;
-                    icon.className = 'fa-solid fa-spinner fa-spin';
-                    setTimeout(() => {
-                        icon.className = originalClass;
-                    }, 2000);
-                }
-            });
+// Inicializar efectos de hover y animaciones
+document.addEventListener('DOMContentLoaded', function() {
+    // Efecto hover en filas de la tabla
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.classList.add('transform', 'scale-[1.01]', 'shadow-lg');
+        });
+        row.addEventListener('mouseleave', function() {
+            this.classList.remove('transform', 'scale-[1.01]', 'shadow-lg');
         });
     });
-    </script>
+
+    // Animación de carga para botones
+    document.querySelectorAll('a[href*="atencion"]').forEach(link => {
+        link.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon && !this.href.includes('#')) {
+                const originalClass = icon.className;
+                icon.className = 'fas fa-spinner fa-spin';
+                setTimeout(() => {
+                    icon.className = originalClass;
+                }, 2000);
+            }
+        });
+    });
+});
+</script>
+
 {% endblock %}

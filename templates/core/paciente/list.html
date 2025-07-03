@@ -3,84 +3,178 @@
 {% block content %}
 {% load static %}
 
-<div class="container mx-auto px-4 py-6 max-w-7xl">
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg shadow-lg mb-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold">Gestión de Pacientes</h1>
-                <p class="text-green-100 mt-1">
-                    Administra los pacientes de la clínica
-                </p>
+<div class="w-full min-h-screen relative">
+    <!-- Medical pattern background que cubre toda la pantalla -->
+    <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="medical-cross-list" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#medical-cross-list)" class="text-blue-500"/>
+        </svg>
+    </div>
+    
+    <!-- Contenido principal con padding -->
+    <div class="relative z-10 px-4 py-6 max-w-7xl mx-auto">
+
+    <!-- Header con diseño médico profesional -->
+    <div class="relative z-10 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-blue-200 dark:border-blue-600 overflow-hidden max-w-full">
+        <!-- Medical pattern overlay -->
+        <div class="absolute inset-0 opacity-10">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="medical-cross-header" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
+            </svg>
+        </div>
+        
+        <div class="relative z-10 flex items-center justify-between flex-wrap">
+            <div class="flex items-center space-x-4 flex-wrap">
+                <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                    <i class="fas fa-user-injured text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold flex items-center flex-wrap">
+                        <i class="fas fa-stethoscope mr-3"></i>
+                        Gestión de Pacientes
+                    </h1>
+                    <p class="text-blue-100 mt-1 flex items-center flex-wrap">
+                        <i class="fas fa-hospital mr-2"></i>
+                        Administra los pacientes de la clínica
+                    </p>
+                </div>
             </div>
-            <div class="text-right">
-                <div class="text-2xl font-bold">{{ pacientes|length }}</div>
-                <div class="text-sm text-green-100">Total Pacientes</div>
+            <div class="text-right mt-4 sm:mt-0">
+                <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                    <div class="text-2xl font-bold">{{ pacientes|length }}</div>
+                    <div class="text-xs text-blue-100">Pacientes</div>
+                </div>
             </div>
+        </div>
+        
+        <!-- Decorative medical elements -->
+        <div class="absolute top-4 right-4 opacity-20">
+            <i class="fas fa-plus text-white text-lg"></i>
+        </div>
+        <div class="absolute bottom-4 left-4 opacity-20">
+            <i class="fas fa-plus text-white text-lg"></i>
         </div>
     </div>
 
-    <!-- Barra de búsqueda y acciones -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <!-- Búsqueda -->
-            <div class="flex-1 max-w-md">
+    <!-- Barra de búsqueda y acciones con diseño médico -->
+    <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden max-w-full">
+        <!-- Medical pattern background -->
+        <div class="absolute inset-0 opacity-5 dark:opacity-10">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="medical-cross-search" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                        <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#medical-cross-search)" class="text-green-500"/>
+            </svg>
+        </div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 flex-wrap">
+            <!-- Búsqueda con diseño médico -->
+            <div class="flex-1 max-w-md min-w-[280px]">
                 <form method="GET" class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center shadow-md">
+                            <i class="fas fa-search text-white text-sm"></i>
+                        </div>
                     </div>
                     <input
                         type="text"
                         name="q"
                         value="{{ request.GET.q }}"
-                        placeholder="Buscar pacientes..."
-                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                        placeholder="Buscar pacientes por nombre, cédula, teléfono..."
+                        class="block w-full pl-14 pr-4 py-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
                     />
                 </form>
             </div>
 
-            <!-- Botón crear -->
+            <!-- Botón crear con diseño médico -->
             {% if 'add_paciente' in permissions %}
             <a
                 href="{{ create_url }}"
-                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+                class="inline-flex items-center px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold whitespace-nowrap"
             >
-                <i class="fas fa-plus mr-2"></i>
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-3 shadow-md">
+                    <i class="fas fa-user-plus text-white"></i>
+                </div>
                 Nuevo Paciente
             </a>
             {% endif %}
         </div>
     </div>
 
-    <!-- Tabla de pacientes -->
-    <div class="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
+        <!-- Tabla de pacientes con diseño médico -->
+        <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+            <!-- Medical pattern background -->
+            <div class="absolute inset-0 opacity-5 dark:opacity-10">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="medical-cross-table" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M20 12h10v6h6v10h-6v6h-10v-6h-6v-10h6z" fill="currentColor" opacity="0.1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#medical-cross-table)" class="text-blue-500"/>
+                </svg>
+            </div>
+            <div class="relative z-10 overflow-x-auto">
             <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
+                <thead class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 border-b-2 border-blue-200 dark:border-blue-700">
                     <tr>
-                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-12">
-                            #
+                        <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider w-16">
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-hashtag mr-1"></i>
+                                ID
+                            </div>
                         </th>
-                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-12">
-                            <i class="fas fa-user-injured"></i>
+                        <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider w-16">
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-user-injured text-green-600"></i>
+                            </div>
                         </th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            Paciente
+                        <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                            <div class="flex items-center">
+                                <i class="fas fa-stethoscope mr-2 text-green-600"></i>
+                                Paciente
+                            </div>
                         </th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
-                            Información Personal
+                        <th class="px-6 py-4 text-left text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider hidden md:table-cell">
+                            <div class="flex items-center">
+                                <i class="fas fa-id-card mr-2 text-purple-600"></i>
+                                Información Personal
+                            </div>
                         </th>
-                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
-                            Edad / Sangre
+                        <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider hidden lg:table-cell">
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-birthday-cake mr-2 text-pink-600"></i>
+                                Edad / Sangre
+                            </div>
                         </th>
-                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">
-                            Información Médica
+                        <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider hidden xl:table-cell">
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-medical-kit mr-2 text-yellow-600"></i>
+                                Información Médica
+                            </div>
                         </th>
-                        <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20">
-                            Acciones
+                        <th class="px-4 py-4 text-center text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                            <div class="flex items-center justify-center">
+                                <i class="fas fa-cogs mr-2 text-gray-600"></i>
+                                Acciones
+                            </div>
                         </th>
-                    </tr>
-                </thead>
+                </thead>       
+
+
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {% for paciente in pacientes %}
                     <tr>
@@ -92,11 +186,11 @@
                             <img
                                 src="{{ paciente.foto.url }}"
                                 alt="{{ paciente.nombre_completo }}"
-                                class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                                class="w-16 h-16 rounded-full object-cover border border-gray-200 dark:border-gray-600"
                             />
                             {% else %}
-                            <div class="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full">
-                                <i class="fas fa-user-injured text-green-600 dark:text-green-400 text-sm"></i>
+                            <div class="flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full">
+                                <i class="fas fa-user-injured text-green-600 dark:text-green-400 text-lg"></i>
                             </div>
                             {% endif %}
                         </td>
@@ -273,18 +367,19 @@
         </div>
     </div>
 
-    <!-- Paginación reutilizable -->
-    {% include 'components/pagination.html' %}
+        <!-- Paginación reutilizable -->
+        {% include 'components/pagination.html' %}
 
-    <!-- Botones de navegación -->
-    <div class="flex justify-center items-center mt-6">
-        <a
-            href="{% url 'home' %}"
-            class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 shadow-sm"
-        >
-            <i class="fas fa-home mr-2"></i>
-            Ir al Inicio
-        </a>
+        <!-- Botones de navegación -->
+        <div class="flex justify-center items-center mt-6">
+            <a
+                href="{% url 'home' %}"
+                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 shadow-sm"
+            >
+                <i class="fas fa-home mr-2"></i>
+                Ir al Inicio
+            </a>
+        </div>
     </div>
 </div>
 
@@ -363,16 +458,31 @@
         }
     });
 
-    // Auto submit del formulario de búsqueda con debounce
-    const searchInput = document.querySelector('input[name="q"]');
-    if (searchInput) {
-        searchInput.addEventListener("input", function () {
-            clearTimeout(this.searchTimeout);
-            this.searchTimeout = setTimeout(() => {
-                this.form.submit();
-            }, 800);
-        });
-    }
+    // Configuración del campo de búsqueda
+    const setupSearch = () => {
+        const searchInput = document.querySelector('input[name="q"]');
+        if (searchInput) {
+            // Configurar placeholder
+            searchInput.setAttribute(
+                "placeholder",
+                "Buscar por nombre, cédula, teléfono, email o tipo de sangre..."
+            );
+
+            // Auto submit con debounce
+            searchInput.addEventListener("input", function () {
+                clearTimeout(this.searchTimeout);
+                this.classList.add("border-blue-400");
+                this.searchTimeout = setTimeout(() => {
+                    this.form.submit();
+                }, 800);
+            });
+
+            // Remover indicador visual al perder foco
+            searchInput.addEventListener("blur", function () {
+                this.classList.remove("border-blue-400");
+            });
+        }
+    };
 
     // Optimizar responsividad
     function adjustTableForMobile() {
@@ -423,28 +533,12 @@
         });
     }
 
-    // Mejorar la búsqueda para incluir tipo de sangre
-    const searchInput = document.querySelector('input[name="q"]');
-    if (searchInput) {
-        searchInput.setAttribute(
-            "placeholder",
-            "Buscar por nombre, cédula, teléfono, email o tipo de sangre..."
-        );
-
-        // Agregar indicador visual de búsqueda activa
-        searchInput.addEventListener("input", function () {
-            clearTimeout(this.searchTimeout);
-            this.classList.add("border-blue-400");
-
-            this.searchTimeout = setTimeout(() => {
-                this.form.submit();
-            }, 800);
-        });
-
-        searchInput.addEventListener("blur", function () {
-            this.classList.remove("border-blue-400");
-        });
-    }
+    // Inicializar todas las funcionalidades
+    window.addEventListener("load", function () {
+        setupSearch();
+        adjustTableForMobile();
+        initializeMedicalBadgeTooltips();
+    });
 </script>
 
 <style>

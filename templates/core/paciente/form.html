@@ -12,34 +12,73 @@
     {% load static %}
 
     <!-- Contenedor principal con altura controlada -->
-    <div class="min-h-screen bg-gray-50 white:bg-gray-900">
-        <div class="w-full px-6 py-8">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 rounded-lg shadow-lg mb-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                    <div class="flex-1">
-                        <h1 class="text-2xl sm:text-3xl font-bold">
-                            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
-                            {% if object %}
-                                Editar Paciente
-                            {% else %}
-                                Nuevo Paciente
-                            {% endif %}
-                        </h1>
-                        <p class="text-blue-100 mt-1 text-sm sm:text-base">
-                            {% if object %}
-                                Modifica la información del paciente "{{ object.nombre_completo }}"
-                            {% else %}
-                                Registra un nuevo paciente en el sistema
-                            {% endif %}
-                        </p>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+        <!-- Medical pattern background -->
+        <div class="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="medical-cross-form" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#medical-cross-form)" class="text-blue-500"/>
+            </svg>
+        </div>
+
+        <div class="relative z-10 w-full px-6 py-8">
+            <!-- Header con diseño médico profesional -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-blue-200 dark:border-blue-600 overflow-hidden">
+                <!-- Medical pattern overlay -->
+                <div class="absolute inset-0 opacity-10">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="medical-cross-header-form" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#medical-cross-header-form)" class="text-white"/>
+                    </svg>
+                </div>
+                <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                    <div class="flex items-center space-x-4 flex-1">
+                        <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                            <i class="fas fa-{% if object %}edit{% else %}user-plus{% endif %} text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-bold flex items-center">
+                                <i class="fas fa-stethoscope mr-3"></i>
+                                {% if object %}
+                                    Editar Paciente
+                                {% else %}
+                                    Nuevo Paciente
+                                {% endif %}
+                            </h1>
+                            <p class="text-blue-100 mt-1 text-sm sm:text-base flex items-center">
+                                <i class="fas fa-hospital mr-2"></i>
+                                {% if object %}
+                                    Modifica la información del paciente "{{ object.nombre_completo }}"
+                                {% else %}
+                                    Registra un nuevo paciente en el sistema
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
                     <div class="text-right mt-4 sm:mt-0">
-                        <div class="text-xl sm:text-2xl font-bold">
-                            <i class="fas fa-user-injured"></i>
+                        <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+                            <div class="text-xl sm:text-2xl font-bold">
+                                <i class="fas fa-user-injured"></i>
+                            </div>
+                            <div class="text-xs text-blue-100">Paciente</div>
                         </div>
-                        <div class="text-xs sm:text-sm text-blue-100">Paciente</div>
                     </div>
+                </div>
+                
+                <!-- Decorative medical elements -->
+                <div class="absolute top-4 right-4 opacity-20">
+                    <i class="fas fa-plus text-white text-lg"></i>
+                </div>
+                <div class="absolute bottom-4 left-4 opacity-20">
+                    <i class="fas fa-plus text-white text-lg"></i>
                 </div>
             </div>
 
@@ -555,18 +594,22 @@
                     </div>
                 </div>
 
-                <!-- Botones de acción -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 sticky bottom-0 z-10">
-                    <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                <!-- Botones de acción con diseño médico -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sticky bottom-0 z-10 border-2 border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                         <a href="{{ back_url }}"
-                           class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                            <i class="fas fa-times mr-2"></i>
+                           class="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <div class="w-6 h-6 bg-white/80 dark:bg-gray-900/80 rounded-full flex items-center justify-center mr-2 shadow-md">
+                                <i class="fas fa-times text-red-500"></i>
+                            </div>
                             Cancelar
                         </a>
                         <button type="submit"
                                 id="submitBtn"
-                                class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-sm">
-                            <i class="fas fa-save mr-2"></i>
+                                class="inline-flex items-center justify-center px-6 py-3 border-2 border-blue-500 dark:border-blue-400 text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-700 dark:to-indigo-700 dark:hover:from-blue-800 dark:hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+                                <i class="fas fa-save text-white"></i>
+                            </div>
                             {{ grabar }}
                         </button>
                     </div>
