@@ -1,367 +1,358 @@
-{% extends 'base.html' %} {% block title %} Lista de Tipos de Gasto - SaludTotal
-{% endblock %} {% block content %} {% load static %}
+{% extends 'base.html' %}
 
-<div class="container mx-auto px-4 py-6 max-w-7xl">
-  <!-- Header -->
-  <div
-    class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg shadow-lg mb-6"
-  >
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold">Gestión de Tipos de Gasto</h1>
-        <p class="text-green-100 mt-1">
-          Administra los tipos de gastos operativos del consultorio
-        </p>
-      </div>
-      <div class="text-right">
-        <div class="text-2xl font-bold">{{ tipos_gasto|length }}</div>
-        <div class="text-sm text-green-100">Total Tipos</div>
-      </div>
-    </div>
+{% block title %}
+Lista de Tipos de Gasto - SaludTotal
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<div class="w-full min-h-screen relative">
+  <!-- Medical pattern background -->
+  <div class="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="medical-cross-list" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#medical-cross-list)" class="text-teal-600"/>
+    </svg>
   </div>
 
-  <!-- Barra de búsqueda y acciones -->
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
-    <div
-      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-    >
-      <!-- Búsqueda -->
-      <div class="flex-1 max-w-md">
-        <form method="GET" class="relative">
-          <div
-            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-          >
-            <i class="fas fa-search text-gray-400"></i>
+  <div class="relative z-10 w-full px-6 py-8 max-w-7xl mx-auto">
+    <!-- Header con diseño médico profesional -->
+    <div class="bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-700 dark:to-cyan-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-teal-300 dark:border-cyan-700 overflow-hidden">
+      <!-- Medical pattern overlay -->
+      <div class="absolute inset-0 opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-header" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
+        </svg>
+      </div>
+      <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <div class="flex items-center space-x-4 flex-1">
+          <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <i class="fas fa-receipt text-2xl text-white"></i>
           </div>
-          <input
-            type="text"
-            name="q"
-            value="{{ request.GET.q }}"
-            placeholder="Buscar tipos de gasto..."
-            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          />
-        </form>
-      </div>
-
-      <!-- Botón crear -->
-      {% if 'add_tipogasto' in permissions %}
-      <a
-        href="{{ create_url }}"
-        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
-      >
-        <i class="fas fa-plus mr-2"></i>
-        Nuevo Tipo de Gasto
-      </a>
-      {% endif %}
-    </div>
-  </div>
-
-  <!-- Tabla de tipos de gasto -->
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead class="bg-gray-50 dark:bg-gray-700">
-          <tr>
-            <th
-              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-12"
-            >
-              #
-            </th>
-            <th
-              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-12"
-            >
-              <i class="fas fa-receipt"></i>
-            </th>
-            <th
-              class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-            >
-              Tipo
-            </th>
-            <th
-              class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell"
-            >
-              Descripción
-            </th>
-            <th
-              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell w-16"
-            >
-              Estado
-            </th>
-            <th
-              class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell w-20"
-            >
-              Gastos
-            </th>
-            <th
-              class="px-2 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20"
-            >
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody
-          class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
-        >
-          {% for tipo_gasto in tipos_gasto %}
-          <tr
-            class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
-          >
-            <td
-              class="px-2 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300"
-            >
-              {{ tipo_gasto.id }}
-            </td>
-            <td class="px-2 py-2 whitespace-nowrap">
-              <div
-                class="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full"
-              >
-                <i
-                  class="fas fa-receipt text-green-600 dark:text-green-400 text-sm"
-                ></i>
-              </div>
-            </td>
-            <td class="px-3 py-2">
-              <div class="text-sm font-medium text-gray-900 dark:text-white">
-                <span
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                >
-                  {{ tipo_gasto.nombre }}
-                </span>
-              </div>
-              <!-- Información adicional para móviles -->
-              <div class="mt-1 md:hidden">
-                {% if tipo_gasto.descripcion %}
-                <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {{ tipo_gasto.descripcion|truncatechars:30 }}
-                </div>
-                {% endif %}
-                <div class="text-xs mt-1 flex items-center gap-2">
-                  {% if tipo_gasto.activo %}
-                  <span
-                    class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                  >
-                    <i class="fas fa-check-circle mr-1"></i>Activo
-                  </span>
-                  {% else %}
-                  <span
-                    class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                  >
-                    <i class="fas fa-times-circle mr-1"></i>Inactivo
-                  </span>
-                  {% endif %}
-                  <span
-                    class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                  >
-                    {{ tipo_gasto.gastos_mensuales.count }} gasto(s)
-                  </span>
-                </div>
-              </div>
-            </td>
-            <td class="px-3 py-2 whitespace-nowrap hidden md:table-cell">
-              {% if tipo_gasto.descripcion %}
-              <div
-                class="text-sm text-gray-900 dark:text-gray-300 max-w-xs truncate"
-              >
-                {{ tipo_gasto.descripcion }}
-              </div>
-              {% else %}
-              <span class="text-sm text-gray-400 dark:text-gray-500 italic"
-                >Sin descripción</span
-              >
-              {% endif %}
-            </td>
-            <td class="px-2 py-2 whitespace-nowrap hidden lg:table-cell">
-              {% if tipo_gasto.activo %}
-              <span
-                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-              >
-                <i class="fas fa-check-circle mr-1"></i>Activo
-              </span>
-              {% else %}
-              <span
-                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-              >
-                <i class="fas fa-times-circle mr-1"></i>Inactivo
-              </span>
-              {% endif %}
-            </td>
-            <td class="px-2 py-2 whitespace-nowrap hidden lg:table-cell">
-              <span
-                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-              >
-                {{ tipo_gasto.gastos_mensuales.count }}
-              </span>
-            </td>
-            <td
-              class="px-2 py-2 whitespace-nowrap text-right text-sm font-medium"
-            >
-              <div class="flex items-center justify-end space-x-1">
-                {% if 'change_tipogasto' in permissions %}
-                <a
-                  href="{% url 'core:tipo_gasto_update' tipo_gasto.pk %}"
-                  class="inline-flex items-center px-1.5 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition-colors duration-200 text-xs"
-                  title="Editar"
-                >
-                  <i class="fas fa-edit text-xs"></i>
-                </a>
-                {% endif %} {% if 'delete_tipogasto' in permissions %}
-                <button
-                  onclick="confirmDelete('{{ tipo_gasto.pk }}', '{{ tipo_gasto.nombre }}')"
-                  class="inline-flex items-center px-1.5 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors duration-200 text-xs"
-                  title="Eliminar"
-                >
-                  <i class="fas fa-trash text-xs"></i>
-                </button>
-                {% endif %}
-              </div>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7" class="px-6 py-12 text-center">
-              <div class="flex flex-col items-center">
-                <i class="fas fa-receipt text-4xl text-gray-400 mb-4"></i>
-                <h3
-                  class="text-lg font-medium text-gray-900 dark:text-white mb-2"
-                >
-                  No hay tipos de gasto
-                </h3>
-                <p class="text-gray-500 dark:text-gray-400 mb-4">
-                  No se encontraron tipos de gasto en el sistema.
-                </p>
-                {% if 'add_tipogasto' in permissions %}
-                <a
-                  href="{{ create_url }}"
-                  class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
-                >
-                  <i class="fas fa-plus mr-2"></i>
-                  Crear primer tipo de gasto
-                </a>
-                {% endif %}
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Paginación reutilizable -->
-  {% include 'components/pagination.html' %}
-
-  <!-- Botones de navegación -->
-  <div class="flex justify-center items-center mt-6">
-    <a
-      href="{% url 'home' %}"
-      class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 shadow-sm"
-    >
-      <i class="fas fa-home mr-2"></i>
-      Ir al Inicio
-    </a>
-  </div>
-</div>
-
-<!-- Modal de confirmación de eliminación -->
-<div
-  id="deleteModal"
-  class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50"
->
-  <div
-    class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-  >
-    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-    </div>
-
-    <span
-      class="hidden sm:inline-block sm:align-middle sm:h-screen"
-      aria-hidden="true"
-      >&#8203;</span
-    >
-
-    <div
-      class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
-    >
-      <div class="sm:flex sm:items-start">
-        <div
-          class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 sm:mx-0 sm:h-10 sm:w-10"
-        >
-          <i
-            class="fas fa-exclamation-triangle text-red-600 dark:text-red-400"
-          ></i>
-        </div>
-        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-          <h3
-            class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
-          >
-            Confirmar Eliminación
-          </h3>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-              ¿Estás seguro que deseas eliminar el tipo de gasto
-              <span id="tipoGastoName" class="font-semibold"></span>? Esta
-              acción no se puede deshacer.
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold flex items-center">
+              <i class="fas fa-calculator mr-3"></i>
+              Gestión de Tipos de Gasto
+            </h1>
+            <p class="text-teal-100 mt-1 text-sm sm:text-base flex items-center">
+              <i class="fas fa-chart-line mr-2"></i>
+              Administra los tipos de gastos operativos del consultorio
             </p>
           </div>
         </div>
+        <div class="text-right mt-4 sm:mt-0">
+          <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <div class="text-xl sm:text-2xl font-bold">{{ tipos_gasto|length }}</div>
+            <div class="text-xs text-teal-100">Total Tipos</div>
+          </div>
+        </div>
       </div>
-      <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-        <form id="deleteForm" method="POST" class="inline">
-          {% csrf_token %}
-          <button
-            type="submit"
-            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-200"
-          >
-            <i class="fas fa-trash mr-2"></i>
-            Eliminar
-          </button>
-        </form>
-        <button
-          type="button"
-          onclick="closeDeleteModal()"
-          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors duration-200"
+      
+      <!-- Decorative medical elements -->
+      <div class="absolute top-4 right-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+      <div class="absolute bottom-4 left-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+    </div>
+
+    <!-- Barra de búsqueda y acciones -->
+    <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <!-- Medical pattern background -->
+      <div class="absolute inset-0 opacity-5 dark:opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-search" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-search)" class="text-teal-600"/>
+        </svg>
+      </div>
+      <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <!-- Búsqueda -->
+        <div class="flex-1 max-w-md">
+          <form method="GET" class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div class="w-6 h-6 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-search text-white text-xs"></i>
+              </div>
+            </div>
+            <input
+              type="text"
+              name="q"
+              value="{{ request.GET.q }}"
+              placeholder="Buscar tipos de gasto..."
+              class="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
+            />
+          </form>
+        </div>
+
+        <!-- Botón crear -->
+        {% if 'add_tipogasto' in permissions %}
+        <a
+          href="{{ create_url }}"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
-          Cancelar
-        </button>
+          <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+            <i class="fas fa-plus text-white text-xs"></i>
+          </div>
+          Nuevo Tipo de Gasto
+        </a>
+        {% endif %}
       </div>
+    </div>
+
+    <!-- Tabla de tipos de gasto -->
+    <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+      <!-- Medical pattern background -->
+      <div class="absolute inset-0 opacity-5 dark:opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-table" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-table)" class="text-teal-600"/>
+        </svg>
+      </div>
+      <div class="relative z-10 overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gradient-to-r from-gray-50 to-teal-50 dark:from-gray-700 dark:to-teal-900">
+            <tr>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                <div class="flex items-center">
+                  <i class="fas fa-hashtag text-teal-500 mr-2"></i>
+                  ID
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                <div class="flex items-center">
+                  <i class="fas fa-receipt text-teal-500 mr-2"></i>
+                  Tipo
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
+                <div class="flex items-center">
+                  <i class="fas fa-align-left text-teal-500 mr-2"></i>
+                  Descripción
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                <div class="flex items-center">
+                  <i class="fas fa-toggle-on text-teal-500 mr-2"></i>
+                  Estado
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                <div class="flex items-center">
+                  <i class="fas fa-chart-bar text-teal-500 mr-2"></i>
+                  Gastos
+                </div>
+              </th>
+              <th class="px-4 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                <div class="flex items-center justify-end">
+                  <i class="fas fa-cogs text-teal-500 mr-2"></i>
+                  Acciones
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {% for tipo_gasto in tipos_gasto %}
+            <tr class="hover:bg-gradient-to-r hover:from-gray-50 hover:to-teal-50 dark:hover:from-gray-700 dark:hover:to-teal-900 transition-all duration-300">
+              <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    {{ tipo_gasto.id }}
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-4">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 bg-gradient-to-r from-teal-100 to-cyan-100 dark:from-teal-900 dark:to-cyan-900 rounded-xl flex items-center justify-center mr-3 shadow-md">
+                    <i class="fas fa-receipt text-teal-600 dark:text-teal-400"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-bold text-gray-900 dark:text-white">
+                      {{ tipo_gasto.nombre }}
+                    </div>
+                    <!-- Información adicional para móviles -->
+                    <div class="mt-1 md:hidden">
+                      {% if tipo_gasto.descripcion %}
+                      <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                        {{ tipo_gasto.descripcion|truncatechars:40 }}
+                      </div>
+                      {% endif %}
+                      <div class="text-xs mt-1 flex items-center gap-2">
+                        {% if tipo_gasto.activo %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          <i class="fas fa-check-circle mr-1"></i>Activo
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                          <i class="fas fa-times-circle mr-1"></i>Inactivo
+                        </span>
+                        {% endif %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          <i class="fas fa-chart-bar mr-1"></i>{{ tipo_gasto.gastos_mensuales.count }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-4 hidden md:table-cell">
+                {% if tipo_gasto.descripcion %}
+                <div class="text-sm text-gray-900 dark:text-gray-300 max-w-xs">
+                  {{ tipo_gasto.descripcion|truncatechars:60 }}
+                </div>
+                {% else %}
+                <span class="text-sm text-gray-400 dark:text-gray-500 italic flex items-center">
+                  <i class="fas fa-minus mr-1"></i>Sin descripción
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap hidden lg:table-cell">
+                {% if tipo_gasto.activo %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 shadow-md">
+                  <i class="fas fa-check-circle mr-2"></i>Activo
+                </span>
+                {% else %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 shadow-md">
+                  <i class="fas fa-times-circle mr-2"></i>Inactivo
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap hidden lg:table-cell">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+                    {{ tipo_gasto.gastos_mensuales.count }}
+                  </div>
+                  <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">gasto(s)</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex items-center justify-end space-x-2">
+                  {% if 'change_tipogasto' in permissions %}
+                  <a
+                    href="{% url 'core:tipo_gasto_update' tipo_gasto.pk %}"
+                    class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                    title="Editar tipo de gasto"
+                  >
+                    <i class="fas fa-edit text-sm"></i>
+                  </a>
+                  {% endif %}
+                  {% if 'delete_tipogasto' in permissions %}
+                  <button
+                    onclick="confirmDelete('{{ tipo_gasto.pk }}', '{{ tipo_gasto.nombre }}')"
+                    class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                    title="Eliminar tipo de gasto"
+                  >
+                    <i class="fas fa-trash text-sm"></i>
+                  </button>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="px-6 py-12 text-center">
+                <div class="flex flex-col items-center">
+                  <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-teal-100 dark:from-gray-700 dark:to-teal-900 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                    <i class="fas fa-receipt text-4xl text-gray-400 dark:text-gray-500"></i>
+                  </div>
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                    No hay tipos de gasto registrados
+                  </h3>
+                  <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md text-center">
+                    No se encontraron tipos de gasto en el sistema. Crea el primer tipo para comenzar a gestionar los gastos operativos.
+                  </p>
+                  {% if 'add_tipogasto' in permissions %}
+                  <a
+                    href="{{ create_url }}"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+                      <i class="fas fa-plus text-white text-xs"></i>
+                    </div>
+                    Crear primer tipo de gasto
+                  </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Paginación reutilizable -->
+    {% include 'components/pagination.html' %}
+
+    <!-- Botones de navegación -->
+    <div class="flex justify-center items-center mt-8">
+      <a
+        href="{% url 'home' %}"
+        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+      >
+        <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+          <i class="fas fa-home text-white text-xs"></i>
+        </div>
+        Ir al Inicio
+      </a>
     </div>
   </div>
 </div>
 
+<!-- Modal de confirmación de eliminación reutilizable -->
+{% include 'components/delete.html' %}
+
 <script>
   function confirmDelete(tipoGastoId, tipoGastoNombre) {
-    document.getElementById("tipoGastoName").textContent = tipoGastoNombre;
-    document.getElementById(
-      "deleteForm"
-    ).action = `/core/tipo_gasto_delete/${tipoGastoId}/`;
-    document.getElementById("deleteModal").classList.remove("hidden");
+    const modal = document.getElementById('deleteModal');
+    const form = document.getElementById('deleteForm');
+    const itemName = document.getElementById('itemName');
+    
+    if (modal && form && itemName) {
+      itemName.textContent = tipoGastoNombre;
+      form.action = `/core/tipo_gasto_delete/${tipoGastoId}/`;
+      modal.classList.remove('hidden');
+      modal.classList.add('show');
+    }
   }
 
-  function closeDeleteModal() {
-    document.getElementById("deleteModal").classList.add("hidden");
+  function closeModal() {
+    const modal = document.getElementById('deleteModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('show');
+    }
   }
 
   // Cerrar modal con ESC
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-      closeDeleteModal();
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeModal();
     }
   });
-
-  // Cerrar modal al hacer clic fuera
-  document
-    .getElementById("deleteModal")
-    .addEventListener("click", function (event) {
-      if (event.target === this) {
-        closeDeleteModal();
-      }
-    });
 
   // Auto submit del formulario de búsqueda con debounce
   const searchInput = document.querySelector('input[name="q"]');
   if (searchInput) {
-    searchInput.addEventListener("input", function () {
+    searchInput.addEventListener('input', function () {
       clearTimeout(this.searchTimeout);
       this.searchTimeout = setTimeout(() => {
         this.form.submit();
@@ -371,89 +362,74 @@
 
   // Optimizar responsividad
   function adjustTableForMobile() {
-    const table = document.querySelector("table");
-    const container = document.querySelector(".container");
+    const table = document.querySelector('table');
     const isMobile = window.innerWidth < 768;
 
     if (isMobile && table) {
-      table.classList.add("text-xs");
-      if (container) {
-        container.classList.add("px-2");
-      }
+      table.classList.add('text-xs');
     } else if (table) {
-      table.classList.remove("text-xs");
-      if (container) {
-        container.classList.remove("px-2");
-      }
+      table.classList.remove('text-xs');
     }
   }
 
   let resizeTimeout;
-  window.addEventListener("load", adjustTableForMobile);
-  window.addEventListener("resize", function () {
+  window.addEventListener('load', adjustTableForMobile);
+  window.addEventListener('resize', function () {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(adjustTableForMobile, 150);
   });
 </script>
 
 <style>
-  .container {
-    max-width: 100% !important;
+  /* Animaciones suaves */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 640px) {
-    .container {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-    }
-
-    table {
-      font-size: 0.75rem;
-    }
-
-    th,
-    td {
-      padding: 0.25rem 0.125rem;
-    }
+  .relative.z-10 {
+    animation: fadeIn 0.6s ease-out;
   }
 
+  /* Estilos para inputs focus */
+  input:focus {
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.3);
+  }
+
+  /* Mejorar el scroll en dispositivos móviles */
   .overflow-x-auto {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    max-width: 100%;
   }
 
   .overflow-x-auto::-webkit-scrollbar {
-    height: 3px;
+    height: 6px;
   }
 
   .overflow-x-auto::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
+    background: #f1f5f9;
+    border-radius: 3px;
   }
 
   .overflow-x-auto::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 2px;
+    background: #14b8a6;
+    border-radius: 3px;
   }
 
   .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: #0f766e;
   }
 
-  .truncate {
-    max-width: 200px;
-  }
-
-  @media (max-width: 768px) {
+  /* Responsive improvements */
+  @media (max-width: 640px) {
     .truncate {
       max-width: 120px;
     }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .truncate {
-      max-width: 80px;
+      max-width: 200px;
     }
   }
 </style>
