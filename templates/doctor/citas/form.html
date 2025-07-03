@@ -1,488 +1,635 @@
-{% extends 'home.html' %}
-<title>{% block title %}{{ grabar }}{% endblock %}</title>
+{% extends 'base.html' %}
+
+{% block title %}
+{{ grabar }} - SaludTotal
+{% endblock %}
+
 {% block content %}
-    {% load static %}
-    {% include 'components/messages.html' %}
-    <section class="dark:bg-principal mt-2">
-        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-            <div class="sm:pt-8 lg:pt-4">
-                <h1 class="rounded-2xl bg-emerald-600 px-2 py-1 text-blue-800 uppercase text-4xl">
-                    {{ grabar }}
-                </h1>
-            </div>
+{% load static %}
 
-            <div class="lg:p-2 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
-                <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <form method="post" id="citaForm">
-                        {% csrf_token %}
-                        
-                        <!-- Patient Selection -->
-                        <div class="mb-6">
-                            <label for="{{ form.paciente.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-user text-blue-500 mr-1"></i>
-                                {{ form.paciente.label }}
-                            </label>
-                            <div class="relative">
-                                <input type="text" id="pacienteSearch" 
-                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="Buscar paciente por nombre, apellido o cédula..."
-                                    value="{% if form.paciente.value %}{{ form.paciente.value }}{% endif %}">
-                                <div id="pacienteResults" class="absolute z-10 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg mt-1 hidden max-h-60 overflow-y-auto"></div>
-                            </div>
-                            {{ form.paciente.as_hidden }}
-                            {% if form.paciente.errors %}
-                                <div class="text-red-500 text-sm mt-1">{{ form.paciente.errors }}</div>
-                            {% endif %}
-                        </div>
+<div class="w-full min-h-screen relative">
+  <!-- Medical pattern background que cubre toda la pantalla -->
+  <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="medical-cross-form" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#medical-cross-form)" class="text-emerald-600"/>
+    </svg>
+  </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Date -->
-                            <div>
-                                <label for="{{ form.fecha.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    <i class="fas fa-calendar text-emerald-500 mr-1"></i>
-                                    {{ form.fecha.label }}
-                                </label>
-                                {{ form.fecha }}
-                                {% if form.fecha.errors %}
-                                    <div class="text-red-500 text-sm mt-1">{{ form.fecha.errors }}</div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Time -->
-                            <div>
-                                <label for="{{ form.hora_cita.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    <i class="fas fa-clock text-blue-500 mr-1"></i>
-                                    {{ form.hora_cita.label }}
-                                </label>
-                                {{ form.hora_cita }}
-                                {% if form.hora_cita.errors %}
-                                    <div class="text-red-500 text-sm mt-1">{{ form.hora_cita.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <!-- Status -->
-                        <div class="mt-6">
-                            <label for="{{ form.estado.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                <i class="fas fa-info-circle text-yellow-500 mr-1"></i>
-                                {{ form.estado.label }}
-                            </label>
-                            {{ form.estado }}
-                            {% if form.estado.errors %}
-                                <div class="text-red-500 text-sm mt-1">{{ form.estado.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Observations with Voice Input -->
-                        <div class="mt-6">
-                            <div class="flex justify-between items-center mb-2">
-                                <label for="{{ form.observaciones.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    <i class="fas fa-notes-medical text-purple-500 mr-1"></i>
-                                    {{ form.observaciones.label }}
-                                </label>
-                                <button type="button" 
-                                        onclick="iniciarDictado(event, '{{ form.observaciones.id_for_label }}')" 
-                                        class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
-                                    <i class="fas fa-microphone mr-1"></i>
-                                    <span>Dictar</span>
-                                </button>
-                            </div>
-                            {{ form.observaciones }}
-                            {% if form.observaciones.errors %}
-                                <div class="text-red-500 text-sm mt-1">{{ form.observaciones.errors }}</div>
-                            {% endif %}
-                            </div>
-
-                        <script>
-                        // Tu función iniciarDictado completa, tal cual la tienes:
-                        // ==============================
-                        // 10. FUNCIONALIDAD DE DICTADO POR VOZ
-                        // ==============================
-
-                        /**
-                        * Función para iniciar dictado por voz
-                        * @param {Event} event - El evento del click del botón
-                        * @param {string} textareaId - ID del textarea donde se insertará el texto
-                        */
-                        function iniciarDictado(event, textareaId) {
-                            const textarea = document.getElementById(textareaId);
-                            const button = event.target.closest('button');
-                            const buttonText = button.querySelector('span');
-                            
-                            if (!textarea) {
-                                console.error('Textarea no encontrado:', textareaId);
-                                return;
-                            }
-
-                            // Verificar si estamos en un contexto seguro
-                            const isSecureContext = window.isSecureContext || 
-                                                    location.protocol === 'https:' || 
-                                                    location.hostname === 'localhost' || 
-                                                    location.hostname === '127.0.0.1';
-                            
-                            // Verificar específicamente si estamos en localhost con Django
-                            const isDjangoLocalhost = (location.hostname === '127.0.0.1' || location.hostname === 'localhost') && 
-                                                    (location.port === '8000' || location.port === '');
-                            
-                            if (!isSecureContext && !isDjangoLocalhost) {
-                                alert('⚠️ El dictado por voz requiere una conexión segura\n\n' +
-                                    'Para usar esta función:\n' +
-                                    '1. Usa el servidor de desarrollo de Django (python manage.py runserver)\n' +
-                                    '2. O configura HTTPS en el servidor de producción\n' +
-                                    '3. Asegúrate de estar en localhost o 127.0.0.1');
-                                return;
-                            }
-
-                            // Verificar soporte del navegador
-                            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                                alert('❌ Tu navegador no soporta reconocimiento de voz.\n\nNavegadores compatibles:\n• Chrome\n• Edge\n• Safari (versiones recientes)');
-                                return;
-                            }
-
-                            // Si ya está grabando, detener
-                            if (window.currentRecognition) {
-                                window.currentRecognition.stop();
-                                return;
-                            }
-
-                            // Crear nueva instancia de reconocimiento (compatibilidad con diferentes navegadores)
-                            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                            const recognition = new SpeechRecognition();
-                            window.currentRecognition = recognition;
-
-                            // Configuración
-                            recognition.continuous = true;
-                            recognition.interimResults = true;
-                            recognition.lang = 'es-ES';
-                            recognition.maxAlternatives = 1;
-
-                            // Eventos
-                            recognition.onstart = function() {
-                                console.log('🎤 Dictado iniciado');
-                                buttonText.textContent = 'Detener Dictado';
-                                button.classList.remove('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900', 'dark:text-blue-200');
-                                button.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-200');
-                                
-                                // Crear indicador de estado si no existe
-                                let statusDiv = document.getElementById('voice-status-' + textareaId);
-                                if (!statusDiv) {
-                                    statusDiv = document.createElement('div');
-                                    statusDiv.id = 'voice-status-' + textareaId;
-                                    statusDiv.className = 'mt-2 text-sm text-emerald-600 flex items-center';
-                                    statusDiv.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i><span>🎤 Escuchando... Habla ahora</span>';
-                                    textarea.parentNode.appendChild(statusDiv);
-                                }
-                                statusDiv.style.display = 'flex';
-                            };
-
-                            recognition.onend = function() {
-                                console.log('🎤 Dictado finalizado');
-                                buttonText.textContent = 'Dictar';
-                                button.classList.remove('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-200');
-                                button.classList.add('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900', 'dark:text-blue-200');
-                                
-                                const statusDiv = document.getElementById('voice-status-' + textareaId);
-                                if (statusDiv) {
-                                    statusDiv.style.display = 'none';
-                                    // También oculta el texto intermedio si estaba visible
-                                    const interimTextSpan = statusDiv.querySelector('span');
-                                    if (interimTextSpan) interimTextSpan.textContent = '';
-                                }
-                                
-                                window.currentRecognition = null;
-                            };
-
-                            recognition.onresult = function(event) {
-                                let finalTranscript = '';
-                                let interimTranscript = '';
-                                
-                                for (let i = event.resultIndex; i < event.results.length; i++) {
-                                    const transcript = event.results[i][0].transcript;
-                                    if (event.results[i].isFinal) {
-                                        finalTranscript += transcript + '. ';
-                                    } else {
-                                        interimTranscript += transcript;
-                                    }
-                                }
-                                
-                                if (finalTranscript) {
-                                    // Agregar el texto al final del contenido existente
-                                    const currentValue = textarea.value;
-                                    const newValue = currentValue ? currentValue + ' ' + finalTranscript : finalTranscript;
-                                    textarea.value = newValue.trim();
-                                    
-                                    // Disparar evento de cambio para que otros scripts detecten el cambio
-                                    textarea.dispatchEvent(new Event('input', { bubbles: true }));
-                                    
-                                    console.log('✅ Texto agregado:', finalTranscript);
-                                }
-                                
-                                // Mostrar texto temporal en el indicador de estado
-                                if (interimTranscript) {
-                                    const statusDiv = document.getElementById('voice-status-' + textareaId);
-                                    if (statusDiv) {
-                                        statusDiv.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-2"></i><span>🎤 "${interimTranscript}"</span>`;
-                                    }
-                                }
-                            };
-
-                            recognition.onerror = function(event) {
-                                console.error('❌ Error en reconocimiento de voz:', event.error);
-                                
-                                let errorMessage = '';
-                                let solution = '';
-                                
-                                switch(event.error) {
-                                    case 'network':
-                                        errorMessage = 'Error de conexión de red';
-                                        solution = 'Verifica tu conexión a internet y que estés usando HTTPS o localhost.';
-                                        break;
-                                    case 'no-speech':
-                                        errorMessage = 'No se detectó voz';
-                                        solution = 'Intenta hablar más cerca del micrófono y más claramente.';
-                                        break;
-                                    case 'audio-capture':
-                                        errorMessage = 'No se pudo acceder al micrófono';
-                                        solution = 'Verifica que tu micrófono esté conectado y funcionando.';
-                                        break;
-                                    case 'not-allowed':
-                                        errorMessage = 'Permiso de micrófono denegado';
-                                        solution = 'Permite el acceso al micrófono en la configuración del navegador.';
-                                        break;
-                                    case 'service-not-allowed':
-                                        errorMessage = 'Servicio de reconocimiento no permitido';
-                                        solution = 'Usa HTTPS o localhost para acceder a esta función.';
-                                        break;
-                                    case 'bad-grammar':
-                                        errorMessage = 'Error de gramática en el reconocimiento';
-                                        solution = 'Intenta hablar más claramente.';
-                                        break;
-                                    case 'language-not-supported':
-                                        errorMessage = 'Idioma no soportado';
-                                        solution = 'El español puede no estar disponible en tu navegador.';
-                                        break;
-                                    default:
-                                        errorMessage = 'Error desconocido en el reconocimiento de voz';
-                                        solution = 'Intenta recargar la página y usar Chrome o Edge.';
-                                }
-                                
-                                alert(`❌ ${errorMessage}\n\n💡 Solución: ${solution}\n\n🔧 Error técnico: ${event.error}`);
-                                
-                                // Resetear el botón
-                                buttonText.textContent = 'Dictar';
-                                button.classList.remove('bg-red-100', 'text-red-800');
-                                button.classList.add('bg-blue-100', 'text-blue-800');
-                                
-                                const statusDiv = document.getElementById('voice-status-' + textareaId);
-                                if (statusDiv) {
-                                    statusDiv.style.display = 'none';
-                                }
-                                
-                                window.currentRecognition = null;
-                            };
-
-                            // Iniciar reconocimiento
-                            try {
-                                console.log('🚀 Iniciando reconocimiento de voz...');
-                                recognition.start();
-                            } catch (error) {
-                                console.error('❌ Error al iniciar reconocimiento:', error);
-                                alert(`❌ Error al iniciar el reconocimiento de voz\n\n🔧 Detalles: ${error.message}\n\n💡 Asegúrate de usar HTTPS o localhost`);
-                            }
-                        }
-
-                        // Hacer la función disponible globalmente
-                        window.iniciarDictado = iniciarDictado;
-                    </script>
-
-                        <!-- Available Time Slots (for date selection) -->
-                        <div id="availableSlots" class="mt-6 hidden">
-                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                                <i class="fas fa-clock text-emerald-500 mr-2"></i>
-                                Horarios Disponibles
-                            </h3>
-                            <div id="slotsContainer" class="grid grid-cols-3 md:grid-cols-6 gap-2">
-                                <!-- Time slots will be populated by JavaScript -->
-                            </div>
-                        </div>
-
-                        <!-- Form Actions -->
-                        <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
-                            <a href="{{ back_url }}" 
-                                class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-lg transition-colors duration-200 flex items-center">
-                                <i class="fas fa-arrow-left mr-2"></i>
-                                Cancelar
-                            </a>
-                            
-                            <button type="submit" 
-                                class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-6 rounded-lg transition-colors duration-200 flex items-center">
-                                <i class="fas fa-save mr-2"></i>
-                                {{ grabar }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="relative z-10 w-full px-6 py-8 max-w-4xl mx-auto">
+    <!-- Header con diseño médico profesional -->
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-700 dark:to-teal-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-emerald-300 dark:border-teal-700 overflow-hidden">
+      <!-- Medical pattern overlay -->
+      <div class="absolute inset-0 opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-header" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
+        </svg>
+      </div>
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <i class="fas fa-calendar-plus text-2xl text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold flex items-center">
+              <i class="fas fa-stethoscope mr-3"></i>
+              {{ grabar }}
+            </h1>
+            <p class="text-emerald-100 mt-1 text-sm sm:text-base flex items-center">
+              <i class="fas fa-user-md mr-2"></i>
+              Gestiona las citas médicas del consultorio
+            </p>
+          </div>
         </div>
-    </section>
+      </div>
+      
+      <!-- Decorative medical elements -->
+      <div class="absolute top-4 right-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+      <div class="absolute bottom-4 left-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize form fields with proper classes
-            const formFields = document.querySelectorAll('input, select, textarea');
-            formFields.forEach(field => {
-                if (!field.classList.contains('hidden')) {
-                    field.classList.add('w-full', 'p-3', 'border', 'border-gray-300', 'rounded-lg', 
-                        'focus:ring-2', 'focus:ring-emerald-500', 'focus:border-transparent',
-                        'dark:bg-gray-700', 'dark:border-gray-600', 'dark:text-white');
-                }
-            });
+    <!-- Formulario -->
+    <div class="relative z-10 bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 backdrop-blur-lg">
+      <form method="post" id="citaForm">
+        {% csrf_token %}
+        
+        <!-- Patient Selection -->
+        <div class="mb-6">
+          <label for="{{ form.paciente.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                <i class="fas fa-user text-white text-sm"></i>
+              </div>
+              {{ form.paciente.label }}
+            </div>
+          </label>
+          <div class="relative">
+            <input type="text" id="pacienteSearch" 
+                class="w-full p-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
+                placeholder="Buscar paciente por nombre, apellido o cédula..."
+                value="{% if form.paciente.value %}{{ form.paciente.value }}{% endif %}">
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <div id="pacienteResults" class="absolute z-10 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl mt-2 hidden max-h-60 overflow-y-auto shadow-xl"></div>
+          </div>
+          {{ form.paciente.as_hidden }}
+          {% if form.paciente.errors %}
+            <div class="text-red-500 text-sm mt-2 flex items-center">
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              {{ form.paciente.errors }}
+            </div>
+          {% endif %}
+        </div>
 
-            // Patient search functionality
-            const pacienteSearch = document.getElementById('pacienteSearch');
-            const pacienteResults = document.getElementById('pacienteResults');
-            const pacienteInput = document.getElementById('{{ form.paciente.id_for_label }}');
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Date -->
+          <div>
+            <label for="{{ form.fecha.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                  <i class="fas fa-calendar text-white text-sm"></i>
+                </div>
+                {{ form.fecha.label }}
+              </div>
+            </label>
+            <div class="relative">
+              {{ form.fecha }}
+              <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <i class="fas fa-calendar-day text-gray-400"></i>
+              </div>
+            </div>
+            {% if form.fecha.errors %}
+              <div class="text-red-500 text-sm mt-2 flex items-center">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                {{ form.fecha.errors }}
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Time -->
+          <div>
+            <label for="{{ form.hora_cita.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                  <i class="fas fa-clock text-white text-sm"></i>
+                </div>
+                {{ form.hora_cita.label }}
+              </div>
+            </label>
+            <div class="relative">
+              {{ form.hora_cita }}
+              <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <i class="fas fa-clock text-gray-400"></i>
+              </div>
+            </div>
+            {% if form.hora_cita.errors %}
+              <div class="text-red-500 text-sm mt-2 flex items-center">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                {{ form.hora_cita.errors }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="mb-6">
+          <label for="{{ form.estado.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                <i class="fas fa-info-circle text-white text-sm"></i>
+              </div>
+              {{ form.estado.label }}
+            </div>
+          </label>
+          {{ form.estado }}
+          {% if form.estado.errors %}
+            <div class="text-red-500 text-sm mt-2 flex items-center">
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              {{ form.estado.errors }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Observations with Voice Input -->
+        <div class="mb-8">
+          <div class="flex justify-between items-center mb-3">
+            <label for="{{ form.observaciones.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                  <i class="fas fa-notes-medical text-white text-sm"></i>
+                </div>
+                {{ form.observaciones.label }}
+              </div>
+            </label>
+            <button type="button" 
+                    onclick="iniciarDictado(event, '{{ form.observaciones.id_for_label }}')" 
+                    class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 rounded-xl hover:from-blue-200 hover:to-indigo-200 dark:from-blue-900 dark:to-indigo-900 dark:text-blue-200 dark:hover:from-blue-800 dark:hover:to-indigo-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+              <i class="fas fa-microphone mr-2"></i>
+              <span>Dictar</span>
+            </button>
+          </div>
+          {{ form.observaciones }}
+          {% if form.observaciones.errors %}
+            <div class="text-red-500 text-sm mt-2 flex items-center">
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              {{ form.observaciones.errors }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Available Time Slots -->
+        <div id="availableSlots" class="mb-8 hidden">
+          <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+            <div class="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mr-3 shadow-md">
+              <i class="fas fa-clock text-white"></i>
+            </div>
+            Horarios Disponibles
+          </h3>
+          <div id="slotsContainer" class="grid grid-cols-3 md:grid-cols-6 gap-3">
+            <!-- Time slots will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-200 dark:border-gray-600">
+          <a href="{{ back_url }}" 
+              class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Cancelar
+          </a>
+          
+          <button type="submit" 
+              class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <i class="fas fa-save mr-2"></i>
+            {{ grabar }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Tu función iniciarDictado completa, tal cual la tienes:
+// ==============================
+// 10. FUNCIONALIDAD DE DICTADO POR VOZ
+// ==============================
+
+/**
+* Función para iniciar dictado por voz
+* @param {Event} event - El evento del click del botón
+* @param {string} textareaId - ID del textarea donde se insertará el texto
+*/
+function iniciarDictado(event, textareaId) {
+    const textarea = document.getElementById(textareaId);
+    const button = event.target.closest('button');
+    const buttonText = button.querySelector('span');
+    
+    if (!textarea) {
+        console.error('Textarea no encontrado:', textareaId);
+        return;
+    }
+
+    // Verificar si estamos en un contexto seguro
+    const isSecureContext = window.isSecureContext || 
+                            location.protocol === 'https:' || 
+                            location.hostname === 'localhost' || 
+                            location.hostname === '127.0.0.1';
+    
+    // Verificar específicamente si estamos en localhost con Django
+    const isDjangoLocalhost = (location.hostname === '127.0.0.1' || location.hostname === 'localhost') && 
+                            (location.port === '8000' || location.port === '');
+    
+    if (!isSecureContext && !isDjangoLocalhost) {
+        alert('⚠️ El dictado por voz requiere una conexión segura\n\n' +
+            'Para usar esta función:\n' +
+            '1. Usa el servidor de desarrollo de Django (python manage.py runserver)\n' +
+            '2. O configura HTTPS en el servidor de producción\n' +
+            '3. Asegúrate de estar en localhost o 127.0.0.1');
+        return;
+    }
+
+    // Verificar soporte del navegador
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('❌ Tu navegador no soporta reconocimiento de voz.\n\nNavegadores compatibles:\n• Chrome\n• Edge\n• Safari (versiones recientes)');
+        return;
+    }
+
+    // Si ya está grabando, detener
+    if (window.currentRecognition) {
+        window.currentRecognition.stop();
+        return;
+    }
+
+    // Crear nueva instancia de reconocimiento (compatibilidad con diferentes navegadores)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    window.currentRecognition = recognition;
+
+    // Configuración
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'es-ES';
+    recognition.maxAlternatives = 1;
+
+    // Eventos
+    recognition.onstart = function() {
+        console.log('🎤 Dictado iniciado');
+        buttonText.textContent = 'Detener Dictado';
+        button.classList.remove('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900', 'dark:text-blue-200');
+        button.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-200');
+        
+        // Crear indicador de estado si no existe
+        let statusDiv = document.getElementById('voice-status-' + textareaId);
+        if (!statusDiv) {
+            statusDiv = document.createElement('div');
+            statusDiv.id = 'voice-status-' + textareaId;
+            statusDiv.className = 'mt-2 text-sm text-emerald-600 flex items-center';
+            statusDiv.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i><span>🎤 Escuchando... Habla ahora</span>';
+            textarea.parentNode.appendChild(statusDiv);
+        }
+        statusDiv.style.display = 'flex';
+    };
+
+    recognition.onend = function() {
+        console.log('🎤 Dictado finalizado');
+        buttonText.textContent = 'Dictar';
+        button.classList.remove('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-200');
+        button.classList.add('bg-blue-100', 'text-blue-800', 'dark:bg-blue-900', 'dark:text-blue-200');
+        
+        const statusDiv = document.getElementById('voice-status-' + textareaId);
+        if (statusDiv) {
+            statusDiv.style.display = 'none';
+            // También oculta el texto intermedio si estaba visible
+            const interimTextSpan = statusDiv.querySelector('span');
+            if (interimTextSpan) interimTextSpan.textContent = '';
+        }
+        
+        window.currentRecognition = null;
+    };
+
+    recognition.onresult = function(event) {
+        let finalTranscript = '';
+        let interimTranscript = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += transcript + '. ';
+            } else {
+                interimTranscript += transcript;
+            }
+        }
+        
+        if (finalTranscript) {
+            // Agregar el texto al final del contenido existente
+            const currentValue = textarea.value;
+            const newValue = currentValue ? currentValue + ' ' + finalTranscript : finalTranscript;
+            textarea.value = newValue.trim();
             
-            let searchTimeout;
+            // Disparar evento de cambio para que otros scripts detecten el cambio
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
             
-            pacienteSearch.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                const query = this.value.trim();
-                
-                if (query.length < 3) {
-                    pacienteResults.classList.add('hidden');
-                    return;
-                }
-                
-                searchTimeout = setTimeout(() => {
-                    fetch(`/core/paciente_find/?q=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            pacienteResults.innerHTML = '';
+            console.log('✅ Texto agregado:', finalTranscript);
+        }
+        
+        // Mostrar texto temporal en el indicador de estado
+        if (interimTranscript) {
+            const statusDiv = document.getElementById('voice-status-' + textareaId);
+            if (statusDiv) {
+                statusDiv.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-2"></i><span>🎤 "${interimTranscript}"</span>`;
+            }
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error('❌ Error en reconocimiento de voz:', event.error);
+        
+        let errorMessage = '';
+        let solution = '';
+        
+        switch(event.error) {
+            case 'network':
+                errorMessage = 'Error de conexión de red';
+                solution = 'Verifica tu conexión a internet y que estés usando HTTPS o localhost.';
+                break;
+            case 'no-speech':
+                errorMessage = 'No se detectó voz';
+                solution = 'Intenta hablar más cerca del micrófono y más claramente.';
+                break;
+            case 'audio-capture':
+                errorMessage = 'No se pudo acceder al micrófono';
+                solution = 'Verifica que tu micrófono esté conectado y funcionando.';
+                break;
+            case 'not-allowed':
+                errorMessage = 'Permiso de micrófono denegado';
+                solution = 'Permite el acceso al micrófono en la configuración del navegador.';
+                break;
+            case 'service-not-allowed':
+                errorMessage = 'Servicio de reconocimiento no permitido';
+                solution = 'Usa HTTPS o localhost para acceder a esta función.';
+                break;
+            case 'bad-grammar':
+                errorMessage = 'Error de gramática en el reconocimiento';
+                solution = 'Intenta hablar más claramente.';
+                break;
+            case 'language-not-supported':
+                errorMessage = 'Idioma no soportado';
+                solution = 'El español puede no estar disponible en tu navegador.';
+                break;
+            default:
+                errorMessage = 'Error desconocido en el reconocimiento de voz';
+                solution = 'Intenta recargar la página y usar Chrome o Edge.';
+        }
+        
+        alert(`❌ ${errorMessage}\n\n💡 Solución: ${solution}\n\n🔧 Error técnico: ${event.error}`);
+        
+        // Resetear el botón
+        buttonText.textContent = 'Dictar';
+        button.classList.remove('bg-red-100', 'text-red-800');
+        button.classList.add('bg-blue-100', 'text-blue-800');
+        
+        const statusDiv = document.getElementById('voice-status-' + textareaId);
+        if (statusDiv) {
+            statusDiv.style.display = 'none';
+        }
+        
+        window.currentRecognition = null;
+    };
+
+    // Iniciar reconocimiento
+    try {
+        console.log('🚀 Iniciando reconocimiento de voz...');
+        recognition.start();
+    } catch (error) {
+        console.error('❌ Error al iniciar reconocimiento:', error);
+        alert(`❌ Error al iniciar el reconocimiento de voz\n\n🔧 Detalles: ${error.message}\n\n💡 Asegúrate de usar HTTPS o localhost`);
+    }
+}
+
+// Hacer la función disponible globalmente
+window.iniciarDictado = iniciarDictado;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize form fields with proper classes
+    const formFields = document.querySelectorAll('input, select, textarea');
+    formFields.forEach(field => {
+        if (!field.classList.contains('hidden')) {
+            field.classList.add('w-full', 'p-4', 'border-2', 'border-gray-300', 'rounded-xl', 
+                'focus:ring-2', 'focus:ring-emerald-500', 'focus:border-emerald-500',
+                'dark:bg-gray-700', 'dark:border-gray-600', 'dark:text-white',
+                'transition-all', 'duration-300', 'shadow-md', 'hover:shadow-lg');
+        }
+    });
+
+    // Patient search functionality
+    const pacienteSearch = document.getElementById('pacienteSearch');
+    const pacienteResults = document.getElementById('pacienteResults');
+    const pacienteInput = document.getElementById('{{ form.paciente.id_for_label }}');
+    
+    let searchTimeout;
+    
+    pacienteSearch.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length < 3) {
+            pacienteResults.classList.add('hidden');
+            return;
+        }
+        
+        searchTimeout = setTimeout(() => {
+            fetch(`/core/paciente_find/?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    pacienteResults.innerHTML = '';
+                    
+                    if (data.success && data.pacientes && data.pacientes.length > 0) {
+                        data.pacientes.forEach(paciente => {
+                            const div = document.createElement('div');
+                            div.className = 'p-4 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 cursor-pointer border-b border-gray-200 dark:border-gray-600 transition-all duration-200';
                             
-                            if (data.success && data.pacientes && data.pacientes.length > 0) {
-                                data.pacientes.forEach(paciente => {
-                                    const div = document.createElement('div');
-                                    div.className = 'p-3 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer border-b border-gray-200 dark:border-gray-600';
-                                    
-                                    // Construir número de identificación
-                                    let identificacion = paciente.cedula_ecuatoriana || paciente.dni || 'Sin identificación';
-                                    
-                                    div.innerHTML = `
-                                        <div class="font-medium text-gray-900 dark:text-gray-100">
-                                            ${paciente.nombres} ${paciente.apellidos}
-                                        </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            ${identificacion} - ${paciente.telefono || 'Sin teléfono'}
-                                        </div>
-                                    `;
-                                    div.addEventListener('click', () => {
-                                        pacienteSearch.value = `${paciente.nombres} ${paciente.apellidos}`;
-                                        pacienteInput.value = paciente.id;
-                                        pacienteResults.classList.add('hidden');
-                                    });
-                                    pacienteResults.appendChild(div);
-                                });
-                                pacienteResults.classList.remove('hidden');
-                            } else {
-                                const message = data.message || 'No se encontraron pacientes';
-                                pacienteResults.innerHTML = `<div class="p-3 text-gray-500 dark:text-gray-400">${message}</div>`;
-                                pacienteResults.classList.remove('hidden');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            pacienteResults.innerHTML = '<div class="p-3 text-red-500 dark:text-red-400">Error al buscar pacientes</div>';
-                            pacienteResults.classList.remove('hidden');
+                            // Construir número de identificación
+                            let identificacion = paciente.cedula_ecuatoriana || paciente.dni || 'Sin identificación';
+                            
+                            div.innerHTML = `
+                                <div class="font-medium text-gray-900 dark:text-gray-100 flex items-center">
+                                    <i class="fas fa-user-circle text-emerald-500 mr-2"></i>
+                                    ${paciente.nombres} ${paciente.apellidos}
+                                </div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 ml-6">
+                                    <i class="fas fa-id-card mr-1"></i>${identificacion} 
+                                    <i class="fas fa-phone ml-3 mr-1"></i>${paciente.telefono || 'Sin teléfono'}
+                                </div>
+                            `;
+                            div.addEventListener('click', () => {
+                                pacienteSearch.value = `${paciente.nombres} ${paciente.apellidos}`;
+                                pacienteInput.value = paciente.id;
+                                pacienteResults.classList.add('hidden');
+                            });
+                            pacienteResults.appendChild(div);
                         });
-                }, 300);
-            });
+                        pacienteResults.classList.remove('hidden');
+                    } else {
+                        const message = data.message || 'No se encontraron pacientes';
+                        pacienteResults.innerHTML = `<div class="p-4 text-gray-500 dark:text-gray-400 text-center"><i class="fas fa-search mr-2"></i>${message}</div>`;
+                        pacienteResults.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    pacienteResults.innerHTML = '<div class="p-4 text-red-500 dark:text-red-400 text-center"><i class="fas fa-exclamation-triangle mr-2"></i>Error al buscar pacientes</div>';
+                    pacienteResults.classList.remove('hidden');
+                });
+        }, 300);
+    });
 
-            // Hide results when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!pacienteSearch.contains(e.target) && !pacienteResults.contains(e.target)) {
-                    pacienteResults.classList.add('hidden');
-                }
-            });
+    // Hide results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!pacienteSearch.contains(e.target) && !pacienteResults.contains(e.target)) {
+            pacienteResults.classList.add('hidden');
+        }
+    });
 
-            // Date change handler to show available slots
-            const fechaInput = document.getElementById('{{ form.fecha.id_for_label }}');
-            const horaInput = document.getElementById('{{ form.hora_cita.id_for_label }}');
-            const availableSlots = document.getElementById('availableSlots');
-            const slotsContainer = document.getElementById('slotsContainer');
+    // Date change handler to show available slots
+    const fechaInput = document.getElementById('{{ form.fecha.id_for_label }}');
+    const horaInput = document.getElementById('{{ form.hora_cita.id_for_label }}');
+    const availableSlots = document.getElementById('availableSlots');
+    const slotsContainer = document.getElementById('slotsContainer');
 
-            fechaInput.addEventListener('change', function() {
-                const fecha = this.value;
-                if (fecha) {
-                    fetch(`{% url 'doctor:api_horarios_disponibles' %}?fecha=${fecha}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                slotsContainer.innerHTML = '';
-                                data.horarios.forEach(slot => {
-                                    const button = document.createElement('button');
-                                    button.type = 'button';
-                                    button.className = `p-3 rounded-lg text-center text-base font-medium transition-all duration-200 ${
-                                        slot.disponible
-                                            ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 cursor-pointer hover:shadow-md'
-                                            : 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700'
-                                    }`;
-                                    
-                                    // Agregar efecto hover solo para slots disponibles
-                                    if (slot.disponible) {
-                                        button.addEventListener('mouseenter', function() {
-                                            this.style.transform = 'translateY(-2px)';
-                                        });
-                                        
-                                        button.addEventListener('mouseleave', function() {
-                                            this.style.transform = 'translateY(0)';
-                                        });
-                                    }
-                                    button.disabled = !slot.disponible;
-                                    button.textContent = slot.hora;
-                                    
-                                    if (slot.disponible) {
-                                        button.addEventListener('click', () => {
-                                            horaInput.value = slot.hora;
-                                            // Update visual selection
-                                            slotsContainer.querySelectorAll('button').forEach(b => {
-                                                b.classList.remove('ring-2', 'ring-emerald-500');
-                                            });
-                                            button.classList.add('ring-2', 'ring-emerald-500');
-                                        });
-                                    }
-                                    
-                                    slotsContainer.appendChild(button);
+    fechaInput.addEventListener('change', function() {
+        const fecha = this.value;
+        if (fecha) {
+            fetch(`{% url 'doctor:api_horarios_disponibles' %}?fecha=${fecha}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        slotsContainer.innerHTML = '';
+                        data.horarios.forEach(slot => {
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.className = `p-3 rounded-xl text-center text-base font-medium transition-all duration-300 transform hover:scale-105 ${
+                                slot.disponible
+                                    ? 'bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 hover:from-emerald-200 hover:to-teal-200 dark:from-emerald-900 dark:to-teal-900 dark:text-emerald-200 cursor-pointer shadow-md hover:shadow-lg'
+                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 opacity-50'
+                            }`;
+                            
+                            button.disabled = !slot.disponible;
+                            button.textContent = slot.hora;
+                            
+                            if (slot.disponible) {
+                                button.addEventListener('click', () => {
+                                    horaInput.value = slot.hora;
+                                    // Update visual selection
+                                    slotsContainer.querySelectorAll('button').forEach(b => {
+                                        b.classList.remove('ring-2', 'ring-emerald-500', 'ring-offset-2');
+                                    });
+                                    button.classList.add('ring-2', 'ring-emerald-500', 'ring-offset-2');
                                 });
-                                availableSlots.classList.remove('hidden');
                             }
-                        })
-                        .catch(error => console.error('Error:', error));
-                } else {
-                    availableSlots.classList.add('hidden');
-                }
-            });
+                            
+                            slotsContainer.appendChild(button);
+                        });
+                        availableSlots.classList.remove('hidden');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            availableSlots.classList.add('hidden');
+        }
+    });
 
-            // Pre-populate from URL parameters (from calendar)
-            const urlParams = new URLSearchParams(window.location.search);
-            const fechaParam = urlParams.get('fecha');
-            const horaParam = urlParams.get('hora');
-            
-            if (fechaParam) {
-                fechaInput.value = fechaParam;
-                fechaInput.dispatchEvent(new Event('change'));
-            }
-            
-            if (horaParam) {
-                horaInput.value = horaParam;
-            }
+    // Pre-populate from URL parameters (from calendar)
+    const urlParams = new URLSearchParams(window.location.search);
+    const fechaParam = urlParams.get('fecha');
+    const horaParam = urlParams.get('hora');
+    
+    if (fechaParam) {
+        fechaInput.value = fechaParam;
+        fechaInput.dispatchEvent(new Event('change'));
+    }
+    
+    if (horaParam) {
+        horaInput.value = horaParam;
+    }
 
-            // Form submission
-            document.getElementById('citaForm').addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-                submitBtn.disabled = true;
-            });
-        });
-    </script>
+    // Form submission
+    document.getElementById('citaForm').addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+
+<style>
+  /* Animaciones suaves */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .relative.z-10 {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  /* Estilos para inputs focus */
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+  }
+
+  /* Mejorar el scroll en dispositivos móviles */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 3px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 640px) {
+    .truncate {
+      max-width: 120px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .truncate {
+      max-width: 200px;
+    }
+  }
+</style>
+
+<!-- Mostrar mensajes -->
+{% include 'components/messages.html' %}
 {% endblock %}

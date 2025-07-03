@@ -16,24 +16,14 @@ Lista de Tipos de Sangre - SaludTotal
           <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill="url(#medical-cross-list)" class="text-green-600"/>
+      <rect width="100%" height="100%" fill="url(#medical-cross-list)" class="text-red-600"/>
     </svg>
   </div>
 
   <div class="relative z-10 w-full px-6 py-8 max-w-7xl mx-auto">
     <!-- Header con diseño médico profesional -->
-    <div class="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-green-300 dark:border-emerald-700 overflow-hidden">
+    <div class="bg-gradient-to-r from-red-600 to-rose-600 dark:from-red-700 dark:to-rose-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-red-300 dark:border-rose-700 overflow-hidden">
       <!-- Medical pattern overlay -->
-      <div class="absolute inset-0 opacity-10">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="medical-cross-header" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
-        </svg>
-      </div>
       <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
         <div class="flex items-center space-x-4 flex-1">
           <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
@@ -44,7 +34,7 @@ Lista de Tipos de Sangre - SaludTotal
               <i class="fas fa-heartbeat mr-3"></i>
               Gestión de Tipos de Sangre
             </h1>
-            <p class="text-green-100 mt-1 text-sm sm:text-base flex items-center">
+            <p class="text-red-100 mt-1 text-sm sm:text-base flex items-center">
               <i class="fas fa-chart-line mr-2"></i>
               Administra los tipos de sangre del sistema médico
             </p>
@@ -53,7 +43,7 @@ Lista de Tipos de Sangre - SaludTotal
         <div class="text-right mt-4 sm:mt-0">
           <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
             <div class="text-xl sm:text-2xl font-bold">{{ tipos_sangre|length }}</div>
-            <div class="text-xs text-green-100">Total Tipos</div>
+            <div class="text-xs text-red-100">Total Tipos</div>
           </div>
         </div>
       </div>
@@ -74,7 +64,7 @@ Lista de Tipos de Sangre - SaludTotal
         <div class="flex-1 max-w-md">
           <form method="GET" class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <div class="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+              <div class="w-6 h-6 bg-gradient-to-r from-red-500 to-rose-500 rounded-full flex items-center justify-center">
                 <i class="fas fa-search text-white text-xs"></i>
               </div>
             </div>
@@ -83,7 +73,7 @@ Lista de Tipos de Sangre - SaludTotal
               name="q"
               value="{{ request.GET.q }}"
               placeholder="Buscar tipos de sangre..."
-              class="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
+              class="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
             />
           </form>
         </div>
@@ -92,7 +82,7 @@ Lista de Tipos de Sangre - SaludTotal
         {% if 'add_tiposangre' in permissions %}
         <a
           href="{{ create_url }}"
-          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
           <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
             <i class="fas fa-plus text-white text-xs"></i>
@@ -107,35 +97,35 @@ Lista de Tipos de Sangre - SaludTotal
     <div class="relative z-10 bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 backdrop-blur-lg">
       <div class="relative z-10 overflow-x-auto">
         <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gradient-to-r from-gray-50 to-green-50 dark:from-gray-700 dark:to-green-900">
+          <thead class="bg-gradient-to-r from-gray-50 to-red-50 dark:from-gray-700 dark:to-red-900">
             <tr>
               <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                 <div class="flex items-center">
-                  <i class="fas fa-hashtag text-green-500 mr-2"></i>
+                  <i class="fas fa-hashtag text-red-500 mr-2"></i>
                   ID
                 </div>
               </th>
               <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                 <div class="flex items-center">
-                  <i class="fas fa-tint text-green-500 mr-2"></i>
+                  <i class="fas fa-tint text-red-500 mr-2"></i>
                   Tipo
                 </div>
               </th>
               <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
                 <div class="flex items-center">
-                  <i class="fas fa-align-left text-green-500 mr-2"></i>
+                  <i class="fas fa-align-left text-red-500 mr-2"></i>
                   Descripción
                 </div>
               </th>
               <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
                 <div class="flex items-center">
-                  <i class="fas fa-chart-bar text-green-500 mr-2"></i>
+                  <i class="fas fa-chart-bar text-red-500 mr-2"></i>
                   Pacientes
                 </div>
               </th>
               <th class="px-4 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                 <div class="flex items-center justify-end">
-                  <i class="fas fa-cogs text-green-500 mr-2"></i>
+                  <i class="fas fa-cogs text-red-500 mr-2"></i>
                   Acciones
                 </div>
               </th>
@@ -143,18 +133,18 @@ Lista de Tipos de Sangre - SaludTotal
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {% for tipo_sangre in tipos_sangre %}
-            <tr class="hover:bg-gradient-to-r hover:from-gray-50 hover:to-green-50 dark:hover:from-gray-700 dark:hover:to-green-900 transition-all duration-300">
+            <tr class="hover:bg-gradient-to-r hover:from-gray-50 hover:to-red-50 dark:hover:from-gray-700 dark:hover:to-red-900 transition-all duration-300">
               <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">
                 <div class="flex items-center">
-                  <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+                  <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-rose-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
                     {{ tipo_sangre.id }}
                   </div>
                 </div>
               </td>
               <td class="px-4 py-4">
                 <div class="flex items-center">
-                  <div class="w-10 h-10 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900 rounded-xl flex items-center justify-center mr-3 shadow-md">
-                    <i class="fas fa-tint text-green-600 dark:text-green-400"></i>
+                  <div class="w-10 h-10 bg-gradient-to-r from-red-100 to-rose-100 dark:from-red-900 dark:to-rose-900 rounded-xl flex items-center justify-center mr-3 shadow-md">
+                    <i class="fas fa-tint text-red-600 dark:text-red-400"></i>
                   </div>
                   <div>
                     <div class="text-sm font-bold text-gray-900 dark:text-white">
@@ -168,7 +158,7 @@ Lista de Tipos de Sangre - SaludTotal
                       </div>
                       {% endif %}
                       <div class="text-xs mt-1 flex items-center gap-2">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                           <i class="fas fa-chart-bar mr-1"></i>{{ tipo_sangre.tipos_sangre.count }}
                         </span>
                       </div>
@@ -189,7 +179,7 @@ Lista de Tipos de Sangre - SaludTotal
               </td>
               <td class="px-4 py-4 whitespace-nowrap hidden lg:table-cell">
                 <div class="flex items-center">
-                  <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+                  <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-rose-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
                     {{ tipo_sangre.tipos_sangre.count }}
                   </div>
                   <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">paciente(s)</span>
@@ -222,7 +212,7 @@ Lista de Tipos de Sangre - SaludTotal
             <tr>
               <td colspan="5" class="px-6 py-12 text-center">
                 <div class="flex flex-col items-center">
-                  <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-green-100 dark:from-gray-700 dark:to-green-900 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                  <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-red-100 dark:from-gray-700 dark:to-red-900 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
                     <i class="fas fa-tint text-4xl text-gray-400 dark:text-gray-500"></i>
                   </div>
                   <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
@@ -233,8 +223,8 @@ Lista de Tipos de Sangre - SaludTotal
                   </p>
                   {% if 'add_tiposangre' in permissions %}
                   <a
-                    href="{{ create_url }}"
-                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                    href="{% url 'core:tipo_sangre_create' tipo_sangre.pk %}"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                   >
                     <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
                       <i class="fas fa-plus text-white text-xs"></i>
@@ -345,7 +335,7 @@ Lista de Tipos de Sangre - SaludTotal
 
   /* Estilos para inputs focus */
   input:focus {
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
   }
 
   /* Mejorar el scroll en dispositivos móviles */
@@ -364,12 +354,12 @@ Lista de Tipos de Sangre - SaludTotal
   }
 
   .overflow-x-auto::-webkit-scrollbar-thumb {
-    background: #22c55e;
+    background: #dc2626;
     border-radius: 3px;
   }
 
   .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    background: #16a34a;
+    background: #b91c1c;
   }
 
   /* Responsive improvements */
