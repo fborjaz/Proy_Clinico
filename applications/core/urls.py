@@ -41,9 +41,13 @@ from applications.core.views.gasto_mensual import (
     GastoMensualListView, GastoMensualCreateView,
     GastoMensualUpdateView, GastoMensualDeleteView
 )
+from applications.core.views.chatbot import chatbot_api
 
 app_name='core' # define un espacio de nombre para la aplicacion
 urlpatterns = [
+    # Rutas para el chatbot
+    path('chatbot_api/', chatbot_api, name="chatbot_api"),
+
     # Rutas para vistas relacionadas con Pacientes
     path('paciente_find/', paciente_find, name="paciente_find"),
     path('paciente_list/', PacienteListView.as_view(), name="paciente_list"),

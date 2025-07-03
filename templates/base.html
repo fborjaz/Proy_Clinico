@@ -88,5 +88,331 @@
     <script src="{% static 'js/ripple-effect.js' %}"></script>
     <script src="{% static 'js/messages.js' %}"></script>
     {% endblock %}
+
+    <!-- Chatbot UI with Medical Design -->
+    <div id="chatbot-container" class="fixed bottom-5 right-5 z-50">
+        <!-- Toggle Button with Medical Pattern -->
+        <button id="chatbot-toggle" class="group relative w-16 h-16 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-700 dark:to-cyan-700 border border-teal-300 dark:border-cyan-700">
+            <!-- Medical Pattern Background -->
+            <div class="absolute inset-0 opacity-10">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="medical-cross-chat" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                            <path d="M6 4h4v2h2v4h-2v2h-4v-2h-2v-4h2z" fill="currentColor" opacity="0.3"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#medical-cross-chat)" class="text-white"/>
+                </svg>
+            </div>
+            <!-- Icon Container -->
+            <div class="relative z-10 w-full h-full flex items-center justify-center">
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <i class="fas fa-robot text-2xl text-white"></i>
+                </div>
+            </div>
+            <!-- Pulse Effect -->
+            <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-96 overflow-hidden transform transition-all duration-300 scale-95 opacity-0">
+            <!-- Main Container -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-teal-200 dark:border-teal-800">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-700 dark:to-cyan-700 p-4 relative overflow-hidden">
+                    <!-- Medical Pattern Background -->
+                    <div class="absolute inset-0 opacity-10">
+                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="medical-cross-header" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                                    <path d="M6 4h4v2h2v4h-2v2h-4v-2h-2v-4h2z" fill="currentColor" opacity="0.3"/>
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
+                        </svg>
+                    </div>
+                    <!-- Header Content -->
+                    <div class="relative z-10 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <i class="fas fa-robot text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Asistente Virtual</h3>
+                                <p class="text-sm text-teal-100">¿En qué puedo ayudarte?</p>
+                            </div>
+                        </div>
+                        <!-- Close Button -->
+                        <button id="chatbot-close" class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm hover:bg-white/30 transition-all duration-200">
+                            <i class="fas fa-times text-white text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div id="chatbot-messages" class="p-4 h-96 overflow-y-auto bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+                    <!-- Messages will be appended here -->
+                </div>
+                <!-- Suggested Questions -->
+                <div id="suggestion-buttons" class="px-4 pb-4 bg-white dark:bg-gray-800">
+                    <div class="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center">
+                        <i class="fas fa-lightbulb mr-2 text-teal-500"></i>
+                        Preguntas sugeridas:
+                    </div>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button class="suggestion-btn text-left p-3 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border border-teal-200 dark:border-teal-700 rounded-xl hover:from-teal-100 hover:to-cyan-100 dark:hover:from-teal-800/50 dark:hover:to-cyan-800/50 transition-all duration-200 text-sm text-gray-700 dark:text-gray-300">
+                            ¿Qué medicamentos tienes disponibles?
+                        </button>
+                        <button class="suggestion-btn text-left p-3 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border border-teal-200 dark:border-teal-700 rounded-xl hover:from-teal-100 hover:to-cyan-100 dark:hover:from-teal-800/50 dark:hover:to-cyan-800/50 transition-all duration-200 text-sm text-gray-700 dark:text-gray-300">
+                            ¿Cuál es el horario de un doctor?
+                        </button>
+                        <button class="suggestion-btn text-left p-3 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border border-teal-200 dark:border-teal-700 rounded-xl hover:from-teal-100 hover:to-cyan-100 dark:hover:from-teal-800/50 dark:hover:to-cyan-800/50 transition-all duration-200 text-sm text-gray-700 dark:text-gray-300">
+                            ¿Cómo buscar un paciente?
+                        </button>
+                    </div>
+                </div>
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex space-x-2">
+                        <div class="relative flex-grow">
+                            <input id="chatbot-input" type="text" 
+                                placeholder="Escribe tu pregunta..." 
+                                class="w-full px-4 py-3 pl-12 pr-12 rounded-xl border border-teal-200 dark:border-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                            >
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                <i class="fas fa-keyboard text-teal-500 dark:text-teal-400"></i>
+                            </div>
+                        </div>
+                        <button id="chatbot-send" 
+                            class="px-4 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Chatbot Animations */
+        #chatbot-window.show {
+            display: block;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Message Animations */
+        .chat-message {
+            animation: messageIn 0.3s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes messageIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotSend = document.getElementById('chatbot-send');
+            const chatbotClose = document.getElementById('chatbot-close');
+            const chatbotSuggestions = document.getElementById('chatbot-suggestions');
+            const suggestionButtons = document.getElementById('suggestion-buttons');
+
+            // Welcome message
+            setTimeout(() => {
+                addMessage('¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?', 'bot');
+            }, 500);
+
+            function openChat() {
+                chatbotWindow.classList.remove('hidden');
+                chatbotWindow.classList.add('show');
+                chatbotInput.focus();
+            }
+
+            function closeChat() {
+                chatbotWindow.classList.add('hidden');
+                chatbotWindow.classList.remove('show');
+            }
+
+            chatbotToggle.addEventListener('click', () => {
+                if (chatbotWindow.classList.contains('hidden')) {
+                    openChat();
+                } else {
+                    closeChat();
+                }
+            });
+
+            chatbotClose.addEventListener('click', closeChat);
+
+            // ESC key to close chat
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !chatbotWindow.classList.contains('hidden')) {
+                    closeChat();
+                }
+            });
+
+            suggestionButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('suggestion-btn')) {
+                    e.preventDefault(); // Evita el comportamiento predeterminado del botón
+                    e.stopPropagation(); // Detiene la propagación del evento
+                    const query = e.target.textContent.trim();
+                    chatbotInput.value = query; // Set the input value
+                    sendMessage(); // Send the message
+                }
+            });
+
+            function createTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.className = 'typing-indicator chat-message ml-2';
+                indicator.innerHTML = `
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                `;
+                return indicator;
+            }
+
+            function addMessage(text, sender) {
+                // Hide suggestions after first message
+                if (sender === 'user') {
+                    const suggestions = document.getElementById('suggestion-buttons');
+                    if (suggestions) {
+                        suggestions.style.display = 'none';
+                    }
+                }
+
+                const messageElement = document.createElement('div');
+                messageElement.className = `chat-message my-3 flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+                
+                const contentElement = document.createElement('div');
+                contentElement.className = `max-w-3/4 p-4 rounded-2xl shadow-md ${
+                    sender === 'user' 
+                        ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white ml-12' 
+                        : 'bg-white dark:bg-gray-700 border border-teal-100 dark:border-teal-800 mr-12'
+                }`;
+
+                // Add icon
+                const iconContainer = document.createElement('div');
+                iconContainer.className = `w-8 h-8 ${sender === 'user' ? 'order-2 ml-3' : 'order-1 mr-3'} bg-gradient-to-r ${
+                    sender === 'user' 
+                        ? 'from-teal-600 to-cyan-600' 
+                        : 'from-teal-500 to-cyan-500'
+                } rounded-full flex items-center justify-center shadow-lg border-2 border-white/30`;
+                
+                const icon = document.createElement('i');
+                icon.className = `fas ${sender === 'user' ? 'fa-user' : 'fa-stethoscope'} text-white text-base`;
+                
+                iconContainer.appendChild(icon);
+                
+                contentElement.textContent = text;
+                
+                messageElement.appendChild(sender === 'user' ? contentElement : iconContainer);
+                messageElement.appendChild(sender === 'user' ? iconContainer : contentElement);
+                
+                chatbotMessages.appendChild(messageElement);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            async function sendMessage() {
+                const query = chatbotInput.value.trim();
+                if (query === '') return;
+
+                addMessage(query, 'user');
+                chatbotInput.value = '';
+
+                // Add typing indicator
+                const typingIndicator = createTypingIndicator();
+                chatbotMessages.appendChild(typingIndicator);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+                try {
+                    const response = await fetch('{% url "core:chatbot_api" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ query })
+                    });
+
+                    // Remove typing indicator
+                    typingIndicator.remove();
+
+                    const data = await response.json();
+                    addMessage(data.message, 'bot');
+                } catch (error) {
+                    console.error('Error:', error);
+                    // Remove typing indicator
+                    typingIndicator.remove();
+                    addMessage('Lo siento, ha ocurrido un error.', 'bot');
+                }
+            }
+
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Suggestion buttons functionality
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('suggestion-btn')) {
+                    const question = e.target.textContent.trim();
+                    chatbotInput.value = question;
+                    sendMessage();
+                }
+            });
+
+            // Focus input when clicking anywhere in the chat window (except close button)
+            chatbotWindow.addEventListener('click', (e) => {
+                if (!e.target.closest('#chatbot-close')) {
+                    chatbotInput.focus();
+                }
+            });
+        });
+    </script>
   </body>
 </html>
