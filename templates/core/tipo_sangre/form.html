@@ -1,320 +1,413 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {% if object %}
-    Editar Tipo de Sangre
-  {% else %}
-    Nuevo Tipo de Sangre
-  {% endif %} - SaludTotal
+Lista de Tipos de Sangre - SaludTotal
 {% endblock %}
 
 {% block content %}
-  {% load static %}
+{% load static %}
 
-  <!-- Contenedor principal con altura controlada -->
-  <div class="min-h-screen bg-gray-50 dark:bg-white-900">
-    <div class="w-full px-6 py-8">
-      <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 sm:p-8 rounded-lg shadow-lg mb-8">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-          <div class="flex-1">
-            <h1 class="text-2xl sm:text-3xl font-bold">
-              <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
-              {% if object %}
-                Editar Tipo de Sangre
-              {% else %}
-                Nuevo Tipo de Sangre
-              {% endif %}
+<div class="w-full min-h-screen relative bg-gray-50 dark:bg-gray-900">
+  <!-- Medical pattern background que cubre toda la pantalla y crece con el contenido -->
+  <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="medical-cross-list" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#medical-cross-list)" class="text-green-600"/>
+    </svg>
+  </div>
+  
+  <!-- Fondo adicional que se extiende con el contenido -->
+  <div class="absolute inset-0 min-h-full opacity-5 dark:opacity-10 pointer-events-none z-0" style="background-image: url('data:image/svg+xml;utf8,<svg width=\"60\" height=\"60\" xmlns=\"http://www.w3.org/2000/svg\"><defs><pattern id=\"medical-cross-bg\" x=\"0\" y=\"0\" width=\"60\" height=\"60\" patternUnits=\"userSpaceOnUse\"><path d=\"M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z\" fill=\"%2316a34a\" opacity=\"0.1\"/></pattern></defs><rect width=\"100%\" height=\"100%\" fill=\"url(%23medical-cross-bg)\"/></svg>'); background-repeat: repeat;"></div>
+
+  <div class="relative z-10 w-full px-6 py-8 max-w-7xl mx-auto">
+    <!-- Header con diseño médico profesional -->
+    <div class="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-green-300 dark:border-emerald-700 overflow-hidden">
+      <!-- Medical pattern overlay -->
+      <div class="absolute inset-0 opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-header" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-header)" class="text-white"/>
+        </svg>
+      </div>
+      <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <div class="flex items-center space-x-4 flex-1">
+          <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <i class="fas fa-tint text-2xl text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold flex items-center">
+              <i class="fas fa-heartbeat mr-3"></i>
+              Gestión de Tipos de Sangre
             </h1>
-            <p class="text-red-100 mt-1 text-sm sm:text-base">
-              {% if object %}
-                Modifica la información del tipo de sangre "{{ object.tipo }}"
-              {% else %}
-                Crea un nuevo tipo de sangre en el sistema
-              {% endif %}
+            <p class="text-green-100 mt-1 text-sm sm:text-base flex items-center">
+              <i class="fas fa-chart-line mr-2"></i>
+              Administra los tipos de sangre del sistema médico
             </p>
           </div>
-          <div class="text-right mt-4 sm:mt-0">
-            <div class="text-xl sm:text-2xl font-bold">
-              <i class="fas fa-tint"></i>
-            </div>
-            <div class="text-xs sm:text-sm text-red-100">Tipo de Sangre</div>
+        </div>
+        <div class="text-right mt-4 sm:mt-0">
+          <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <div class="text-xl sm:text-2xl font-bold">{{ tipos_sangre|length }}</div>
+            <div class="text-xs text-green-100">Total Tipos</div>
           </div>
         </div>
       </div>
+      
+      <!-- Decorative medical elements -->
+      <div class="absolute top-4 right-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+      <div class="absolute bottom-4 left-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+    </div>
 
-      <!-- Formulario -->
-      <form method="post" class="space-y-6" id="tipoSangreForm">
-        {% csrf_token %}
+    <!-- Barra de búsqueda y acciones -->
+    <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <!-- Medical pattern background -->
+      <div class="absolute inset-0 opacity-5 dark:opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-search" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-search)" class="text-green-600"/>
+        </svg>
+      </div>
+      <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <!-- Búsqueda -->
+        <div class="flex-1 max-w-md">
+          <form method="GET" class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div class="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-search text-white text-xs"></i>
+              </div>
+            </div>
+            <input
+              type="text"
+              name="q"
+              value="{{ request.GET.q }}"
+              placeholder="Buscar tipos de sangre..."
+              class="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg"
+            />
+          </form>
+        </div>
 
-        <!-- Contenedor principal del formulario -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-          <!-- Vista previa del tipo de sangre -->
-          <div class="bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-            <div class="text-center">
-              <div class="bg-white dark:bg-gray-800 rounded-full w-16 sm:w-20 h-16 sm:h-20 mx-auto flex items-center justify-center shadow-sm border border-gray-200 dark:border-gray-600 mb-3">
-                <div class="text-center">
-                  <i class="fas fa-tint text-2xl sm:text-3xl text-red-600 dark:text-red-400"></i>
-                  <div id="tipoPreview" class="text-xs sm:text-sm font-bold text-red-600 dark:text-red-400 mt-1">
-                    {% if object %}{{ object.tipo }}{% else %}--{% endif %}
+        <!-- Botón crear -->
+        {% if 'add_tiposangre' in permissions %}
+        <a
+          href="{{ create_url }}"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+        >
+          <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+            <i class="fas fa-plus text-white text-xs"></i>
+          </div>
+          Nuevo Tipo de Sangre
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tabla de tipos de sangre -->
+    <div class="relative z-10 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+      <!-- Medical pattern background -->
+      <div class="absolute inset-0 opacity-5 dark:opacity-10">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="medical-cross-table" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#medical-cross-table)" class="text-green-600"/>
+        </svg>
+      </div>
+      <div class="relative z-10 overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gradient-to-r from-gray-50 to-green-50 dark:from-gray-700 dark:to-green-900">
+            <tr>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                <div class="flex items-center">
+                  <i class="fas fa-hashtag text-green-500 mr-2"></i>
+                  ID
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                <div class="flex items-center">
+                  <i class="fas fa-tint text-green-500 mr-2"></i>
+                  Tipo
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
+                <div class="flex items-center">
+                  <i class="fas fa-align-left text-green-500 mr-2"></i>
+                  Descripción
+                </div>
+              </th>
+              <th class="px-4 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                <div class="flex items-center">
+                  <i class="fas fa-chart-bar text-green-500 mr-2"></i>
+                  Pacientes
+                </div>
+              </th>
+              <th class="px-4 py-4 text-right text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                <div class="flex items-center justify-end">
+                  <i class="fas fa-cogs text-green-500 mr-2"></i>
+                  Acciones
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {% for tipo_sangre in tipos_sangre %}
+            <tr class="hover:bg-gradient-to-r hover:from-gray-50 hover:to-green-50 dark:hover:from-gray-700 dark:hover:to-green-900 transition-all duration-300">
+              <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+                    {{ tipo_sangre.id }}
                   </div>
                 </div>
-              </div>
-              <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-                Vista previa del tipo
-              </h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                El tipo se actualizará mientras escribes
-              </p>
-            </div>
-          </div>
-
-          <!-- Campos del formulario -->
-          <div class="p-4 sm:p-6">
-            <!-- Grid de campos principales -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
-              <!-- Campo Tipo -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  <i class="fas fa-tint text-red-500 mr-1"></i>
-                  {{ form.tipo.label }}
-                  <span class="text-red-500 ml-1">*</span>
-                </label>
-                <div class="relative">{{ form.tipo }}</div>
-                {% if form.tipo.errors %}
-                  <div class="mt-1 text-red-600 text-sm">
-                    {% for error in form.tipo.errors %}
-                      <p>{{ error }}</p>
-                    {% endfor %}
+              </td>
+              <td class="px-4 py-4">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900 rounded-xl flex items-center justify-center mr-3 shadow-md">
+                    <i class="fas fa-tint text-green-600 dark:text-green-400"></i>
                   </div>
-                {% endif %}
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  <i class="fas fa-info-circle mr-1"></i>
-                  Tipos válidos: A+, A-, B+, B-, AB+, AB-, O+, O-
-                </p>
-              </div>
-
-              <!-- Campo Descripción -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  <i class="fas fa-align-left text-red-500 mr-1"></i>
-                  {{ form.descripcion.label }}
-                  <span class="text-red-500 ml-1">*</span>
-                </label>
-                <div class="relative">{{ form.descripcion }}</div>
-                {% if form.descripcion.errors %}
-                  <div class="mt-1 text-red-600 text-sm">
-                    {% for error in form.descripcion.errors %}
-                      <p>{{ error }}</p>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  <i class="fas fa-info-circle mr-1"></i>
-                  Descripción detallada del tipo de sangre
-                </p>
-              </div>
-            </div>
-
-            <!-- Información adicional -->
-            {% if object %}
-              <div class="bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-400 p-4 mb-6">
-                <div class="flex">
-                  <div class="flex-shrink-0">
-                    <i class="fas fa-info-circle text-blue-400"></i>
-                  </div>
-                  <div class="ml-3">
-                    <p class="text-sm text-blue-700 dark:text-blue-200">
-                      <strong>Información:</strong> Este tipo de sangre está siendo utilizado por
-                      <strong>{{ object.tipos_sangre.count }} paciente(s)</strong>.
-                      {% if object.tipos_sangre.count > 0 %}
-                        Ten cuidado al modificar esta información.
+                  <div>
+                    <div class="text-sm font-bold text-gray-900 dark:text-white">
+                      {{ tipo_sangre.tipo }}
+                    </div>
+                    <!-- Información adicional para móviles -->
+                    <div class="mt-1 md:hidden">
+                      {% if tipo_sangre.descripcion %}
+                      <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                        {{ tipo_sangre.descripcion|truncatechars:40 }}
+                      </div>
                       {% endif %}
-                    </p>
+                      <div class="text-xs mt-1 flex items-center gap-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          <i class="fas fa-chart-bar mr-1"></i>{{ tipo_sangre.tipos_sangre.count }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            {% endif %}
+              </td>
+              <td class="px-4 py-4 hidden md:table-cell">
+                {% if tipo_sangre.descripcion %}
+                <div class="text-sm text-gray-900 dark:text-gray-300 max-w-xs">
+                  {{ tipo_sangre.descripcion|truncatechars:60 }}
+                </div>
+                {% else %}
+                <span class="text-sm text-gray-400 dark:text-gray-500 italic flex items-center">
+                  <i class="fas fa-minus mr-1"></i>Sin descripción
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap hidden lg:table-cell">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+                    {{ tipo_sangre.tipos_sangre.count }}
+                  </div>
+                  <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">paciente(s)</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex items-center justify-end space-x-2">
+                  {% if 'change_tiposangre' in permissions %}
+                  <a
+                    href="{% url 'core:tipo_sangre_update' tipo_sangre.pk %}"
+                    class="inline-flex items-center px-2 py-1.5 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 rounded-xl hover:from-amber-200 hover:to-yellow-200 transition-all duration-300 transform hover:scale-105 text-xs border border-amber-200 dark:border-amber-700"
+                    title="Editar"
+                  >
+                    <i class="fas fa-edit text-xs"></i>
+                  </a>
+                  {% endif %}
+                  {% if 'delete_tiposangre' in permissions %}
+                  <button
+                    onclick="confirmDelete('{{ tipo_sangre.pk }}', '{{ tipo_sangre.tipo }}')"
+                    class="inline-flex items-center px-2 py-1.5 bg-gradient-to-r from-red-100 to-rose-100 text-red-700 rounded-xl hover:from-red-200 hover:to-rose-200 transition-all duration-300 transform hover:scale-105 text-xs border border-red-200 dark:border-red-700"
+                    title="Eliminar"
+                  >
+                    <i class="fas fa-trash text-xs"></i>
+                  </button>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="px-6 py-12 text-center">
+                <div class="flex flex-col items-center">
+                  <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-green-100 dark:from-gray-700 dark:to-green-900 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                    <i class="fas fa-tint text-4xl text-gray-400 dark:text-gray-500"></i>
+                  </div>
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                    No hay tipos de sangre registrados
+                  </h3>
+                  <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md text-center">
+                    No se encontraron tipos de sangre en el sistema. Crea el primer tipo para comenzar a gestionar los tipos de sangre.
+                  </p>
+                  {% if 'add_tiposangre' in permissions %}
+                  <a
+                    href="{{ create_url }}"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+                      <i class="fas fa-plus text-white text-xs"></i>
+                    </div>
+                    Crear primer tipo de sangre
+                  </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-            <!-- Sección de tipos de sangre comunes (ayuda visual) -->
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-                <i class="fas fa-question-circle text-gray-500 mr-1"></i>
-                Tipos de sangre más comunes:
-              </h4>
-              <div class="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                <button type="button" onclick="selectTipo('A+')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  A+
-                </button>
-                <button type="button" onclick="selectTipo('A-')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  A-
-                </button>
-                <button type="button" onclick="selectTipo('B+')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  B+
-                </button>
-                <button type="button" onclick="selectTipo('B-')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  B-
-                </button>
-                <button type="button" onclick="selectTipo('AB+')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  AB+
-                </button>
-                <button type="button" onclick="selectTipo('AB-')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  AB-
-                </button>
-                <button type="button" onclick="selectTipo('O+')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  O+
-                </button>
-                <button type="button" onclick="selectTipo('O-')" class="px-2 py-1 text-xs font-medium rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200">
-                  O-
-                </button>
-              </div>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                Haz clic en cualquier tipo para seleccionarlo automáticamente
-              </p>
-            </div>
-          </div>
-        </div>
+    <!-- Paginación reutilizable -->
+    {% include 'components/pagination.html' %}
 
-        <!-- Botones de acción -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 sticky bottom-0 z-10">
-          <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-            <a href="{{ back_url }}" class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-              <i class="fas fa-times mr-2"></i>
-              Cancelar
-            </a>
-            <button type="submit" id="submitBtn" class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-sm">
-              <i class="fas fa-save mr-2"></i>
-              {% if object %}
-                Actualizar Tipo de Sangre
-              {% else %}
-                Crear Tipo de Sangre
-              {% endif %}
-            </button>
-          </div>
+    <!-- Botones de navegación -->
+    <div class="flex justify-center items-center mt-8">
+      <a
+        href="{% url 'home' %}"
+        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+      >
+        <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+          <i class="fas fa-home text-white text-xs"></i>
         </div>
-      </form>
+        Ir al Inicio
+      </a>
     </div>
   </div>
+</div>
 
-  <style>
-    /* Estilos adicionales para mejorar la responsividad */
-    @media (max-height: 600px) {
-      .container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-      }
+<!-- Modal de confirmación de eliminación reutilizable -->
+{% include 'components/delete.html' %}
 
-      .bg-gradient-to-r {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-
-      .space-y-6 > * + * {
-        margin-top: 1rem;
-      }
+<script>
+  function confirmDelete(tipoSangreId, tipoSangreTipo) {
+    const modal = document.getElementById('deleteModal');
+    const form = document.getElementById('deleteForm');
+    const itemName = document.getElementById('itemName');
+    
+    if (modal && form && itemName) {
+      itemName.textContent = tipoSangreTipo;
+      form.action = `/core/tipo_sangre_delete/${tipoSangreId}/`;
+      modal.classList.remove('hidden');
+      modal.classList.add('show');
     }
+  }
 
-    /* Asegurar que los inputs se adapten correctamente */
-    input[type="text"],
-    textarea {
-      width: 100%;
-      min-width: 0;
+  function closeModal() {
+    const modal = document.getElementById('deleteModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('show');
     }
+  }
 
-    /* Mejorar el scroll en dispositivos móviles */
-    .overflow-y-auto {
-      -webkit-overflow-scrolling: touch;
+  // Cerrar modal con ESC
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeModal();
     }
+  });
 
-    /* Hacer que los botones de tipos comunes sean más responsivos */
-    @media (max-width: 640px) {
-      .grid-cols-8 {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-    }
-  </style>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Referencias a elementos
-      const tipoInput = document.getElementById("{{ form.tipo.id_for_label }}");
-      const tipoPreview = document.getElementById("tipoPreview");
-      const form = document.getElementById("tipoSangreForm");
-      const submitBtn = document.getElementById("submitBtn");
-
-      // Función para actualizar vista previa del tipo
-      function updateTipoPreview() {
-        const tipoValue = tipoInput.value.trim().toUpperCase();
-        if (tipoValue) {
-          tipoPreview.textContent = tipoValue;
-        } else {
-          tipoPreview.textContent = "--";
-        }
-      }
-
-      // Función para seleccionar un tipo común
-      window.selectTipo = function (tipo) {
-        tipoInput.value = tipo;
-        updateTipoPreview();
-        tipoInput.focus();
-      };
-
-      // Inicializar vista previa del tipo
-      if (tipoInput) {
-        // Actualizar vista previa al cargar (para edición)
-        updateTipoPreview();
-
-        // Actualizar vista previa cuando cambie el input
-        tipoInput.addEventListener("input", function () {
-          // Convertir a mayúsculas automáticamente
-          this.value = this.value.toUpperCase();
-          updateTipoPreview();
-        });
-        tipoInput.addEventListener("keyup", updateTipoPreview);
-        tipoInput.addEventListener("change", updateTipoPreview);
-      }
-
-      // Manejar envío del formulario
-      if (form && submitBtn) {
-        form.addEventListener("submit", function (e) {
-          // Deshabilitar el botón para evitar doble envío
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-
-          // Re-habilitar después de 3 segundos por si hay errores
-          setTimeout(() => {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '{% if object %}<i class="fas fa-save mr-2"></i>Actualizar Tipo de Sangre{% else %}<i class="fas fa-save mr-2"></i>Crear Tipo de Sangre{% endif %}';
-          }, 3000);
-        });
-      }
-
-      // Auto-focus en el primer campo con error
-      const firstError = document.querySelector(".text-red-600");
-      if (firstError) {
-        const errorField = firstError.closest("div").querySelector("input, textarea");
-        if (errorField) {
-          errorField.focus();
-          errorField.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      } else {
-        // Si no hay errores, focus en el primer campo
-        const firstField = document.querySelector("#{{ form.tipo.id_for_label }}");
-        if (firstField) {
-          firstField.focus();
-        }
-      }
-
-      // Función para ajustar la altura de la página dinámicamente
-      function adjustViewport() {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty("--vh", `${vh}px`);
-      }
-
-      // Ejecutar al cargar y al cambiar el tamaño
-      adjustViewport();
-      window.addEventListener("resize", adjustViewport);
-      window.addEventListener("orientationchange", adjustViewport);
+  // Auto submit del formulario de búsqueda con debounce
+  const searchInput = document.querySelector('input[name="q"]');
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => {
+        this.form.submit();
+      }, 800);
     });
-  </script>
+  }
+
+  // Optimizar responsividad
+  function adjustTableForMobile() {
+    const table = document.querySelector('table');
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile && table) {
+      table.classList.add('text-xs');
+    } else if (table) {
+      table.classList.remove('text-xs');
+    }
+  }
+
+  let resizeTimeout;
+  window.addEventListener('load', adjustTableForMobile);
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(adjustTableForMobile, 150);
+  });
+</script>
+
+<style>
+  /* Animaciones suaves */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .relative.z-10 {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  /* Estilos para inputs focus */
+  input:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+  }
+
+  /* Mejorar el scroll en dispositivos móviles */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #22c55e;
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 640px) {
+    .truncate {
+      max-width: 120px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .truncate {
+      max-width: 200px;
+    }
+  }
+</style>
 {% endblock %}
