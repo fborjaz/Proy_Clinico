@@ -157,5 +157,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='gabrielasqui2996@gmail.com')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='hwgv ttia tfjg rnfx')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+# PayPal Configuration
+PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = config('PAYPAL_CLIENT_SECRET')
+PAYPAL_MODE = config('PAYPAL_MODE', default='sandbox') # 'sandbox' or 'live'
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='gabrielasqui2996@gmail.com')

@@ -6,6 +6,7 @@ from applications.doctor.views.cita_medica import (
     CitaMedicaListView, CitaMedicaCreateView, CitaMedicaUpdateView, CitaMedicaDeleteView,
     CalendarioCitasView, obtener_disponibilidad_calendario, obtener_horarios_disponibles
 )
+from applications.doctor.views.paypal_views import create_paypal_order, capture_paypal_payment
 
 app_name='doctor' # define un espacio de nombre para la aplicacion
 urlpatterns = [
@@ -27,4 +28,8 @@ urlpatterns = [
     # APIs para calendario dinámico
     path('api/disponibilidad_calendario/', obtener_disponibilidad_calendario, name="api_disponibilidad_calendario"),
     path('api/horarios_disponibles/', obtener_horarios_disponibles, name="api_horarios_disponibles"),
+
+    # Rutas para PayPal
+    path('api/paypal/create-order/', create_paypal_order, name='create_paypal_order'),
+    path('api/paypal/capture-payment/', capture_paypal_payment, name='capture_paypal_payment'),
 ]

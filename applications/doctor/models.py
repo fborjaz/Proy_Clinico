@@ -347,6 +347,9 @@ class Pago(models.Model):
     referencia_externa = models.CharField(max_length=100, verbose_name="Referencia Externa",
                                           blank=True, null=True,
                                           help_text="ID de transacción PayPal, etc.")
+    paypal_order_id = models.CharField(max_length=100, null=True, blank=True, verbose_name="PayPal Order ID")
+    paypal_capture_id = models.CharField(max_length=100, null=True, blank=True, verbose_name="PayPal Capture ID")
+    json_respuesta_paypal = models.JSONField(null=True, blank=True, verbose_name="Respuesta PayPal (JSON)")
 
     # Evidencia del pago (solo para pagos no efectivo)
     evidencia_pago = models.ImageField(upload_to='doctor/evidencia_pagos/', verbose_name="Evidencia de Pago",
