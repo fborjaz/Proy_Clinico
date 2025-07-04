@@ -7,9 +7,9 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 
-from applications.core.models import Paciente, Medicamento, Diagnostico
+from applications.core.models import Paciente, Medicamento, Diagnostico, Servicio
 from applications.doctor.forms.atencion import AtencionForm
-from applications.doctor.models import Atencion, DetalleAtencion
+from applications.doctor.models import Atencion, DetalleAtencion, DetalleServicioAtencion
 from applications.security.components.mixin_crud import CreateViewMixin, DeleteViewMixin, ListViewMixin, \
     PermissionMixin, UpdateViewMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -61,6 +61,8 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
 
         context['paciente_json'] = 'null'
         context['medicamentos_json'] = '[]'  # Array vacío
+        context['servicios'] = Servicio.objects.filter(activo=True).order_by('nombre')
+        context['servicios_json'] = '[]' # Array vacío
         context['modo_edicion'] = False
         return context
 
@@ -74,6 +76,7 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
         evaluacion_clinica = data.get('evaluacionClinica', {})
         plan_terapeutico = data.get('planTerapeutico', {})
         medicamentos = data.get('medicamentos', [])
+        servicios = data.get('servicios', [])
 
         # Conversiones simples (el frontend ya validó)
         def to_int(value):
@@ -128,6 +131,15 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
                         prescripcion=medicamento.get('prescripcion'),
                         duracion_tratamiento=to_int(medicamento.get('duracion')),
                         frecuencia_diaria=to_int(medicamento.get('frecuencia'))
+                    )
+
+                # Procesar servicios adicionales
+                for servicio_data in servicios:
+                    DetalleServicioAtencion.objects.create(
+                        atencion=atencion,
+                        servicio_id=to_int(servicio_data.get('id')),
+                        cantidad=to_int(servicio_data.get('cantidad')),
+                        observaciones=servicio_data.get('observaciones')
                     )
 
                 # Guardar auditoría
@@ -204,6 +216,19 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
         # Solo los medicamentos en JSON para JavaScript
         context['medicamentos_json'] = json.dumps(medicamentos)
 
+        # Solo los servicios adicionales para cargar dinámicamente con JavaScript
+        servicios_adicionales = []
+        for detalle_servicio in atencion.servicios_adicionales.select_related('servicio').all():
+            servicio_dict = {
+                'id': detalle_servicio.servicio.id,
+                'nombre': detalle_servicio.servicio.nombre,
+                'precio': float(detalle_servicio.servicio.precio),
+                'cantidad': detalle_servicio.cantidad,
+                'observaciones': detalle_servicio.observaciones,
+            }
+            servicios_adicionales.append(servicio_dict)
+        context['servicios_json'] = json.dumps(servicios_adicionales)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -218,6 +243,7 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
         evaluacion_clinica = data.get('evaluacionClinica', {})
         plan_terapeutico = data.get('planTerapeutico', {})
         medicamentos = data.get('medicamentos', [])
+        servicios = data.get('servicios', [])
 
         # Conversiones simples (el frontend ya validó)
         def to_int(value):
@@ -274,6 +300,17 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
                         prescripcion=medicamento.get('prescripcion'),
                         duracion_tratamiento=to_int(medicamento.get('duracion')),
                         frecuencia_diaria=to_int(medicamento.get('frecuencia'))
+                    )
+
+                # Procesar servicios adicionales: borrar existentes y crear nuevos
+                DetalleServicioAtencion.objects.filter(atencion=atencion).delete()
+
+                for servicio_data in servicios:
+                    DetalleServicioAtencion.objects.create(
+                        atencion=atencion,
+                        servicio_id=to_int(servicio_data.get('id')),
+                        cantidad=to_int(servicio_data.get('cantidad')),
+                        observaciones=servicio_data.get('observaciones')
                     )
 
                 # Guardar auditoría para modificación

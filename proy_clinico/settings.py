@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 THIRD_PARTY_APPS = [
     'django_extensions',
     'django_browser_reload', 
-
+    'widget_tweaks',
 ]
 # Aplicaciones propias
 LOCAL_APPS = [

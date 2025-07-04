@@ -241,6 +241,44 @@ class DetalleAtencion(models.Model):
     def __str__(self):
         return f"{self.medicamento} para {self.atencion.paciente}"
 
+
+class DetalleServicioAtencion(models.Model):
+    atencion = models.ForeignKey(
+        Atencion,
+        on_delete=models.CASCADE,
+        verbose_name="Atención Médica",
+        related_name="servicios_adicionales",
+        help_text="Atención médica asociada a este servicio adicional."
+    )
+    servicio = models.ForeignKey(
+        'core.Servicio',
+        on_delete=models.PROTECT,
+        verbose_name="Servicio Adicional",
+        related_name="detalles_atencion",
+        help_text="Servicio adicional realizado durante la atención."
+    )
+    cantidad = models.PositiveIntegerField(
+        default=1,
+        verbose_name="Cantidad",
+        help_text="Cantidad de veces que se realizó el servicio."
+    )
+    observaciones = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Observaciones",
+        help_text="Notas adicionales sobre el servicio realizado."
+    )
+
+    class Meta:
+        ordering = ['atencion', 'servicio']
+        verbose_name = "Detalle de Servicio de Atención"
+        verbose_name_plural = "Detalles de Servicios de Atención"
+        unique_together = ('atencion', 'servicio')
+
+    def __str__(self):
+        return f"{self.servicio.nombre} para {self.atencion.paciente} ({self.cantidad})"
+
+
 # Modelo que representa un servicio adicional ofrecido durante una atención médica.
 # Puede incluir exámenes, procedimientos, o cualquier otro servicio.
 class ServiciosAdicionales(models.Model):

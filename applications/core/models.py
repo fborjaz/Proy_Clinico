@@ -20,6 +20,41 @@ class TipoSangre(models.Model):
     def __str__(self):
         return self.tipo
 
+
+"""Modelo que representa los diferentes servicios adicionales que ofrece la clínica."""
+class Servicio(models.Model):
+    nombre = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="Nombre del Servicio",
+        help_text="Ejemplo: Consulta General, Radiografía de Tórax, Análisis de Sangre"
+    )
+    descripcion = models.TextField(
+        verbose_name="Descripción del Servicio",
+        null=True,
+        blank=True,
+        help_text="Detalle del servicio ofrecido."
+    )
+    precio = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Precio",
+        help_text="Costo del servicio."
+    )
+    activo = models.BooleanField(
+        default=True,
+        verbose_name="Activo",
+        help_text="Indica si el servicio está disponible."
+    )
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "Servicio"
+        verbose_name_plural = "Servicios"
+        ordering = ['nombre']
+
 """ Manager del modelo paciente """
 class ActivePatientManager(models.Manager):
     # Método para obtener un queryset de pacientes activos

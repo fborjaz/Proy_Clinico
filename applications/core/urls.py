@@ -42,11 +42,20 @@ from applications.core.views.gasto_mensual import (
     GastoMensualUpdateView, GastoMensualDeleteView
 )
 from applications.core.views.chatbot import chatbot_api
+from applications.core.views.servicio import (
+    ServicioListView, ServicioCreateView, ServicioUpdateView, ServicioDeleteView
+)
 
 app_name='core' # define un espacio de nombre para la aplicacion
 urlpatterns = [
     # Rutas para el chatbot
     path('chatbot_api/', chatbot_api, name="chatbot_api"),
+
+    # Rutas para Servicios
+    path('servicio_list/', ServicioListView.as_view(), name="servicio_list"),
+    path('servicio_create/', ServicioCreateView.as_view(), name="servicio_create"),
+    path('servicio_update/<int:pk>/', ServicioUpdateView.as_view(), name='servicio_update'),
+    path('servicio_delete/<int:pk>/', ServicioDeleteView.as_view(), name='servicio_delete'),
 
     # Rutas para vistas relacionadas con Pacientes
     path('paciente_find/', paciente_find, name="paciente_find"),

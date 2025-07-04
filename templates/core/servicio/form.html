@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if object %}Editar Servicio{% else %}Nuevo Servicio{% endif %} - SaludTotal
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load widget_tweaks %}
+
+<div class="w-full min-h-screen relative">
+  <!-- Medical pattern background que cubre toda la pantalla -->
+  <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="medical-cross-form" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M25 15h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="currentColor" opacity="0.1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#medical-cross-form)" class="text-blue-600"/>
+    </svg>
+  </div>
+
+  <div class="relative z-10 w-full px-6 py-8 max-w-4xl mx-auto">
+    <!-- Header con diseño médico profesional -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white p-8 rounded-2xl shadow-2xl mb-8 border border-blue-300 dark:border-indigo-700 overflow-hidden">
+      <!-- Medical pattern overlay -->
+      <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <div class="flex items-center space-x-4 flex-1">
+          <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <i class="fas fa-concierge-bell text-2xl text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold flex items-center">
+              <i class="fas fa-stethoscope mr-3"></i>
+              {% if object %}Editar Servicio{% else %}Nuevo Servicio{% endif %}
+            </h1>
+            <p class="text-blue-100 mt-1 text-sm sm:text-base flex items-center">
+              <i class="fas fa-clipboard-list mr-2"></i>
+              Gestiona los servicios médicos del sistema
+            </p>
+          </div>
+        </div>
+        <div class="text-right mt-4 sm:mt-0">
+          <div class="w-20 h-20 bg-white/20 rounded-2xl flex flex-col items-center justify-center shadow-lg border-2 border-white/30 backdrop-blur-sm">
+            <i class="fas fa-hospital text-2xl text-white mb-1"></i>
+            <div class="text-xs text-blue-100">Servicio</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Decorative medical elements -->
+      <div class="absolute top-4 right-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+      <div class="absolute bottom-4 left-4 opacity-20">
+        <i class="fas fa-plus text-white text-lg"></i>
+      </div>
+    </div>
+
+    <!-- Formulario con diseño médico -->
+    <div class="relative z-10 bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 backdrop-blur-lg">
+      <form method="post" class="space-y-8">
+        {% csrf_token %}
+
+        <!-- Mensajes de error con diseño médico -->
+        {% if form.errors %}
+        <div class="bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/50 dark:to-rose-900/50 border-l-4 border-red-500 rounded-xl p-6 shadow-lg">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400"></i>
+              </div>
+            </div>
+            <div class="ml-4 flex-1">
+              <h3 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+                <i class="fas fa-ban mr-2"></i>
+                Errores en el formulario
+              </h3>
+              <div class="text-red-700 dark:text-red-300">
+                <ul class="list-disc list-inside space-y-1">
+                  {% for field in form %}
+                    {% if field.errors %}
+                      {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                      {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Campos del formulario con diseño médico -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Nombre del servicio -->
+          <div class="space-y-2">
+            <label for="id_nombre" class="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300">
+              <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-2 shadow-md">
+                <i class="fas fa-tag text-white text-xs"></i>
+              </div>
+              {{ form.nombre.label }}
+              <span class="text-red-500 ml-1">*</span>
+            </label>
+            <div class="relative">
+              {% render_field form.nombre class="w-full px-4 py-3 pl-12 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg" placeholder="Ingrese el nombre del servicio" %}
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-concierge-bell text-white text-xs"></i>
+                </div>
+              </div>
+            </div>
+            {% if form.nombre.help_text %}
+              <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                <i class="fas fa-info-circle mr-1"></i>
+                {{ form.nombre.help_text }}
+              </p>
+            {% endif %}
+          </div>
+
+          <!-- Precio -->
+          <div class="space-y-2">
+            <label for="id_precio" class="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300">
+              <div class="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-2 shadow-md">
+                <i class="fas fa-dollar-sign text-white text-xs"></i>
+              </div>
+              {{ form.precio.label }}
+              <span class="text-red-500 ml-1">*</span>
+            </label>
+            <div class="relative">
+              {% render_field form.precio class="w-full px-4 py-3 pl-12 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg" placeholder="0.00" %}
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div class="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-dollar-sign text-white text-xs"></i>
+                </div>
+              </div>
+            </div>
+            {% if form.precio.help_text %}
+              <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                <i class="fas fa-info-circle mr-1"></i>
+                {{ form.precio.help_text }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="space-y-2">
+          <label for="id_descripcion" class="flex items-center text-sm font-bold text-gray-700 dark:text-gray-300">
+            <div class="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2 shadow-md">
+              <i class="fas fa-align-left text-white text-xs"></i>
+            </div>
+            {{ form.descripcion.label }}
+          </label>
+          <div class="relative">
+            {% render_field form.descripcion class="w-full px-4 py-3 pl-12 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-300 shadow-md hover:shadow-lg resize-none" rows="4" placeholder="Descripción detallada del servicio médico" %}
+            <div class="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
+              <div class="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-align-left text-white text-xs"></i>
+              </div>
+            </div>
+          </div>
+          {% if form.descripcion.help_text %}
+            <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+              <i class="fas fa-info-circle mr-1"></i>
+              {{ form.descripcion.help_text }}
+            </p>
+          {% endif %}
+        </div>
+
+        <!-- Estado activo -->
+        <div class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center">
+              {% render_field form.activo class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-all duration-300" %}
+              <label for="id_activo" class="ml-3 flex items-center text-sm font-medium text-gray-900 dark:text-gray-300">
+                <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-2 shadow-md">
+                  <i class="fas fa-toggle-on text-white text-xs"></i>
+                </div>
+                {{ form.activo.label }}
+              </label>
+            </div>
+            {% if form.activo.help_text %}
+              <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                <i class="fas fa-info-circle mr-1"></i>
+                {{ form.activo.help_text }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <a href="{{ back_url }}" 
+             class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+              <i class="fas fa-times text-white text-xs"></i>
+            </div>
+            Cancelar
+          </a>
+          <button type="submit" 
+                  class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+              <i class="fas fa-save text-white text-xs"></i>
+            </div>
+            {{ grabar }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Botón de navegación -->
+    <div class="flex justify-center items-center mt-8">
+      <a href="{% url 'home' %}" 
+         class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+        <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 shadow-md">
+          <i class="fas fa-home text-white text-xs"></i>
+        </div>
+        Ir al Inicio
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Animaciones suaves */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .relative.z-10 {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  /* Estilos para inputs focus */
+  input:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Efectos hover mejorados */
+  button:hover, a:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 640px) {
+    .grid-cols-1.lg\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}

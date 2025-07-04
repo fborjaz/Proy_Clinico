@@ -6,69 +6,58 @@
 {%  endblock css %}
 {% block content %}
 <section class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 relative">
-    <!-- Medical pattern background que cubre toda la pantalla -->
-    <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="medical-cross-main" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#medical-cross-main)" class="text-blue-500 dark:text-blue-400"/>
-        </svg>
-    </div>
+   <!-- Medical pattern background que cubre toda la pantalla -->
+   <div class="fixed inset-0 opacity-5 dark:opacity-10 pointer-events-none z-0">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+         <defs>
+            <pattern id="medical-cross-main" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+               <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
+            </pattern>
+         </defs>
+         <rect width="100%" height="100%" fill="url(#medical-cross-main)" class="text-blue-500 dark:text-blue-400"/>
+      </svg>
+   </div>
 
-    <!-- Navigation Tabs con diseño médico profesional -->
-    <nav class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-xl sticky top-0 z-10 border-b border-gray-200/50 dark:border-gray-700/50">
-        <div class="container mx-auto px-6">
-            <div class="flex space-x-0">
-                <button onclick="showTab('paciente')" id="tab-paciente" class="tab-button flex-1 py-4 px-6 text-center border-b-3 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold transition-all duration-300 hover:bg-blue-50 dark:hover:bg-blue-900/30">
-                    <div class="flex items-center justify-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-user-injured text-white text-sm"></i>
-                        </div>
-                        <span>Datos del Paciente</span>
-                    </div>
-                </button>
-                <button onclick="showTab('consultas')" id="tab-consultas" class="tab-button flex-1 py-4 px-6 text-center border-b-3 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/30 hover:text-gray-700 dark:hover:text-gray-300">
-                    <div class="flex items-center justify-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-file-medical-alt text-white text-sm"></i>
-                        </div>
-                        <span>Consultas Anteriores</span>
-                    </div>
-                </button>
-                <button onclick="showTab('atencion')" id="tab-atencion" class="tab-button flex-1 py-4 px-6 text-center border-b-3 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/30 hover:text-gray-700 dark:hover:text-gray-300">
-                    <div class="flex items-center justify-center space-x-2">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-clipboard-check text-white text-sm"></i>
-                        </div>
-                        <span>Atención Actual</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </nav>
+   <!-- Navigation -->
+   <nav class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-xl sticky top-0 z-10 border-b border-gray-200/50 dark:border-gray-700/50">
+      <div class="container mx-auto px-6">
+         <div class="flex space-x-0">
+            <button onclick="showTab('paciente')" id="tab-paciente" class="tab-button flex-1 py-4 px-6 text-center border-b-4 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold transition-all duration-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 bg-blue-50/50 dark:bg-blue-900/20">
+               <div class="flex items-center justify-center space-x-2">
+                  <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg transform scale-110">
+                     <i class="fas fa-user-injured text-white text-sm"></i>
+                  </div>
+                  <span>Datos del Paciente</span>
+                  <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+               </div>
+            </button>
+            <button onclick="showTab('consultas')" id="tab-consultas" class="tab-button flex-1 py-4 px-6 text-center border-b-4 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/30 hover:text-gray-700 dark:hover:text-gray-300">
+               <div class="flex items-center justify-center space-x-2">
+                  <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+                     <i class="fas fa-file-medical-alt text-white text-sm"></i>
+                  </div>
+                  <span>Consultas Anteriores</span>
+               </div>
+            </button>
+            <button onclick="showTab('atencion')" id="tab-atencion" class="tab-button flex-1 py-4 px-6 text-center border-b-4 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/30 hover:text-gray-700 dark:hover:text-gray-300">
+               <div class="flex items-center justify-center space-x-2">
+                  <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                     <i class="fas fa-clipboard-check text-white text-sm"></i>
+                  </div>
+                  <span>Atención Actual</span>
+               </div>
+            </button>
+         </div>
+      </div>
+   </nav>
 
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-8">
      <!-- Datos del Paciente -->
         <div id="content-paciente" class="tab-content active">
             <!-- Selector de Paciente -->
-            <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 card-hover transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
-                <!-- Medical pattern background -->
-                <div class="absolute inset-0 opacity-5 dark:opacity-10">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="medical-cross-selector" x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse">
-                                <path d="M8 6h9v3h3v9h-3v3h-9v-3h-3v-9h3z" fill="currentColor" opacity="0.1"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#medical-cross-selector)" class="text-blue-500 dark:text-blue-400"/>
-                    </svg>
-                </div>
-                
-                <div class="relative z-10">
+            <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 card-hover transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 relative z-10">
+                <div class="relative">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                         <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
                             <i class="fas fa-search text-white text-lg"></i>
@@ -76,291 +65,170 @@
                         Selección de Paciente
                     </h2>
 
-        <div class="flex flex-col md:flex-row gap-4 items-end">
-            <div class="flex-1 relative">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Buscar y Seleccionar Paciente</label>
-
-                <!-- Input de búsqueda personalizado -->
-                <div class="relative">
-                    <input
-                        type="text"
-                        id="paciente-search-input"
-                        placeholder="Escriba el nombre, apellido o cédula del paciente..."
-                        class="w-full p-4 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 bg-white"
-                        autocomplete="off"
-                    >
-
-                    <!-- Indicador de carga -->
-                    <div id="loading-indicator" class="absolute right-4 top-1/2 transform -translate-y-1/2 hidden">
-                        <svg class="w-5 h-5 text-blue-500 loading-spinner" fill="none" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle>
-                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" class="opacity-75"></path>
-                        </svg>
-                    </div>
-
-                    <!-- Icono de búsqueda -->
-                    <div id="search-icon" class="absolute right-4 top-1/2 transform -translate-y-1/2">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-
-                    <!-- Botón de limpiar -->
-                    <button
-                        id="clear-button"
-                        class="absolute right-4 top-1/2 transform -translate-y-1/2 hidden hover:bg-gray-100 rounded-full p-1"
-                        onclick="limpiarSeleccion()"
-                    >
-                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Dropdown de resultados -->
-                <div
-                    id="pacientes-dropdown"
-                    class="absolute z-50 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto dropdown-closed transition-all duration-200"
-                >
-                    <div id="pacientes-list" class="py-2">
-                        <!-- Los resultados se cargarán aquí -->
-                    </div>
-
-                    <!-- Mensaje cuando no hay resultados -->
-                    <div id="no-results" class="p-4 text-center text-gray-500 hidden">
-                        <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        No se encontraron pacientes
-                    </div>
-
-                    <!-- Mensaje de mínimo de caracteres -->
-                    <div id="min-chars-message" class="p-4 text-center text-gray-500 hidden">
-                        <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                        Escriba al menos 3 caracteres para buscar
+                    <div class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-1 relative">
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Buscar y Seleccionar Paciente</label>
+                            <div class="relative">
+                                <input
+                                    type="text"
+                                    id="paciente-search-input"
+                                    placeholder="Escriba el nombre, apellido o cédula del paciente..."
+                                    class="w-full p-4 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700"
+                                    autocomplete="off"
+                                >
+                                <div id="loading-indicator" class="absolute right-4 top-1/2 transform -translate-y-1/2 hidden">
+                                    <svg class="w-5 h-5 text-blue-500 loading-spinner" fill="none" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle>
+                                        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" class="opacity-75"></path>
+                                    </svg>
+                                </div>
+                                <div id="search-icon" class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <button id="clear-button" class="absolute right-4 top-1/2 transform -translate-y-1/2 hidden hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-1" onclick="limpiarSeleccion()">
+                                    <i class="fas fa-times text-gray-500 dark:text-gray-400"></i>
+                                </button>
+                            </div>
+                            <div id="pacientes-dropdown" class="absolute z-50 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto dropdown-closed transition-all duration-200">
+                                <div id="pacientes-list" class="py-2"></div>
+                                <div id="no-results" class="p-4 text-center text-gray-500 dark:text-gray-400 hidden">
+                                    <i class="fas fa-user-slash text-3xl text-gray-300 dark:text-gray-500 mb-2"></i><br>
+                                    No se encontraron pacientes
+                                </div>
+                                <div id="min-chars-message" class="p-4 text-center text-gray-500 dark:text-gray-400 hidden">
+                                    <i class="fas fa-keyboard text-3xl text-gray-300 dark:text-gray-500 mb-2"></i><br>
+                                    Escriba al menos 3 caracteres para buscar
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="mostrarFormularioNuevoPaciente()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl transition-colors duration-200 flex items-center space-x-2 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Agregar Paciente</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <button
-                onclick="mostrarFormularioNuevoPaciente()"
-                class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl transition-colors duration-200 flex items-center space-x-2 font-semibold"
-            >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span>Agregar Paciente</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Datos del Paciente Seleccionado -->
-    <div id="datos-paciente-container" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 hidden border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
-        <!-- Medical pattern background -->
-        <div class="absolute inset-0 opacity-5 dark:opacity-10">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="medical-cross-patient-data" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
-                        <path d="M10 8h10v4h4v10h-4v4h-10v-4h-4v-10h4z" fill="currentColor" opacity="0.1"/>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#medical-cross-patient-data)" class="text-green-500 dark:text-green-400"/>
-            </svg>
-        </div>
-        
-        <div class="relative z-10">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
-                    <i class="fas fa-user-check text-white text-lg"></i>
-                </div>
-                Datos del Paciente
-            </h3>
-
-            <!-- Información Personal -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 p-4 rounded-xl border border-blue-200/50 dark:border-blue-700/50">
-                    <div class="flex items-center space-x-4">
-                       <div id="paciente-avatar" class="w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-lg">
-                            <img id="paciente-foto" src="" alt="Foto del paciente" class="w-full h-full object-cover">
+            <!-- Datos del Paciente Seleccionado -->
+            <div id="datos-paciente-container" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 hidden border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                            <i class="fas fa-user-check text-white text-lg"></i>
                         </div>
-                        <div>
-                            <div id="paciente-nombre" class="font-semibold text-gray-800 dark:text-white text-lg">Nombre del Paciente</div>
-                            <div id="paciente-cedula" class="text-sm text-blue-600 dark:text-blue-400 font-medium">CI: 0000000000</div>
+                        Datos del Paciente
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 p-4 rounded-xl border border-blue-200/50 dark:border-blue-700/50 col-span-1 md:col-span-2 lg:col-span-3">
+                            <div class="flex items-center space-x-4">
+                                <div id="paciente-avatar" class="w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-lg bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center">
+                                    <img id="paciente-foto" src="{% static 'img/usuario_anonimo.png' %}" alt="Foto del paciente" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fas fa-user text-white text-xl hidden"></i>
+                                </div>
+                                <div>
+                                    <div id="paciente-nombre" class="font-semibold text-gray-800 dark:text-white text-lg">Nombre del Paciente</div>
+                                    <div id="paciente-cedula" class="text-sm text-blue-600 dark:text-blue-400 font-medium">CI: 0000000000</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 p-4 rounded-xl border border-purple-200/50 dark:border-purple-700/50">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-phone text-white text-sm"></i>
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 p-4 rounded-xl border border-purple-200/50 dark:border-purple-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-phone text-white text-sm"></i></div>
+                                <div>
+                                    <div class="text-sm text-purple-600 dark:text-purple-400 font-medium">Teléfono</div>
+                                    <div id="paciente-telefono" class="font-semibold text-gray-800 dark:text-white">--</div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="text-sm text-purple-600 dark:text-purple-400 font-medium">Teléfono</div>
-                            <div id="paciente-telefono" class="font-semibold text-gray-800 dark:text-white">--</div>
+                        <div class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 p-4 rounded-xl border border-teal-200/50 dark:border-teal-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-envelope text-white text-sm"></i></div>
+                                <div>
+                                    <div class="text-sm text-teal-600 dark:text-teal-400 font-medium">Email</div>
+                                    <div id="paciente-email" class="font-semibold text-gray-800 dark:text-white">--</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 p-4 rounded-xl border border-teal-200/50 dark:border-teal-700/50">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-envelope text-white text-sm"></i>
+                        <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/30 dark:to-red-900/30 p-4 rounded-xl border border-orange-200/50 dark:border-orange-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-birthday-cake text-white text-sm"></i></div>
+                                <div>
+                                    <div class="text-sm text-orange-600 dark:text-orange-400 font-medium">Edad</div>
+                                    <div id="paciente-edad" class="font-semibold text-gray-800 dark:text-white">--</div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="text-sm text-teal-600 dark:text-teal-400 font-medium">Email</div>
-                            <div id="paciente-email" class="font-semibold text-gray-800 dark:text-white">--</div>
+                        <div class="md:col-span-2 lg:col-span-3 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800/50 dark:to-blue-900/30 p-4 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-r from-gray-500 to-blue-500 rounded-lg flex items-center justify-center shadow-md"><i class="fas fa-map-marker-alt text-white text-sm"></i></div>
+                                <div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Dirección</div>
+                                    <div id="paciente-direccion" class="font-semibold text-gray-800 dark:text-white">--</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/30 dark:to-red-900/30 p-4 rounded-xl border border-orange-200/50 dark:border-orange-700/50">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-birthday-cake text-white text-sm"></i>
-                        </div>
-                        <div>
-                            <div class="text-sm text-orange-600 dark:text-orange-400 font-medium">Edad</div>
-                            <div id="paciente-edad" class="font-semibold text-gray-800 dark:text-white">--</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-2 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800/50 dark:to-blue-900/30 p-4 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-gray-500 to-blue-500 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt text-white text-sm"></i>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Dirección</div>
-                            <div id="paciente-direccion" class="font-semibold text-gray-800 dark:text-white">--</div>
+                    <!-- Historia Clínica -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border border-indigo-200/50 dark:border-indigo-700/50">
+                         <h4 class="text-lg font-bold text-indigo-800 dark:text-indigo-300 mb-4 flex items-center">
+                            <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mr-3 shadow-md"><i class="fas fa-file-medical text-white text-sm"></i></div>
+                            Historia Clínica
+                        </h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-user-md text-blue-500 mr-2"></i>Antecedentes Personales</label>
+                                <textarea id="antecedentes-personales" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-cut text-red-500 mr-2"></i>Antecedentes Quirúrgicos</label>
+                                <textarea id="antecedentes-quirurgicos" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-users text-green-500 mr-2"></i>Antecedentes Familiares</label>
+                                <textarea id="antecedentes-familiares" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>Alergias</label>
+                                <textarea id="alergias" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-pills text-purple-500 mr-2"></i>Medicamentos Actuales</label>
+                                <textarea id="medicamentos-actuales" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-smoking text-orange-500 mr-2"></i>Hábitos Tóxicos</label>
+                                <textarea id="habitos-toxicos" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-syringe text-teal-500 mr-2"></i>Vacunas</label>
+                                <textarea id="vacunas" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
+                            <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-venus text-pink-500 mr-2"></i>Antecedentes Gineco-obstétricos</label>
+                                <textarea id="antecedentes-gineco" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" readonly></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Historia Clínica -->
-            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border border-indigo-200/50 dark:border-indigo-700/50">
-                <h4 class="text-lg font-bold text-indigo-800 dark:text-indigo-300 mb-4 flex items-center">
-                    <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-file-medical text-white text-sm"></i>
+            <!-- Mensaje cuando no hay paciente seleccionado -->
+            <div id="no-paciente-mensaje" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 text-center border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-blue-100 dark:from-gray-700 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-user-plus text-2xl text-gray-400 dark:text-gray-500"></i>
                     </div>
-                    Historia Clínica
-                </h4>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-user-md text-blue-500 mr-2"></i>
-                            Antecedentes Personales
-                        </label>
-                        <textarea id="antecedentes-personales" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-cut text-red-500 mr-2"></i>
-                            Antecedentes Quirúrgicos
-                        </label>
-                        <textarea id="antecedentes-quirurgicos" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-users text-green-500 mr-2"></i>
-                            Antecedentes Familiares
-                        </label>
-                        <textarea id="antecedentes-familiares" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
-                            Alergias
-                        </label>
-                        <textarea id="alergias" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-pills text-purple-500 mr-2"></i>
-                            Medicamentos Actuales
-                        </label>
-                        <textarea id="medicamentos-actuales" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-smoking text-orange-500 mr-2"></i>
-                            Hábitos Tóxicos
-                        </label>
-                        <textarea id="habitos-toxicos" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-syringe text-teal-500 mr-2"></i>
-                            Vacunas
-                        </label>
-                        <textarea id="vacunas" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
-
-                    <div class="bg-white/70 dark:bg-gray-800/70 p-4 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                            <i class="fas fa-venus text-pink-500 mr-2"></i>
-                            Antecedentes Gineco-obstétricos
-                        </label>
-                        <textarea id="antecedentes-gineco" rows="3" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-white" readonly></textarea>
-                    </div>
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Seleccione un paciente</h3>
+                    <p class="text-gray-500 dark:text-gray-400">Para continuar, busque y seleccione un paciente de la lista o agregue uno nuevo.</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Mensaje cuando no hay paciente seleccionado -->
-    <div id="no-paciente-mensaje" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 text-center border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
-        <!-- Medical pattern background -->
-        <div class="absolute inset-0 opacity-5 dark:opacity-10">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="medical-cross-no-patient" x="0" y="0" width="35" height="35" patternUnits="userSpaceOnUse">
-                        <path d="M12 9h11v5h5v11h-5v5h-11v-5h-5v-11h5z" fill="currentColor" opacity="0.1"/>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#medical-cross-no-patient)" class="text-gray-400"/>
-            </svg>
-        </div>
-        
-        <div class="relative z-10">
-            <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-blue-100 dark:from-gray-700 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <i class="fas fa-user-plus text-2xl text-gray-400 dark:text-gray-500"></i>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Seleccione un paciente</h3>
-            <p class="text-gray-500 dark:text-gray-400">Para continuar, busque y seleccione un paciente de la lista o agregue uno nuevo.</p>
-        </div>
-    </div>
-
             <!-- Modal Agregar Paciente si no existe -->
             {% include "components/modal_paciente.html"  %}
         </div>
+
         <!-- Consultas Anteriores -->
-        <div id="content-consultas" class="tab-content">
-            <!-- Header Section con diseño médico -->
+        <div id="content-consultas" class="tab-content hidden">
             <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
-                <!-- Medical pattern background -->
-                <div class="absolute inset-0 opacity-5 dark:opacity-10">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="medical-cross-consultas" x="0" y="0" width="35" height="35" patternUnits="userSpaceOnUse">
-                                <path d="M12 9h11v5h5v11h-5v5h-11v-5h-5v-11h5z" fill="currentColor" opacity="0.1"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#medical-cross-consultas)" class="text-indigo-500 dark:text-indigo-400"/>
-                    </svg>
-                </div>
-                
                 <div class="relative z-10">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
                         <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
@@ -371,26 +239,8 @@
                     <p class="text-gray-600 dark:text-gray-400">Registro completo de atenciones médicas anteriores</p>
                 </div>
             </div>
-
-            <!-- Contenedor de consultas -->
-            <div id="consultas-container" class="space-y-6">
-                <!-- Las consultas se cargarán aquí dinámicamente -->
-            </div>
-
-            <!-- Mensaje cuando no hay consultas -->
+            <div id="consultas-container" class="space-y-6"></div>
             <div id="no-consultas-mensaje" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-12 text-center border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden hidden">
-                <!-- Medical pattern background -->
-                <div class="absolute inset-0 opacity-5 dark:opacity-10">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="medical-cross-no-consultas" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                                <path d="M15 10h10v5h5v10h-5v5h-10v-5h-5v-10h5z" fill="currentColor" opacity="0.1"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#medical-cross-no-consultas)" class="text-gray-400"/>
-                    </svg>
-                </div>
-                
                 <div class="relative z-10">
                     <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-indigo-100 dark:from-gray-700 dark:to-indigo-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                         <i class="fas fa-file-medical text-2xl text-gray-400 dark:text-gray-500"></i>
@@ -403,59 +253,29 @@
 
         <!-- Atención Actual -->
          <div id="content-atencion" class="tab-content hidden">
-            <!-- Mensaje cuando no hay paciente seleccionado -->
-            <div id="no-atencion-mensaje" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 text-center border border-gray-200/50 dark:border-gray-700/50 relative overflow-hidden">
-                <!-- Medical pattern background -->
-                <div class="absolute inset-0 opacity-5 dark:opacity-10">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="medical-cross-no-atencion" x="0" y="0" width="35" height="35" patternUnits="userSpaceOnUse">
-                                <path d="M12 9h11v5h5v11h-5v5h-11v-5h-5v-11h5z" fill="currentColor" opacity="0.1"/>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#medical-cross-no-atencion)" class="text-gray-400"/>
-                    </svg>
-                </div>
-                
-                <div class="relative z-10">
-                    <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-blue-100 dark:from-gray-700 dark:to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <i class="fas fa-user-plus text-2xl text-gray-400 dark:text-gray-500"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Seleccione un paciente primero</h3>
-                    <p class="text-gray-500 dark:text-gray-400">Para registrar una atención médica, primero debe seleccionar un paciente.</p>
-                </div>
-            </div>
-
-            <!-- Contenido de la atención (se mostrará cuando haya un paciente seleccionado) -->
-            <div id="atencion-contenido" class="hidden space-y-8">
             <div class="space-y-8">
-                <!-- Identificación -->
               <form id="atencion-form" onsubmit="event.preventDefault(); grabarAtencion();">
                     {% csrf_token %}
-                    <div class="bg-white rounded-2xl shadow-xl p-8">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                            <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mr-4">
-                                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                </svg>
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                                <i class="fas fa-clipboard-list text-white text-lg"></i>
                             </div>
                             Identificación de la Atención
                         </h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                            <div class="bg-blue-50 p-2 rounded-xl border-l-4 border-blue-400 md:col-span-2">
-                                <h3 class="font-semibold text-blue-800 mb-2">Paciente</h3>
-                                <p id="paciente-nombre2" class="text-blue-700 text-lg">Vera, Erick</p>
-                                <!-- Campo oculto para capturar ID del paciente -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-xl border-l-4 border-blue-400 md:col-span-2">
+                                <h3 class="font-semibold text-blue-800 dark:text-blue-300 mb-2">Paciente</h3>
+                                <p id="paciente-nombre2" class="text-blue-700 dark:text-blue-200 text-lg">Seleccione un paciente</p>
                                 <input type="hidden" id="id_paciente">
                             </div>
-                            <div class="bg-green-50 p-2 rounded-xl border-l-4 border-green-400 text-center ">
-                                 <div id="paciente-avatar2" class="w-24 h-24 rounded-full overflow-hidden mx-auto">
-                                    <img id="paciente-foto2" src="" alt="Foto del paciente" class="w-full h-full object-cover">
-
+                            <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-xl border-l-4 border-green-400 text-center flex flex-col items-center justify-center">
+                                 <div id="paciente-avatar2" class="w-24 h-24 rounded-full overflow-hidden mx-auto border-2 border-white shadow-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center">
+                                    <img id="paciente-foto2" src="{% static 'img/usuario_anonimo.png' %}" alt="Foto del paciente" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fas fa-user text-white text-2xl hidden"></i>
                                 </div>
-                                 <span id="paciente-edad2" class="text-blue-800 text-1xl font-bold">Edad</span>
-                                <!-- Campo oculto para capturar ID del doctor -->
+                                 <span id="paciente-edad2" class="text-blue-800 dark:text-blue-300 text-xl font-bold mt-2">Edad</span>
                                 <input type="hidden" id="id_doctor" value="1">
                             </div>
 
@@ -463,55 +283,49 @@
                     </div>
 
                     <!-- Signos Vitales -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                                <i class="fas fa-heartbeat text-white"></i>
                             </div>
                             Signos Vitales y Mediciones
                         </h3>
 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-red-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-red-800 text-sm">Presión Arterial</h4>
-                                <input type="text" id="id_presion_arterial" value="{{ atencion.presion_arterial|default:'' }}" class="w-full mt-2 p-2 border border-red-200 rounded-lg text-center font-bold text-red-700" placeholder="120/80">
+                            <div class="bg-red-50 dark:bg-red-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-red-800 dark:text-red-300 text-sm">Presión Arterial</h4>
+                                <input type="text" id="id_presion_arterial" value="{{ atencion.presion_arterial|default:'' }}" class="w-full mt-2 p-2 border border-red-200 dark:border-red-700 rounded-lg text-center font-bold text-red-700 dark:text-red-200 bg-white dark:bg-red-900/50" placeholder="120/80">
                             </div>
-                            <div class="bg-pink-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-pink-800 text-sm">Pulso (ppm)</h4>
-                                <input type="number" id="id_pulso" value="{{ atencion.pulso|default:'' }}" class="w-full mt-2 p-2 border border-pink-200 rounded-lg text-center font-bold text-pink-700" placeholder="72">
+                            <div class="bg-pink-50 dark:bg-pink-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-pink-800 dark:text-pink-300 text-sm">Pulso (ppm)</h4>
+                                <input type="number" id="id_pulso" value="{{ atencion.pulso|default:'' }}" class="w-full mt-2 p-2 border border-pink-200 dark:border-pink-700 rounded-lg text-center font-bold text-pink-700 dark:text-pink-200 bg-white dark:bg-pink-900/50" placeholder="72">
                             </div>
-                            <div class="bg-orange-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-orange-800 text-sm">Temperatura (°C)</h4>
-                                <input type="number" step="0.1" id="id_temperatura" value="{{ atencion.temperatura|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-orange-200 rounded-lg text-center font-bold text-orange-700" placeholder="36.5">
+                            <div class="bg-orange-50 dark:bg-orange-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-orange-800 dark:text-orange-300 text-sm">Temperatura (°C)</h4>
+                                <input type="number" step="0.1" id="id_temperatura" value="{{ atencion.temperatura|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-orange-200 dark:border-orange-700 rounded-lg text-center font-bold text-orange-700 dark:text-orange-200 bg-white dark:bg-orange-900/50" placeholder="36.5">
                             </div>
-                            <div class="bg-blue-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-blue-800 text-sm">Freq. Respiratoria</h4>
-                                <input type="number" id="id_frecuencia_respiratoria" value="{{ atencion.frecuencia_respiratoria|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-blue-200 rounded-lg text-center font-bold text-blue-700" placeholder="16">
+                            <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-blue-800 dark:text-blue-300 text-sm">Freq. Respiratoria</h4>
+                                <input type="number" id="id_frecuencia_respiratoria" value="{{ atencion.frecuencia_respiratoria|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-blue-200 dark:border-blue-700 rounded-lg text-center font-bold text-blue-700 dark:text-blue-200 bg-white dark:bg-blue-900/50" placeholder="16">
                             </div>
-                            <div class="bg-green-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-green-800 text-sm">Saturación O2 (%)</h4>
-                                <input type="number" id="id_saturacion_oxigeno" value="{{ atencion.saturacion_oxigeno|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-green-200 rounded-lg text-center font-bold text-green-700" placeholder="98">
+                            <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-green-800 dark:text-green-300 text-sm">Saturación O2 (%)</h4>
+                                <input type="number" id="id_saturacion_oxigeno" value="{{ atencion.saturacion_oxigeno|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-green-200 dark:border-green-700 rounded-lg text-center font-bold text-green-700 dark:text-green-200 bg-white dark:bg-green-900/50" placeholder="98">
                             </div>
-                            <div class="bg-purple-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-purple-800 text-sm">Peso (kg)</h4>
-                                <input type="number" step="0.1" id="id_peso" value="{{ atencion.peso|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-purple-200 rounded-lg text-center font-bold text-purple-700" placeholder="70.5">
+                            <div class="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-purple-800 dark:text-purple-300 text-sm">Peso (kg)</h4>
+                                <input type="number" step="0.1" id="id_peso" value="{{ atencion.peso|stringformat:'g'|default:'' }}" class="w-full mt-2 p-2 border border-purple-200 dark:border-purple-700 rounded-lg text-center font-bold text-purple-700 dark:text-purple-200 bg-white dark:bg-purple-900/50" placeholder="70.5">
                             </div>
-                            <div class="bg-indigo-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-indigo-800 text-sm">Altura (m)</h4>
-                                <input type="number" step="0.01" id="id_altura" value="{{ atencion.altura|stringformat:'g' }}" class="w-full mt-2 p-2 border border-indigo-200 rounded-lg text-center font-bold text-indigo-700" placeholder="1.75">
+                            <div class="bg-indigo-50 dark:bg-indigo-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-indigo-800 dark:text-indigo-300 text-sm">Altura (m)</h4>
+                                <input type="number" step="0.01" id="id_altura" value="{{ atencion.altura|stringformat:'g' }}" class="w-full mt-2 p-2 border border-indigo-200 dark:border-indigo-700 rounded-lg text-center font-bold text-indigo-700 dark:text-indigo-200 bg-white dark:bg-indigo-900/50" placeholder="1.75">
                             </div>
-                            <div class="bg-teal-50 p-4 rounded-xl text-center">
-                                <h4 class="font-semibold text-teal-800 text-sm mb-3">Consulta Control</h4>
+                            <div class="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-xl text-center">
+                                <h4 class="font-semibold text-teal-800 dark:text-teal-300 text-sm mb-3">Consulta Control</h4>
                                 <div class="flex items-center justify-center">
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="checkbox" id="id_consulta_control" {% if atencion.es_control %}checked{% endif %} class="sr-only">
-                                        <div class="relative">
-                                            <div class="w-10 h-6 bg-teal-200 rounded-full shadow-inner transition-colors duration-200 ease-in-out"></div>
-                                            <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ease-in-out"></div>
-                                        </div>
-                                        <span class="ml-3 text-sm font-medium text-teal-700">¿Es consulta de control?</span>
+                                        <input type="checkbox" id="id_consulta_control" {% if atencion.es_control %}checked{% endif %} class="sr-only peer">
+                                        <div class="relative w-11 h-6 bg-gray-200 dark:bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600"></div>
                                     </label>
                                 </div>
                             </div>
@@ -519,68 +333,53 @@
                     </div>
 
                     <!-- Evaluación Clínica -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                                <i class="fas fa-stethoscope text-white"></i>
                             </div>
                             Evaluación Clínica
                         </h3>
-
+                        
                         <div class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="block text-sm font-semibold text-gray-700">Motivo de Consulta *</label>
-                                        <button type="button" onclick="iniciarDictado(event, 'id_motivo_consulta')" 
-                                            class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
-                                            <i class="fas fa-microphone mr-1"></i>
-                                            <span>Dictar</span>
+                                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Motivo de Consulta *</label>
+                                        <button type="button" onclick="iniciarDictado(event, 'id_motivo_consulta')" class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
+                                            <i class="fas fa-microphone mr-1"></i><span>Dictar</span>
                                         </button>
                                     </div>
-                                    <textarea id="id_motivo_consulta" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Ingrese el motivo de la consulta...">{{ atencion.motivo_consulta|default:'' }}</textarea>
+                                    <textarea id="id_motivo_consulta" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" rows="3" placeholder="Ingrese el motivo de la consulta...">{{ atencion.motivo_consulta|default:'' }}</textarea>
                                 </div>
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
-                                        <label class="block text-sm font-semibold text-gray-700">Síntomas *</label>
-                                        <button type="button" onclick="iniciarDictado(event, 'id_sintomas')" 
-                                            class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
-                                            <i class="fas fa-microphone mr-1"></i>
-                                            <span>Dictar</span>
+                                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Síntomas *</label>
+                                        <button type="button" onclick="iniciarDictado(event, 'id_sintomas')" class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
+                                            <i class="fas fa-microphone mr-1"></i><span>Dictar</span>
                                         </button>
                                     </div>
-                                    <textarea id="id_sintomas" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Describa los síntomas presentados...">{{ atencion.sintomas|default:'' }}</textarea>
+                                    <textarea id="id_sintomas" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" rows="3" placeholder="Describa los síntomas presentados...">{{ atencion.sintomas|default:'' }}</textarea>
                                 </div>
                             </div>
 
                             <div>
                                 <div class="flex justify-between items-center mb-2">
-                                    <label class="block text-sm font-semibold text-gray-700">Examen Físico</label>
-                                    <button type="button" onclick="iniciarDictado(event, 'id_examen_fisico')" 
-                                        class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
-                                        <i class="fas fa-microphone mr-1"></i>
-                                        <span>Dictar</span>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Examen Físico</label>
+                                    <button type="button" onclick="iniciarDictado(event, 'id_examen_fisico')" class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
+                                        <i class="fas fa-microphone mr-1"></i><span>Dictar</span>
                                     </button>
                                 </div>
-                                <textarea id="id_examen_fisico" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" placeholder="Hallazgos del examen físico...">{{ atencion.examen_fisico|default:'' }}</textarea>
+                                <textarea id="id_examen_fisico" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" rows="4" placeholder="Hallazgos del examen físico...">{{ atencion.examen_fisico|default:'' }}</textarea>
                             </div>
-                           <!-- diagnosticos-->
-                           <div class="bg-pink-50 border border-gray-300 rounded-lg ">
-                             <label class="block text-sm font-semibold text-pink-800 mb-2">Diagnotico(s) *</label>
-                              <div class="bg-gray-50 p-4 rounded-xl">
+                           
+                           <div class="bg-pink-50 dark:bg-pink-900/30 border border-pink-200 dark:border-pink-700 rounded-lg p-4">
+                             <label class="block text-sm font-semibold text-pink-800 dark:text-pink-300 mb-2">Diagnóstico(s) *</label>
+                              <div class="bg-white dark:bg-gray-800/50 p-4 rounded-xl">
                                 <div class="flex items-center space-x-3 mb-3">
-                                    <select
-                                        id="id_diagnostico"
-                                        multiple
-                                        class="flex-1 p-3 border border-gray-300 rounded-lg h-32 bg-white"
-                                        size="5">
+                                    <select id="id_diagnostico" multiple class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg h-32 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" size="5">
                                         {% for diagnostico in diagnosticos %}
-                                            <option
-                                                value="{{ diagnostico.id }}"
-                                                {% if atencion and diagnostico in atencion.diagnostico.all %}selected{% endif %}
-                                                title="{{ diagnostico.datos_adicionales|default:'' }}">
+                                            <option value="{{ diagnostico.id }}" {% if atencion and diagnostico in atencion.diagnostico.all %}selected{% endif %} title="{{ diagnostico.datos_adicionales|default:'' }}">
                                                  {{ diagnostico.codigo }} - {{ diagnostico.descripcion }}
                                             </option>
                                         {% empty %}
@@ -588,75 +387,67 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div id="diagnosticos-lista" class="text-sm text-gray-600">
-                                    <!-- Aquí aparecerán los diagnósticos seleccionados -->
-                                </div>
+                                <div id="diagnosticos-lista" class="text-sm text-gray-600 dark:text-gray-400"></div>
                             </div>
                             </div>
-                           <!-- fin diagnosticos-->
-
                      </div>
                     </div>
 
                     <!-- Plan Terapéutico -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                                </svg>
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                                <i class="fas fa-notes-medical text-white"></i>
                             </div>
                             Plan Terapéutico
                         </h3>
 
                         <div class="space-y-6">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Plan de Tratamiento *</label>
-                                <textarea id="id_tratamiento" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="4" placeholder="Detalle el plan de tratamiento...">{{ atencion.tratamiento|default:'' }}</textarea>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Exámenes Solicitados</label>
-                                <textarea id="id_examenes_enviados" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Lista de exámenes solicitados...">{{ atencion.examenes_enviados|default:'' }}</textarea>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Plan de Tratamiento *</label>
+                                <textarea id="id_tratamiento" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" rows="4" placeholder="Detalle el plan de tratamiento...">{{ atencion.tratamiento|default:'' }}</textarea>
                             </div>
 
                             <div>
                                 <div class="flex justify-between items-center mb-2">
-                                    <label class="block text-sm font-semibold text-gray-700">Comentario Adicional</label>
-                                    <button type="button" onclick="iniciarDictado(event, 'id_comentario_adicional')" 
-                                        class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
-                                        <i class="fas fa-microphone mr-1"></i>
-                                        <span>Dictar</span>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Exámenes Enviados</label>
+                                    <button type="button" onclick="iniciarDictado(event, 'id_examenes_enviados')" class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
+                                        <i class="fas fa-microphone mr-1"></i><span>Dictar</span>
                                     </button>
                                 </div>
-                                <textarea id="id_comentario_adicional" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Comentarios adicionales...">{{ atencion.comentario_adicional|default:'' }}</textarea>
+                                <textarea id="id_examenes_enviados" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" rows="4" placeholder="Exámenes de laboratorio, imágenes, etc.">{{ atencion.examenes_enviados|default:'' }}</textarea>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Comentario Adicional</label>
+                                    <button type="button" onclick="iniciarDictado(event, 'id_comentario_adicional')" class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 transition-colors">
+                                        <i class="fas fa-microphone mr-1"></i><span>Dictar</span>
+                                    </button>
+                                </div>
+                                <textarea id="id_comentario_adicional" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" rows="3" placeholder="Comentarios adicionales...">{{ atencion.comentario_adicional|default:'' }}</textarea>
                             </div>
                         </div>
                     </div>
 
                     <!-- Prescripción de Medicamentos -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                                </svg>
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-rose-500 to-red-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                                <i class="fas fa-pills text-white"></i>
                             </div>
                             Prescripción de Medicamentos
                         </h3>
 
-                        <!-- Formulario de agregar medicamento -->
-                        <div class="bg-gray-50 p-6 rounded-xl mb-6">
-                            <h4 class="font-semibold text-gray-800 mb-4">Agregar Medicamento</h4>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl mb-6 border border-gray-200 dark:border-gray-700">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-4">Agregar Medicamento</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                               <!-- select dinamico -->
-                                  <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Medicamento *</label>
-                                    <select id="medicamento-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500" name="medicamento_id" required>
+                               <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Medicamento *</label>
+                                    <select id="medicamento-select" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" name="medicamento_id" required>
                                         <option value="">Seleccione medicamento...</option>
                                         {% for medicamento in medicamentos %}
-                                            <option value="{{ medicamento.id }}"
-                                                    title="{{ medicamento.nombre }} {{ medicamento.concentracion }} - {{ medicamento.tipo.nombre }} ({{ medicamento.marca_medicamento.nombre }}) - ${{ medicamento.precio }} - Stock: {{ medicamento.cantidad }}">
+                                            <option value="{{ medicamento.id }}" title="{{ medicamento.nombre }} {{ medicamento.concentracion }} - {{ medicamento.tipo.nombre }} ({{ medicamento.marca_medicamento.nombre }}) - ${{ medicamento.precio }} - Stock: {{ medicamento.cantidad }}">
                                                 {{ medicamento.nombre }}
                                             </option>
                                         {% empty %}
@@ -664,30 +455,27 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <!-- fin select -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad *</label>
-                                    <input type="number" id="cantidad-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500" placeholder="30">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cantidad *</label>
+                                    <input type="number" id="cantidad-input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" placeholder="30">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Prescripción *</label>
-                                    <input type="text" id="prescripcion-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500" placeholder="1 cada 8 horas">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prescripción *</label>
+                                    <input type="text" id="prescripcion-input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" placeholder="1 cada 8 horas">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Duración (días) *</label>
-                                    <input type="number" id="duracion-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500" placeholder="7">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duración (días) *</label>
+                                    <input type="number" id="duracion-input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" placeholder="7">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Frecuencia diaria *</label>
-                                    <input type="number" id="frecuencia-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500" placeholder="3">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Frecuencia diaria *</label>
+                                    <input type="number" id="frecuencia-input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" placeholder="3">
                                 </div>
                             </div>
                             <div class="mt-4 flex space-x-3">
-                                <button type="button" onclick="agregarMedicamento()" class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                    <span>Add Prescripcion</span>
+                                <button type="button" onclick="agregarMedicamento()" class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Add Prescripción</span>
                                 </button>
                                 <button type="button" onclick="verDatos()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors duration-200">
                                     Crear Medicamentos
@@ -695,33 +483,29 @@
                             </div>
                         </div>
 
-                        <!-- Tabla de medicamentos -->
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
-                                    <tr class="border-b-2 border-gray-200">
-                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">Medicamento</th>
-                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">Cantidad</th>
-                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">Prescripción</th>
-                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">Duración (días)</th>
-                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">Frecuencia</th>
-                                        <th class="text-left py-4 px-4 font-semibold text-gray-700">Acción</th>
+                                    <tr class="border-b-2 border-gray-200 dark:border-gray-700">
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700 dark:text-gray-300">Medicamento</th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700 dark:text-gray-300">Cantidad</th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700 dark:text-gray-300">Prescripción</th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700 dark:text-gray-300">Duración (días)</th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700 dark:text-gray-300">Frecuencia</th>
+                                        <th class="text-left py-4 px-4 font-semibold text-gray-700 dark:text-gray-300">Acción</th>
                                     </tr>
                                 </thead>
-                                <tbody id="medicamentos-table">
-                                    <!-- Los medicamentos se agregarán aquí dinámicamente -->
+                                <tbody id="medicamentos-table" class="divide-y divide-gray-200 dark:divide-gray-700">
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     <!-- Botón de Guardar -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8 mt-8">
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mt-8 border border-gray-200/50 dark:border-gray-700/50">
                         <div class="flex justify-center space-x-4">
-                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors duration-200 flex items-center space-x-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                <i class="fas fa-save"></i>
                                 <span>Guardar Atención Médica</span>
                             </button>
                             <button type="button" onclick="window.history.back()" class="bg-gray-600 hover:bg-gray-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors duration-200">
@@ -989,7 +773,7 @@ let isSearching = false;
 // 2. GESTIÓN DE PESTAÑAS/TABS
 // ==============================
 
-/**
+ /**
  * Función para cambiar de pestaña o tabs
  * @param {string} tabName - Nombre de la pestaña a mostrar
  */
@@ -998,28 +782,76 @@ function showTab(tabName) {
     const allTabs = document.querySelectorAll('.tab-content');
     allTabs.forEach(tab => {
         tab.classList.remove('active');
-        tab.classList.add('hidden');
     });
 
     // Mostrar la pestaña seleccionada
     const selectedTab = document.getElementById('content-' + tabName);
-    if (selectedTab) {
-        selectedTab.classList.add('active');
-        selectedTab.classList.remove('hidden');
-    }
+    selectedTab.classList.add('active');
 
-    // Actualizar estilos de los botones
+    // Actualizar estilos de los botones - RESETEAR TODOS
     const allButtons = document.querySelectorAll('.tab-button');
     allButtons.forEach(button => {
-        button.classList.remove('border-blue-500', 'text-blue-600');
-        button.classList.add('border-transparent', 'text-gray-500');
+        // Remover clases activas
+        button.classList.remove('border-blue-500', 'border-indigo-500', 'border-purple-500');
+        button.classList.remove('text-blue-600', 'text-indigo-600', 'text-purple-600');
+        button.classList.remove('bg-blue-50/50', 'bg-indigo-50/50', 'bg-purple-50/50');
+        button.classList.remove('dark:bg-blue-900/20', 'dark:bg-indigo-900/20', 'dark:bg-purple-900/20');
+        button.classList.remove('dark:text-blue-400', 'dark:text-indigo-400', 'dark:text-purple-400');
+        
+        // Agregar clases inactivas
+        button.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+        
+        // Resetear iconos
+        const icon = button.querySelector('.w-8');
+        if (icon) {
+            icon.classList.remove('transform', 'scale-110');
+        }
+        
+        // Remover indicador activo
+        const indicator = button.querySelector('.w-2.h-2');
+        if (indicator) {
+            indicator.remove();
+        }
     });
 
-    // Activar el botón seleccionado
+    // Activar el botón seleccionado con colores específicos
     const selectedButton = document.getElementById('tab-' + tabName);
-    if (selectedButton) {
-        selectedButton.classList.remove('border-transparent', 'text-gray-500');
-        selectedButton.classList.add('border-blue-500', 'text-blue-600');
+    selectedButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+    
+    // Aplicar estilos específicos según la pestaña
+    if (tabName === 'paciente') {
+        selectedButton.classList.add('border-blue-500', 'text-blue-600', 'dark:text-blue-400', 'bg-blue-50/50', 'dark:bg-blue-900/20');
+        // Agregar indicador activo
+        const buttonContent = selectedButton.querySelector('.flex.items-center.justify-center.space-x-2');
+        if (buttonContent && !buttonContent.querySelector('.w-2.h-2')) {
+            const indicator = document.createElement('div');
+            indicator.className = 'w-2 h-2 bg-blue-500 rounded-full animate-pulse';
+            buttonContent.appendChild(indicator);
+        }
+    } else if (tabName === 'consultas') {
+        selectedButton.classList.add('border-indigo-500', 'text-indigo-600', 'dark:text-indigo-400', 'bg-indigo-50/50', 'dark:bg-indigo-900/20');
+        // Agregar indicador activo
+        const buttonContent = selectedButton.querySelector('.flex.items-center.justify-center.space-x-2');
+        if (buttonContent && !buttonContent.querySelector('.w-2.h-2')) {
+            const indicator = document.createElement('div');
+            indicator.className = 'w-2 h-2 bg-indigo-500 rounded-full animate-pulse';
+            buttonContent.appendChild(indicator);
+        }
+    } else if (tabName === 'atencion') {
+        selectedButton.classList.add('border-purple-500', 'text-purple-600', 'dark:text-purple-400', 'bg-purple-50/50', 'dark:bg-purple-900/20');
+        // Agregar indicador activo
+        const buttonContent = selectedButton.querySelector('.flex.items-center.justify-center.space-x-2');
+        if (buttonContent && !buttonContent.querySelector('.w-2.h-2')) {
+            const indicator = document.createElement('div');
+            indicator.className = 'w-2 h-2 bg-purple-500 rounded-full animate-pulse';
+            buttonContent.appendChild(indicator);
+        }
+    }
+    
+    // Escalar el icono del botón activo
+    const activeIcon = selectedButton.querySelector('.w-8');
+    if (activeIcon) {
+        activeIcon.classList.add('transform', 'scale-110');
     }
 }
 
@@ -1782,9 +1614,7 @@ async function buscarPacientes(query) {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
             },
-            credentials: 'same-origin'
         });
 
         if (!response.ok) {
@@ -1833,22 +1663,31 @@ function mostrarResultados(pacientes) {
  */
 function crearOpcionPaciente(paciente) {
     const option = document.createElement('div');
-    option.className = 'px-4 py-3 cursor-pointer option-hover transition-colors duration-150 border-b border-gray-50 last:border-b-0';
+    option.className = 'px-4 py-3 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors duration-200';
     option.setAttribute('data-paciente-id', paciente.id);
 
     option.innerHTML = `
-        <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-lg">
                 ${(paciente.nombres?.charAt(0) || '') + (paciente.apellidos?.charAt(0) || '')}
             </div>
             <div class="flex-1 min-w-0">
-                <div class="text-sm font-medium text-gray-900 truncate">
+                <div class="text-base font-semibold text-gray-900 dark:text-white">
                     ${paciente.nombres || ''} ${paciente.apellidos || ''}
                 </div>
-                <div class="text-xs text-gray-500 truncate">
-                    CI: ${paciente.cedula_ecuatoriana || paciente.dni || 'No disponible'} |
-                    Tel: ${paciente.telefono || 'No disponible'}
+                <div class="flex items-center space-x-3 mt-1">
+                    <span class="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-900/50 text-xs font-medium text-blue-700 dark:text-blue-300">
+                        <i class="fas fa-id-card mr-1"></i>
+                        ${paciente.cedula_ecuatoriana || paciente.dni || 'No disponible'}
+                    </span>
+                    <span class="inline-flex items-center text-xs text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-phone mr-1"></i>
+                        ${paciente.telefono || 'No disponible'}
+                    </span>
                 </div>
+            </div>
+            <div class="flex-shrink-0">
+                <i class="fas fa-chevron-right text-gray-400 dark:text-gray-600"></i>
             </div>
         </div>
     `;
@@ -1867,30 +1706,13 @@ function seleccionarPaciente(paciente) {
 
     // Actualizar el input
     searchInput.value = `${paciente.id} - ${paciente.nombres} ${paciente.apellidos} - CI: ${paciente.cedula_ecuatoriana || paciente.dni}`;
-
-    // Set value of hidden input id_paciente correctly
-    const inputPacienteId = document.getElementById('id_paciente');
-    if (inputPacienteId) {
-        inputPacienteId.value = paciente.id;
-    }
-
+    document.getElementById('id_paciente').value=paciente.id
     // Ocultar dropdown
     ocultarDropdown();
 
     // Cargar datos del paciente
     cargarDatosPaciente(paciente);
     cargarConsultas(paciente.atenciones);
-
-    // Show the Atención Actual form content and hide the no-atencion message
-    const atencionContenido = document.getElementById('atencion-contenido');
-    const noAtencionMensaje = document.getElementById('no-atencion-mensaje');
-    if (atencionContenido && noAtencionMensaje) {
-        atencionContenido.classList.remove('hidden');
-        noAtencionMensaje.classList.add('hidden');
-    }
-
-    // Automatically switch to "Atención Actual" tab
-    showTab('atencion');
 }
 
 /**
@@ -1904,7 +1726,24 @@ function cargarDatosPaciente(paciente) {
     // Actualizar información personal
     document.getElementById('paciente-nombre').textContent =
         `${paciente.nombres || ''} ${paciente.apellidos || ''}`;
-    document.getElementById('paciente-foto').src = paciente.foto_url;
+    
+    // Manejar foto del paciente con fallback mejorado
+    const fotoElement = document.getElementById('paciente-foto');
+    const iconElement = fotoElement.nextElementSibling;
+    
+    if (paciente.foto_url && paciente.foto_url !== '' && paciente.foto_url !== 'null') {
+        fotoElement.src = paciente.foto_url;
+        fotoElement.style.display = 'block';
+        iconElement.style.display = 'none';
+        fotoElement.onerror = function() {
+            this.style.display = 'none';
+            iconElement.style.display = 'flex';
+        };
+    } else {
+        fotoElement.style.display = 'none';
+        iconElement.style.display = 'flex';
+    }
+    
     document.getElementById('paciente-telefono').textContent = paciente.telefono || 'No disponible';
     document.getElementById('paciente-direccion').textContent = paciente.direccion || 'No disponible';
     document.getElementById('paciente-email').textContent = paciente.email || 'No disponible';
@@ -1912,17 +1751,27 @@ function cargarDatosPaciente(paciente) {
     document.getElementById('paciente-cedula').textContent =
         `CI: ${paciente.cedula_ecuatoriana || paciente.dni || 'No disponible'}`;
 
-    // Datos fijos de la nueva atención
-    document.getElementById('paciente-foto2').src = paciente.foto_url;
+    // Datos fijos de la nueva atención - Manejar foto con fallback
+    const foto2Element = document.getElementById('paciente-foto2');
+    const icon2Element = foto2Element.nextElementSibling;
+    
+    if (paciente.foto_url && paciente.foto_url !== '' && paciente.foto_url !== 'null') {
+        foto2Element.src = paciente.foto_url;
+        foto2Element.style.display = 'block';
+        icon2Element.style.display = 'none';
+        foto2Element.onerror = function() {
+            this.style.display = 'none';
+            icon2Element.style.display = 'flex';
+        };
+    } else {
+        foto2Element.style.display = 'none';
+        icon2Element.style.display = 'flex';
+    }
+    
     document.getElementById('paciente-edad2').textContent = edad;
     document.getElementById('paciente-nombre2').textContent =
         `${paciente.nombres || ''} ${paciente.apellidos || ''}`;
-
-    // Fix: set value of input, not textContent
-    const inputPacienteId = document.getElementById('id_paciente');
-    if (inputPacienteId) {
-        inputPacienteId.value = paciente.id;
-    }
+    document.getElementById('id_paciente').value = paciente.id;
 
     // Actualizar historia clínica
     document.getElementById('antecedentes-personales').value = paciente.antecedentes_personales || '';
@@ -2910,4 +2759,4 @@ function iniciarDictado(event, textareaId) {
 window.iniciarDictado = iniciarDictado;
 </script>
 
-{% endblock %}
+{% endblock %}  
