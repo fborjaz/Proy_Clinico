@@ -1,7 +1,9 @@
 from django.urls import path
 
-from applications.doctor.views.atencion_medica import AtencionListView, AtencionCreateView, AtencionUpdateView, \
-    AtencionDeleteView
+from applications.doctor.views.atencion_medica import (
+    AtencionListView, AtencionCreateView, AtencionUpdateView,
+    AtencionDeleteView, AtencionDetailView
+)
 from applications.doctor.views.cita_medica import (
     CitaMedicaListView, CitaMedicaCreateView, CitaMedicaUpdateView, CitaMedicaDeleteView,
     CalendarioCitasView, obtener_disponibilidad_calendario, obtener_horarios_disponibles
@@ -16,6 +18,7 @@ urlpatterns = [
     # Rutas para vistas relacionadas con Atenciones Médicas
     path('atencion_list/', AtencionListView.as_view(), name="atencion_list"),
     path('atencion_create/', AtencionCreateView.as_view(), name="atencion_create"),
+    path('atencion_detail/<int:pk>/', AtencionDetailView.as_view(), name="atencion_detail"),
     path('atencion_update/<int:pk>/', AtencionUpdateView.as_view(), name="atencion_update"),
     path('atencion_delete/<int:pk>/', AtencionDeleteView.as_view(), name="atencion_delete"),
     

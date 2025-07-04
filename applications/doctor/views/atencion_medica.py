@@ -9,14 +9,40 @@ from django.utils import timezone
 
 from applications.core.models import Paciente, Medicamento, Diagnostico, Servicio
 from applications.doctor.forms.atencion import AtencionForm, DetalleServicioAtencionFormSet
-from applications.doctor.models import Atencion, DetalleAtencion, DetalleServicioAtencion
+from applications.doctor.models import Atencion, DetalleAtencion, DetalleServicioAtencion, Pago
 from applications.security.components.mixin_crud import CreateViewMixin, DeleteViewMixin, ListViewMixin, \
     PermissionMixin, UpdateViewMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.db.models import Q
 
 from proy_clinico.util import save_audit
 
+
+def crear_o_actualizar_pago(atencion):
+    """
+    Crea o actualiza un registro de Pago para una atención médica.
+    Calcula el monto total basado en medicamentos y servicios.
+    """
+    total_amount = Decimal(0)
+
+    # Sumar precios de medicamentos
+    for detalle_medicamento in atencion.detalles.all():
+        total_amount += detalle_medicamento.medicamento.precio * detalle_medicamento.cantidad
+
+    # Sumar precios de servicios adicionales
+    for detalle_servicio in atencion.servicios_adicionales.all():
+        total_amount += detalle_servicio.servicio.precio * detalle_servicio.cantidad
+
+    # Crear o actualizar el pago
+    pago, created = Pago.objects.update_or_create(
+        atencion=atencion,
+        defaults={
+            'monto_total': total_amount,
+            'estado': 'pendiente',  # Siempre se establece como pendiente al crear/actualizar
+            'metodo_pago': 'efectivo' # Por defecto, se puede cambiar luego
+        }
+    )
+    return pago
 
 class AtencionListView(PermissionMixin, ListViewMixin, ListView):
     template_name = 'doctor/atenciones/list.html'
@@ -158,6 +184,9 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
                         observaciones=servicio_data.get('observaciones')
                     )
 
+                # Crear o actualizar el pago asociado
+                pago = crear_o_actualizar_pago(atencion)
+
                 # Guardar auditoría
                 save_audit(request, atencion, "ADICION")
 
@@ -168,6 +197,8 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
                 return JsonResponse({
                     "msg": "Atención médica registrada exitosamente",
                     "id": atencion.id,
+                    "pago_id": pago.id,
+                    "total_pagar": pago.monto_total,
                     "fecha": atencion.fecha_atencion.strftime('%Y-%m-%d %H:%M:%S'),
                     "paciente": str(atencion.paciente)
                 }, status=200)
@@ -178,6 +209,8 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
                 "msg": f"Error al registrar la atención médica: {str(e)}"
             }, status=500)
 
+
+from django.conf import settings
 
 class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
     model = Atencion
@@ -190,6 +223,7 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['grabar'] = 'Actualizar Atención'
         context['back_url'] = self.success_url
+        context['PAYPAL_CLIENT_ID'] = settings.PAYPAL_CLIENT_ID
 
         # Contextos iguales al CreateView
         context['diagnosticos'] = Diagnostico.objects.filter(activo=True)
@@ -213,6 +247,11 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
 
         # Contexto específico para el update: detalles de atención actual
         atencion = self.get_object()
+        
+        # Obtener el pago asociado o crearlo si no existe
+        pago = crear_o_actualizar_pago(atencion)
+        context['pago'] = pago
+
 
         # Obtener contexto completo del paciente para edición
         contexto_paciente = obtener_contexto_paciente(atencion.paciente.id)
@@ -342,6 +381,9 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
                         observaciones=servicio_data.get('observaciones')
                     )
 
+                # Crear o actualizar el pago asociado
+                pago = crear_o_actualizar_pago(atencion)
+
                 # Guardar auditoría para modificación
                 save_audit(request, atencion, "MODIFICACION")
 
@@ -352,6 +394,8 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
                 return JsonResponse({
                     "msg": "Atención médica actualizada exitosamente",
                     "id": atencion.id,
+                    "pago_id": pago.id,
+                    "total_pagar": pago.monto_total,
                     "fecha": atencion.fecha_atencion.strftime('%Y-%m-%d %H:%M:%S'),
                     "paciente": str(atencion.paciente)
                 }, status=200)
@@ -361,6 +405,137 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
             return JsonResponse({
                 "msg": f"Error al actualizar la atención médica: {str(e)}"
             }, status=500)
+
+class AtencionDetailView(PermissionMixin, DetailView):
+    model = Atencion
+    template_name = 'doctor/atenciones/detail.html'
+    context_object_name = 'atencion'
+    permission_required = 'view_atencion'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        atencion = self.get_object()
+        
+        # Obtener medicamentos prescritos
+        medicamentos = []
+        total_medicamentos = 0
+        for detalle in atencion.detalles.select_related('medicamento').all():
+            precio_unitario = float(detalle.medicamento.precio) if detalle.medicamento.precio else 0
+            subtotal = precio_unitario * detalle.cantidad
+            total_medicamentos += subtotal
+            
+            medicamentos.append({
+                'nombre': detalle.medicamento.nombre,
+                'concentracion': detalle.medicamento.concentracion,
+                'cantidad': detalle.cantidad,
+                'prescripcion': detalle.prescripcion,
+                'duracion': detalle.duracion_tratamiento,
+                'frecuencia': detalle.frecuencia_diaria,
+                'precio_unitario': precio_unitario,
+                'subtotal': subtotal
+            })
+        
+        # Obtener servicios adicionales
+        servicios = []
+        total_servicios = 0
+        for servicio_detalle in atencion.servicios_adicionales.select_related('servicio').all():
+            precio_unitario = float(servicio_detalle.servicio.precio)
+            subtotal = precio_unitario * servicio_detalle.cantidad
+            total_servicios += subtotal
+            
+            servicios.append({
+                'nombre': servicio_detalle.servicio.nombre,
+                'descripcion': servicio_detalle.servicio.descripcion,
+                'cantidad': servicio_detalle.cantidad,
+                'precio_unitario': precio_unitario,
+                'subtotal': subtotal,
+                'observaciones': servicio_detalle.observaciones
+            })
+        
+        # Calcular total general
+        total_general = total_medicamentos + total_servicios
+        
+        # Obtener o crear información del pago
+        pago, created = Pago.objects.get_or_create(
+            atencion=atencion,
+            defaults={
+                'monto_total': Decimal(str(total_general)),
+                'metodo_pago': 'paypal',
+                'estado': 'pendiente'
+            }
+        )
+        
+        # Actualizar el monto si cambió
+        if float(pago.monto_total) != total_general:
+            pago.monto_total = Decimal(str(total_general))
+            pago.save()
+        
+        context.update({
+            'medicamentos': medicamentos,
+            'servicios': servicios,
+            'total_medicamentos': total_medicamentos,
+            'total_servicios': total_servicios,
+            'total_general': total_general,
+            'pago': pago,
+            'tiene_pago': True,
+            'back_url': reverse_lazy('doctor:atencion_list'),
+            'edit_url': reverse_lazy('doctor:atencion_update', kwargs={'pk': atencion.pk}),
+        })
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Manejar pagos desde la vista de detalle"""
+        try:
+            data = json.loads(request.body)
+            action = data.get('action')
+            
+            if action == 'marcar_pagado':
+                atencion = self.get_object()
+                
+                # Obtener o crear el pago
+                pago, created = Pago.objects.get_or_create(
+                    atencion=atencion,
+                    defaults={
+                        'monto_total': Decimal('0'),
+                        'metodo_pago': 'efectivo',
+                        'estado': 'pendiente'
+                    }
+                )
+                
+                # Actualizar el pago
+                pago.estado = 'pagado'
+                pago.fecha_pago = timezone.now()
+                
+                # Actualizar método de pago y datos de PayPal si corresponde
+                if 'paypal_order_id' in data:
+                    pago.metodo_pago = 'paypal'
+                    pago.paypal_order_id = data.get('paypal_order_id')
+                    pago.paypal_capture_id = data.get('paypal_capture_id')
+                elif 'metodo_pago' in data:
+                    pago.metodo_pago = data.get('metodo_pago')
+                
+                pago.save()
+                
+                # Guardar auditoría
+                save_audit(request, pago, "MODIFICACION")
+                
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Pago registrado exitosamente'
+                })
+            
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Acción no válida'
+            }, status=400)
+            
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+
 
 class AtencionDeleteView(PermissionMixin, DeleteViewMixin, DeleteView):
     model = Atencion

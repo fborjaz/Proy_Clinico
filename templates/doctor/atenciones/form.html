@@ -3,6 +3,9 @@
 {% load static %}
 {% block css %}
     <script src="https://cdn.tailwindcss.com"></script>
+    {% if modo_edicion and pago and PAYPAL_CLIENT_ID %}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
+    {% endif %}
 {%  endblock css %}
 {% block content %}
 <section class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 relative">
@@ -556,6 +559,52 @@
                         </div>
                     </div>
                 </form>
+                
+                <!-- Sección de Pago (Solo en modo edición) -->
+                {% if modo_edicion and pago %}
+                <div id="payment-section" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mt-8 border border-gray-200/50 dark:border-gray-700/50">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                        <div class="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                            <i class="fas fa-credit-card text-white text-lg"></i>
+                        </div>
+                        Gestión de Pago
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <!-- Detalles del Pago -->
+                        <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl border border-gray-200 dark:border-gray-600">
+                            <h3 class="font-semibold text-lg text-gray-800 dark:text-white mb-4">Resumen de la Deuda</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Monto Total:</span>
+                                    <span id="monto-total" class="font-bold text-2xl text-teal-600 dark:text-teal-400">{{ pago.monto_total|default:"0.00" }} USD</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-400">Estado del Pago:</span>
+                                    <span id="pago-estado" class="px-3 py-1 rounded-full text-sm font-semibold 
+                                        {% if pago.estado == 'pagado' %} bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 
+                                        {% elif pago.estado == 'pendiente' %} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300
+                                        {% else %} bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 {% endif %}">
+                                        {{ pago.get_estado_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Botón de PayPal y Mensajes -->
+                        <div id="paypal-container" class="text-center">
+                            {% if pago.estado == 'pendiente' %}
+                                <p class="text-gray-600 dark:text-gray-400 mb-4">Seleccione el método de pago para continuar.</p>
+                                <div id="paypal-button-container"></div>
+                                <div id="paypal-messages" class="mt-4 text-sm"></div>
+                            {% else %}
+                                <div class="text-center text-green-600 dark:text-green-400">
+                                    <i class="fas fa-check-circle fa-3x"></i>
+                                    <p class="mt-2 font-semibold">Este pago ya ha sido procesado.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
 
@@ -800,13 +849,13 @@
 // ==============================
 
 // Obtener datos de Django de forma segura
-const pacienteDesdeServidor = {{ paciente_json|default:"null"|safe }};
-const medicamentosDesdeServidor = {{ medicamentos_json|default:"[]"|safe }};
-const serviciosDesdeServidor = {{ servicios_json|default:"[]"|safe }};
-const modoEdicion = {{ modo_edicion|yesno:"true,false" }};
+var pacienteDesdeServidor = {% if paciente_json %}{{ paciente_json|safe }}{% else %}null{% endif %};
+var medicamentosDesdeServidor = {% if medicamentos_json %}{{ medicamentos_json|safe }}{% else %}[]{% endif %};
+var serviciosDesdeServidor = {% if servicios_json %}{{ servicios_json|safe }}{% else %}[]{% endif %};
+var modoEdicion = {{ modo_edicion|yesno:"true,false" }};
 
 // Contexto de servicios disponibles
-window.serviciosContext = {{ servicios_disponibles_json|default:"[]"|safe }};
+window.serviciosContext = {% if servicios_disponibles_json %}{{ servicios_disponibles_json|safe }}{% else %}[]{% endif %};
 
 // ==============================
 // SISTEMA DE ATENCIÓN MÉDICA - CÓDIGO ORGANIZADO
@@ -1034,69 +1083,6 @@ class GestorAtencionMedica {
     // ============================================
 
     /**
-     * Método para agregar medicamento a la tabla
-     */
-    agregarMedicamento() {
-        console.log('💊 Agregando medicamento...');
-
-        // Obtener valores de los campos de forma segura
-        const select = document.getElementById('medicamento-select');
-        const medicamento = select.options[select.selectedIndex].text;
-        const cantidad = this.obtenerValorSeguro('cantidad-input');
-        const prescripcion = this.obtenerValorSeguro('prescripcion-input');
-        const duracion = this.obtenerValorSeguro('duracion-input');
-        const frecuencia = this.obtenerValorSeguro('frecuencia-input');
-
-        console.log('📋 Valores capturados:', {medicamento, cantidad, prescripcion, duracion, frecuencia});
-
-        // Validar que todos los campos estén llenos
-        if (!medicamento || !cantidad || !prescripcion || !duracion || !frecuencia) {
-            alert('Por favor, complete todos los campos obligatorios del medicamento.');
-            return;
-        }
-
-        // Validar que los números sean válidos
-        if (isNaN(cantidad) || isNaN(duracion) || isNaN(frecuencia)) {
-            alert('La cantidad, duración y frecuencia deben ser números válidos.');
-            return;
-        }
-
-        // Verificar si el medicamento ya existe en la lista
-        const medicamentoId = select.value;
-        const indiceExistente = this.medicamentos.findIndex(med => med.id === medicamentoId);
-
-        if (indiceExistente !== -1) {
-            console.log('🔄 Medicamento ya existe, reemplazando...', this.medicamentos[indiceExistente]);
-            // Eliminar el medicamento existente sin confirmación
-            this.medicamentos.splice(indiceExistente, 1);
-            console.log('🗑️ Medicamento anterior eliminado. Total restante:', this.medicamentos.length);
-        }
-
-        // Crear objeto medicamento
-        const nuevoMedicamento = {
-            id: medicamentoId,
-            medicamento: medicamento,
-            cantidad: parseInt(cantidad),
-            prescripcion: prescripcion,
-            duracion: parseInt(duracion),
-            frecuencia: parseInt(frecuencia)
-        };
-
-        // Agregar a la lista
-        this.medicamentos.push(nuevoMedicamento);
-
-        // Actualizar la tabla
-        this.actualizarTablaMedicamentos();
-
-        // Limpiar campos
-        this.limpiarCamposMedicamentos();
-
-        const accion = indiceExistente !== -1 ? 'actualizado' : 'agregado';
-        console.log(`✅ Medicamento ${accion}:`, nuevoMedicamento);
-        console.log('📊 Total medicamentos:', this.medicamentos.length);
-    }
-
-    /**
      * Método para actualizar la tabla de medicamentos
      */
     actualizarTablaMedicamentos() {
@@ -1115,18 +1101,18 @@ class GestorAtencionMedica {
         // Agregar cada medicamento
         this.medicamentos.forEach((med, index) => {
             const fila = document.createElement('tr');
-            fila.className = 'border-b border-gray-100 hover:bg-gray-50';
+            fila.className = 'bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200';
 
             fila.innerHTML = `
-                <td class="py-4 px-4 text-gray-800">${med.medicamento}</td>
-                <td class="py-4 px-4 text-gray-600">${med.cantidad}</td>
-                <td class="py-4 px-4 text-gray-600">${med.prescripcion}</td>
-                <td class="py-4 px-4 text-gray-600">${med.duracion}</td>
-                <td class="py-4 px-4 text-gray-600">${med.frecuencia}</td>
+                <td class="py-4 px-4 text-gray-800 dark:text-gray-200 font-medium">${med.medicamento}</td>
+                <td class="py-4 px-4 text-gray-600 dark:text-gray-300">${med.cantidad}</td>
+                <td class="py-4 px-4 text-gray-600 dark:text-gray-300">${med.prescripcion}</td>
+                <td class="py-4 px-4 text-gray-600 dark:text-gray-300">${med.duracion}</td>
+                <td class="py-4 px-4 text-gray-600 dark:text-gray-300">${med.frecuencia}</td>
                 <td class="py-4 px-4">
                     <button onclick="eliminarMedicamentoSeguro(${index})"
-                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200">
-                        Eliminar
+                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200 shadow-md hover:shadow-lg">
+                        <i class="fas fa-trash mr-1"></i>Eliminar
                     </button>
                 </td>
             `;
@@ -1705,12 +1691,72 @@ inicializarDiagnosticos() {
     validarCamposObligatorios() {
         const errores = [];
 
+        // Validar campos básicos
         if (!this.motivoConsulta.trim()) errores.push('- Motivo de Consulta');
         if (!this.sintomas.trim()) errores.push('- Síntomas');
         if (this.diagnostico.length === 0) errores.push('- Diagnósticos');
         if (!this.tratamiento.trim()) errores.push('- Plan de Tratamiento');
 
+        // NO validar medicamentos en el formulario si ya hay medicamentos agregados a la lista
+        // Solo validar si el usuario está intentando agregar un medicamento pero no completó los campos
+        const medicamentoSeleccionado = document.getElementById('medicamento-select').value;
+        const cantidadIngresada = document.getElementById('cantidad-input').value;
+        const prescripcionIngresada = document.getElementById('prescripcion-input').value;
+        const duracionIngresada = document.getElementById('duracion-input').value;
+        const frecuenciaIngresada = document.getElementById('frecuencia-input').value;
+
+        // Solo validar si hay ALGÚN campo de medicamento lleno pero no todos
+        const hayDatosParciales = medicamentoSeleccionado || cantidadIngresada || prescripcionIngresada || duracionIngresada || frecuenciaIngresada;
+        const todoCompleto = medicamentoSeleccionado && cantidadIngresada && prescripcionIngresada && duracionIngresada && frecuenciaIngresada;
+
+        if (hayDatosParciales && !todoCompleto) {
+            errores.push('- Complete todos los campos del medicamento o límpielos para continuar');
+        }
+
         return errores;
+    }
+
+    /**
+     * Método para agregar medicamento
+     */
+    agregarMedicamento() {
+        console.log('💊 Agregando medicamento...');
+
+        // Obtener valores de los campos de forma segura
+        const select = document.getElementById('medicamento-select');
+        const medicamento = select.options[select.selectedIndex]?.text;
+        const cantidad = this.obtenerValorSeguro('cantidad-input');
+        const prescripcion = this.obtenerValorSeguro('prescripcion-input');
+        const duracion = this.obtenerValorSeguro('duracion-input');
+        const frecuencia = this.obtenerValorSeguro('frecuencia-input');
+
+        // Validar que todos los campos estén llenos
+        if (!medicamento || !cantidad || !prescripcion || !duracion || !frecuencia) {
+            alert('Por favor, complete todos los campos del medicamento.');
+            return;
+        }
+
+        // Crear objeto medicamento
+        const nuevoMedicamento = {
+            id: select.value,
+            medicamento: medicamento,
+            cantidad: parseInt(cantidad),
+            prescripcion: prescripcion,
+            duracion: parseInt(duracion),
+            frecuencia: parseInt(frecuencia)
+        };
+
+        // Agregar a la lista
+        this.medicamentos.push(nuevoMedicamento);
+
+        // Actualizar la tabla
+        this.actualizarTablaMedicamentos();
+
+        // Limpiar campos
+        this.limpiarCamposMedicamentos();
+
+        console.log('✅ Medicamento agregado:', nuevoMedicamento);
+        console.log('📊 Total medicamentos:', this.medicamentos.length);
     }
 
     /**
@@ -3077,6 +3123,70 @@ function iniciarDictado(event, textareaId) {
 
 // Hacer la función disponible globalmente
 window.iniciarDictado = iniciarDictado;
+
+// ==============================
+// 11. LÓGICA DE PAGO CON PAYPAL
+// ==============================
+document.addEventListener('DOMContentLoaded', function() {
+    if (modoEdicion && document.getElementById('paypal-button-container')) {
+        const atencionId = {{ atencion.id|default:"null" }};
+        const pagoId = {{ pago.id|default:"null" }};
+        const montoTotal = parseFloat("{{ pago.monto_total|default:'0.00' }}");
+
+        if (atencionId && pagoId && montoTotal > 0) {
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    console.log('Creating PayPal order...');
+                    return fetch('{% url "doctor:create_paypal_order" %}', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({ 'atencion_id': atencionId })
+                    }).then(function(res) {
+                        return res.json();
+                    }).then(function(orderData) {
+                        console.log('Order created:', orderData);
+                        return orderData.paypal_order_id;
+                    });
+                },
+                onApprove: function(data, actions) {
+                    console.log('Payment approved:', data);
+                    return fetch('{% url "doctor:capture_paypal_payment" %}', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({
+                            'paypal_order_id': data.orderID,
+                            'payer_id': data.payerID,
+                            'atencion_id': atencionId
+                        })
+                    }).then(function(res) {
+                        return res.json();
+                    }).then(function(paymentData) {
+                        console.log('Payment captured:', paymentData);
+                        const messagesDiv = document.getElementById('paypal-messages');
+                        if (paymentData.status === 'success') {
+                            messagesDiv.innerHTML = `<div class="text-green-600">${paymentData.message}</div>`;
+                            document.getElementById('pago-estado').textContent = 'Pagado';
+                            document.getElementById('pago-estado').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                            document.getElementById('paypal-button-container').style.display = 'none';
+                        } else {
+                            messagesDiv.innerHTML = `<div class="text-red-600">Error: ${paymentData.message}</div>`;
+                        }
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal Error:', err);
+                    document.getElementById('paypal-messages').innerHTML = `<div class="text-red-600">Ocurrió un error con PayPal. Por favor, intente de nuevo.</div>`;
+                }
+            }).render('#paypal-button-container');
+        }
+    }
+});
 </script>
 
 {% endblock content %}  
