@@ -1,7 +1,8 @@
 
 from django import forms
-from django.forms import ModelForm
-from applications.doctor.models import Atencion
+from django.forms import ModelForm, inlineformset_factory
+from applications.doctor.models import Atencion, DetalleServicioAtencion
+from applications.doctor.forms.detalle_servicio_atencion import DetalleServicioAtencionForm
 
 
 class AtencionForm(ModelForm):
@@ -11,9 +12,6 @@ class AtencionForm(ModelForm):
 
         widgets = {
             'paciente': forms.Select(attrs={
-                'class': 'form-select w-full rounded-lg border-gray-300 focus:ring focus:ring-blue-200'
-            }),
-            'doctor': forms.Select(attrs={
                 'class': 'form-select w-full rounded-lg border-gray-300 focus:ring focus:ring-blue-200'
             }),
             'presion_arterial': forms.TextInput(attrs={
@@ -69,3 +67,9 @@ class AtencionForm(ModelForm):
                 'class': 'form-checkbox h-5 w-5 text-blue-600'
             }),
         }
+
+
+DetalleServicioAtencionFormSet = inlineformset_factory(
+    Atencion, DetalleServicioAtencion, form=DetalleServicioAtencionForm,
+    extra=1, can_delete=True
+)

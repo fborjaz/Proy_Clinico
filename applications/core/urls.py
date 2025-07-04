@@ -51,11 +51,7 @@ urlpatterns = [
     # Rutas para el chatbot
     path('chatbot_api/', chatbot_api, name="chatbot_api"),
 
-    # Rutas para Servicios
-    path('servicio_list/', ServicioListView.as_view(), name="servicio_list"),
-    path('servicio_create/', ServicioCreateView.as_view(), name="servicio_create"),
-    path('servicio_update/<int:pk>/', ServicioUpdateView.as_view(), name='servicio_update'),
-    path('servicio_delete/<int:pk>/', ServicioDeleteView.as_view(), name='servicio_delete'),
+    
 
     # Rutas para vistas relacionadas con Pacientes
     path('paciente_find/', paciente_find, name="paciente_find"),

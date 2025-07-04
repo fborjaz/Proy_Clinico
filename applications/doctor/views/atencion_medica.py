@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 
 from applications.core.models import Paciente, Medicamento, Diagnostico, Servicio
-from applications.doctor.forms.atencion import AtencionForm
+from applications.doctor.forms.atencion import AtencionForm, DetalleServicioAtencionFormSet
 from applications.doctor.models import Atencion, DetalleAtencion, DetalleServicioAtencion
 from applications.security.components.mixin_crud import CreateViewMixin, DeleteViewMixin, ListViewMixin, \
     PermissionMixin, UpdateViewMixin
@@ -59,10 +59,26 @@ class AtencionCreateView(PermissionMixin, CreateViewMixin, CreateView):
                   'precio', 'cantidad', 'tipo__nombre', 'marca_medicamento__nombre'
                   ).order_by('nombre'))
 
+        # Contexto inicial para modo creación
         context['paciente_json'] = 'null'
         context['medicamentos_json'] = '[]'  # Array vacío
-        context['servicios'] = Servicio.objects.filter(activo=True).order_by('nombre')
-        context['servicios_json'] = '[]' # Array vacío
+        context['servicios_json'] = '[]'  # Array vacío para servicios existentes
+        
+        # Obtener y preparar servicios disponibles
+        servicios = Servicio.objects.filter(activo=True).order_by('nombre')
+        servicios_json = []
+        for servicio in servicios:
+            servicios_json.append({
+                'id': servicio.id,
+                'nombre': servicio.nombre,
+                'descripcion': servicio.descripcion or '',
+                'precio': float(servicio.precio) if servicio.precio else 0
+            })
+        
+        # Agregar servicios al contexto
+        context['servicios'] = servicios  # Para el template
+        context['servicios_disponibles_json'] = json.dumps(servicios_json)  # Para poblar selects
+        context['formset_servicios'] = DetalleServicioAtencionFormSet()  # Formset vacío
         context['modo_edicion'] = False
         return context
 
@@ -183,6 +199,18 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
                                          'precio', 'cantidad', 'tipo__nombre', 'marca_medicamento__nombre'
                                          ).order_by('nombre'))
 
+        # Obtener servicios y convertirlos a JSON
+        servicios = Servicio.objects.filter(activo=True).order_by('nombre')
+        servicios_json = []
+        for servicio in servicios:
+            servicios_json.append({
+                'id': servicio.id,
+                'nombre': servicio.nombre,
+                'descripcion': servicio.descripcion or '',
+                'precio': float(servicio.precio) if servicio.precio else 0
+            })
+        context['servicios'] = servicios
+
         # Contexto específico para el update: detalles de atención actual
         atencion = self.get_object()
 
@@ -228,7 +256,8 @@ class AtencionUpdateView(PermissionMixin, UpdateViewMixin, UpdateView):
             }
             servicios_adicionales.append(servicio_dict)
         context['servicios_json'] = json.dumps(servicios_adicionales)
-
+        context['servicios_disponibles_json'] = json.dumps(servicios_json)
+        context['formset_servicios'] = DetalleServicioAtencionFormSet(instance=atencion)
         return context
 
     def post(self, request, *args, **kwargs):

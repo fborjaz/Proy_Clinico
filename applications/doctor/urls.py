@@ -7,6 +7,9 @@ from applications.doctor.views.cita_medica import (
     CalendarioCitasView, obtener_disponibilidad_calendario, obtener_horarios_disponibles
 )
 from applications.doctor.views.paypal_views import create_paypal_order, capture_paypal_payment
+from applications.doctor.views.servicio import (
+    ServicioListView, ServicioCreateView, ServicioUpdateView, ServicioDeleteView
+)
 
 app_name='doctor' # define un espacio de nombre para la aplicacion
 urlpatterns = [
@@ -32,4 +35,10 @@ urlpatterns = [
     # Rutas para PayPal
     path('api/paypal/create-order/', create_paypal_order, name='create_paypal_order'),
     path('api/paypal/capture-payment/', capture_paypal_payment, name='capture_paypal_payment'),
+
+    # Rutas para Servicios
+    path('servicio_list/', ServicioListView.as_view(), name="servicio_list"),
+    path('servicio_create/', ServicioCreateView.as_view(), name="servicio_create"),
+    path('servicio_update/<int:pk>/', ServicioUpdateView.as_view(), name='servicio_update'),
+    path('servicio_delete/<int:pk>/', ServicioDeleteView.as_view(), name='servicio_delete'),
 ]

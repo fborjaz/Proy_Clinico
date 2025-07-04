@@ -501,6 +501,48 @@
                         </div>
                     </div>
 
+                    <!-- Servicios Adicionales -->
+                    <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 border border-gray-200/50 dark:border-gray-700/50">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                                <i class="fas fa-hand-holding-medical text-white"></i>
+                            </div>
+                            Servicios Adicionales
+                        </h3>
+
+                        <div id="formset-servicios-container">
+                            {{ formset_servicios.management_form }}
+                            {% for form in formset_servicios %}
+                                <div class="formset-row-servicio bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl mb-4 border border-gray-200 dark:border-gray-700">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Servicio *</label>
+                                            {{ form.servicio }}
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cantidad *</label>
+                                            {{ form.cantidad }}
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observaciones</label>
+                                            {{ form.observaciones }}
+                                        </div>
+                                    </div>
+                                    {% if form.instance.pk %}
+                                        <button type="button" class="delete-row-button mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-200" data-form-id="{{ form.prefix }}">Eliminar</button>
+                                    {% else %}
+                                        <button type="button" class="delete-row-button mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-200">Eliminar</button>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="button" id="add-servicio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mt-4">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Añadir Servicio</span>
+                        </button>
+                    </div>
+
                     <!-- Botón de Guardar -->
                     <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mt-8 border border-gray-200/50 dark:border-gray-700/50">
                         <div class="flex justify-center space-x-4">
@@ -751,11 +793,20 @@
         }
  </style>
 
- <script>
- // Recibir el contexto del paciente desde Django
- const pacienteDesdeServidor = {{ paciente_json|safe }};
- const medicamentosDesdeServidor = {{ medicamentos_json|safe }};
- const modoEdicion = {{ modo_edicion|yesno:"true,false" }};
+<!-- Script principal de la aplicación -->
+<script>
+// ==============================
+// INICIALIZACIÓN DE CONTEXTOS
+// ==============================
+
+// Obtener datos de Django de forma segura
+const pacienteDesdeServidor = {{ paciente_json|default:"null"|safe }};
+const medicamentosDesdeServidor = {{ medicamentos_json|default:"[]"|safe }};
+const serviciosDesdeServidor = {{ servicios_json|default:"[]"|safe }};
+const modoEdicion = {{ modo_edicion|yesno:"true,false" }};
+
+// Contexto de servicios disponibles
+window.serviciosContext = {{ servicios_disponibles_json|default:"[]"|safe }};
 
 // ==============================
 // SISTEMA DE ATENCIÓN MÉDICA - CÓDIGO ORGANIZADO
@@ -773,11 +824,11 @@ let isSearching = false;
 // 2. GESTIÓN DE PESTAÑAS/TABS
 // ==============================
 
- /**
+/**
  * Función para cambiar de pestaña o tabs
  * @param {string} tabName - Nombre de la pestaña a mostrar
  */
-function showTab(tabName) {
+window.showTab = function(tabName) {
     // Ocultar todas las pestañas
     const allTabs = document.querySelectorAll('.tab-content');
     allTabs.forEach(tab => {
@@ -866,8 +917,9 @@ class GestorAtencionMedica {
     constructor() {
         console.log('🔧 Construyendo GestorAtencionMedica...');
 
-        // Inicializar arrays para medicamentos
+        // Inicializar arrays para medicamentos y servicios
         this.medicamentos = [];
+        this.servicios = [];
 
         // Propiedades para capturar datos del formulario
         this.paciente = '';
@@ -894,6 +946,17 @@ class GestorAtencionMedica {
             console.log('💊 Modo edición detectado - Cargando medicamentos existentes...');
             this.cargarMedicamentosExistentes(medicamentosDesdeServidor);
         }
+
+        // 🆕 CARGAR SERVICIOS SI ESTÁ EN MODO EDICIÓN
+        if (modoEdicion && serviciosDesdeServidor.length > 0) {
+            console.log('🏥 Modo edición detectado - Cargando servicios existentes...');
+            this.cargarServiciosExistentes(serviciosDesdeServidor);
+        }
+
+        // Inicializar gestión de servicios adicionales
+        setTimeout(() => {
+            this.inicializarServiciosAdicionales();
+        }, 100);
 
     }
 
@@ -1098,6 +1161,208 @@ class GestorAtencionMedica {
             this.actualizarTablaMedicamentos();
             console.log('🗑️ Medicamento eliminado. Total restante:', this.medicamentos.length);
         }
+    }
+
+    // ============================================
+    // 3.2.1 GESTIÓN DE SERVICIOS ADICIONALES
+    // ============================================
+
+    /**
+     * Carga los servicios existentes directamente en la lista
+     * Se ejecuta solo en modo edición
+     */
+    cargarServiciosExistentes(servicios) {
+        console.log('🏥 Cargando', servicios.length, 'servicios en la lista...');
+
+        // Recorrer cada servicio del servidor
+        servicios.forEach((servicioData, index) => {
+            console.log(`🏥 Procesando servicio ${index + 1}:`, servicioData);
+
+            // Crear objeto servicio con la misma estructura
+            const servicioParaLista = {
+                id: servicioData.id,
+                nombre: servicioData.nombre,
+                cantidad: servicioData.cantidad,
+                observaciones: servicioData.observaciones,
+                precio: servicioData.precio
+            };
+
+            // Agregar directamente al array servicios
+            this.servicios.push(servicioParaLista);
+
+            console.log(`✅ Servicio ${index + 1} agregado a la lista:`, servicioParaLista);
+        });
+
+        console.log('🎉 Servicios cargados! Total servicios:', this.servicios.length);
+    }
+
+    /**
+     * Inicializar la gestión de servicios adicionales
+     */
+    inicializarServiciosAdicionales() {
+        console.log('🏥 Inicializando gestión de servicios adicionales...');
+
+        // Obtener elementos del DOM
+        const addButton = document.getElementById('add-servicio-button');
+        const container = document.getElementById('formset-servicios-container');
+
+        if (!addButton || !container) {
+            console.warn('⚠️ Elementos de servicios no encontrados');
+            return;
+        }
+
+        // Configurar evento para agregar servicio
+        addButton.addEventListener('click', () => {
+            this.agregarFormularioServicio();
+        });
+
+        // Configurar eventos para eliminar servicios existentes
+        this.configurarEventosEliminarServicios();
+
+        console.log('✅ Gestión de servicios inicializada');
+    }
+
+    /**
+     * Agregar un nuevo formulario de servicio al formset
+     */
+    agregarFormularioServicio() {
+        console.log('🏥 Agregando nuevo formulario de servicio...');
+
+        const container = document.getElementById('formset-servicios-container');
+        const managementForm = container.querySelector('input[name$="-TOTAL_FORMS"]');
+        
+        if (!managementForm) {
+            console.error('❌ Management form no encontrado');
+            return;
+        }
+
+        const totalForms = parseInt(managementForm.value);
+        const newFormIndex = totalForms;
+
+        // Crear el HTML del nuevo formulario
+        const nuevoFormulario = this.crearFormularioServicioHTML(newFormIndex);
+
+        // Insertar antes del botón de agregar
+        const addButton = document.getElementById('add-servicio-button');
+        addButton.parentNode.insertBefore(nuevoFormulario, addButton);
+
+        // Actualizar el management form
+        managementForm.value = totalForms + 1;
+
+        // Configurar evento de eliminar para el nuevo formulario
+        this.configurarEventoEliminarServicio(nuevoFormulario);
+
+        console.log('✅ Formulario de servicio agregado. Total forms:', totalForms + 1);
+    }
+
+    /**
+     * Crear el HTML de un formulario de servicio
+     */
+    crearFormularioServicioHTML(index) {
+        const div = document.createElement('div');
+        div.className = 'formset-row-servicio bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl mb-4 border border-gray-200 dark:border-gray-700';
+        
+        // Crear el HTML dinámicamente sin usar template literals de Django
+        div.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Servicio *</label>
+                    <select name="servicios-${index}-servicio" id="id_servicios-${index}-servicio" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" required>
+                        <option value="">Seleccione servicio...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cantidad *</label>
+                    <input type="number" name="servicios-${index}-cantidad" id="id_servicios-${index}-cantidad" min="1" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" placeholder="1" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observaciones</label>
+                    <textarea name="servicios-${index}-observaciones" id="id_servicios-${index}-observaciones" rows="1" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200" placeholder="Observaciones adicionales..."></textarea>
+                </div>
+            </div>
+            <button type="button" class="delete-row-button mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-200">Eliminar</button>
+        `;
+
+        // Poblar el select con los servicios disponibles
+        const select = div.querySelector('select');
+        this.poblarSelectServicios(select);
+
+        return div;
+    }
+
+    /**
+     * Configurar eventos de eliminar para servicios existentes
+     */
+    configurarEventosEliminarServicios() {
+        const deleteButtons = document.querySelectorAll('.formset-row-servicio .delete-row-button');
+        deleteButtons.forEach(button => {
+            this.configurarEventoEliminarServicio(button.closest('.formset-row-servicio'));
+        });
+    }
+
+    /**
+     * Configurar evento de eliminar para un formulario específico
+     */
+    configurarEventoEliminarServicio(formulario) {
+        const deleteButton = formulario.querySelector('.delete-row-button');
+        if (deleteButton) {
+            deleteButton.addEventListener('click', () => {
+                if (confirm('¿Está seguro de que desea eliminar este servicio?')) {
+                    this.eliminarFormularioServicio(formulario);
+                }
+            });
+        }
+    }
+
+    /**
+     * Eliminar un formulario de servicio
+     */
+    eliminarFormularioServicio(formulario) {
+        console.log('🗑️ Eliminando formulario de servicio...');
+
+        const container = document.getElementById('formset-servicios-container');
+        const managementForm = container.querySelector('input[name$="-TOTAL_FORMS"]');
+        
+        if (managementForm) {
+            const totalForms = parseInt(managementForm.value);
+            managementForm.value = Math.max(0, totalForms - 1);
+        }
+
+        formulario.remove();
+        console.log('✅ Formulario de servicio eliminado');
+    }
+
+    /**
+     * Recopilar datos de servicios del formset
+     */
+    recopilarDatosServicios() {
+        console.log('🏥 Recopilando datos de servicios...');
+
+        const servicios = [];
+        const formularios = document.querySelectorAll('.formset-row-servicio');
+
+        formularios.forEach((formulario, index) => {
+            const servicioSelect = formulario.querySelector('select[name*="-servicio"]');
+            const cantidadInput = formulario.querySelector('input[name*="-cantidad"]');
+            const observacionesTextarea = formulario.querySelector('textarea[name*="-observaciones"]');
+
+            if (servicioSelect && cantidadInput) {
+                const servicioId = servicioSelect.value;
+                const cantidad = cantidadInput.value;
+                const observaciones = observacionesTextarea ? observacionesTextarea.value : '';
+
+                if (servicioId && cantidad) {
+                    servicios.push({
+                        id: parseInt(servicioId),
+                        cantidad: parseInt(cantidad),
+                        observaciones: observaciones.trim()
+                    });
+                }
+            }
+        });
+
+        console.log('📋 Servicios recopilados:', servicios);
+        return servicios;
     }
 
     // ============================================
@@ -1448,64 +1713,93 @@ inicializarDiagnosticos() {
         return errores;
     }
 
-   /**
- * Método para obtener todos los datos estructurados con conversiones numéricas
- * @returns {Object} - Objeto con todos los datos de la atención
- */
- obtenerDatosCompletos() {
-    // Función auxiliar para convertir a número o null
-    const convertirANumero = (valor) => {
-        if (!valor || valor === '') return null;
-        const numero = parseFloat(valor);
-        return isNaN(numero) ? null : numero;
-    };
+    /**
+     * Poblar un select con los servicios disponibles
+     */
+    poblarSelectServicios(select) {
+        // Obtener los servicios del contexto global
+        const serviciosContext = window.serviciosContext || [];
+        
+        serviciosContext.forEach(servicio => {
+            const option = document.createElement('option');
+            option.value = servicio.id;
+            option.textContent = servicio.nombre;
+            option.title = `${servicio.descripcion || ''} - $${servicio.precio}`;
+            select.appendChild(option);
+        });
 
-    // Función auxiliar para convertir a entero o null
-    const convertirAEntero = (valor) => {
-        if (!valor || valor === '') return null;
-        const numero = parseInt(valor);
-        return isNaN(numero) ? null : numero;
-    };
+        if (serviciosContext.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.disabled = true;
+            option.textContent = 'No hay servicios disponibles';
+            select.appendChild(option);
+        }
+    }
 
-    // Procesar medicamentos con conversiones numéricas
-    const medicamentosProcesados = this.medicamentos.map(med => ({
-        id: convertirAEntero(med.id),
-        medicamento: med.medicamento,
-        cantidad: convertirAEntero(med.cantidad),
-        prescripcion: med.prescripcion,
-        duracion: convertirAEntero(med.duracion),
-        frecuencia: convertirAEntero(med.frecuencia)
-    }));
+    /**
+     * Método para obtener todos los datos estructurados con conversiones numéricas
+     * @returns {Object} - Objeto con todos los datos de la atención
+     */
+     obtenerDatosCompletos() {
+        // Función auxiliar para convertir a número o null
+        const convertirANumero = (valor) => {
+            if (!valor || valor === '') return null;
+            const numero = parseFloat(valor);
+            return isNaN(numero) ? null : numero;
+        };
 
-    return {
-        paciente: convertirAEntero(this.paciente),
-        signosVitales: {
-            presionArterial: this.presionArterial, // Se mantiene como string (ej: "120/80")
-            pulso: convertirAEntero(this.pulso),
-            temperatura: convertirANumero(this.temperatura),
-            frecuenciaRespiratoria: convertirAEntero(this.frecuenciaRespiratoria),
-            saturacionOxigeno: convertirANumero(this.saturacionOxigeno),
-            peso: convertirANumero(this.peso),
-            altura: convertirANumero(this.altura),
-            consultaControl: Boolean(this.consultaControl)
-        },
-        evaluacionClinica: {
-            motivoConsulta: this.motivoConsulta,
-            sintomas: this.sintomas,
-            examenFisico: this.examenFisico,
-            diagnostico: this.diagnostico
-        },
-        planTerapeutico: {
-            tratamiento: this.tratamiento,
-            examenesEnviados: this.examenesEnviados,
-            comentarioAdicional: this.comentarioAdicional
-        },
-        medicamentos: medicamentosProcesados,
-        fechaAtencion: new Date().toISOString(),
-        totalMedicamentos: this.medicamentos.length,
-        totalDiagnosticos: this.diagnostico.length
-    };
- }
+        // Función auxiliar para convertir a entero o null
+        const convertirAEntero = (valor) => {
+            if (!valor || valor === '') return null;
+            const numero = parseInt(valor);
+            return isNaN(numero) ? null : numero;
+        };
+
+        // Procesar medicamentos con conversiones numéricas
+        const medicamentosProcesados = this.medicamentos.map(med => ({
+            id: convertirAEntero(med.id),
+            medicamento: med.medicamento,
+            cantidad: convertirAEntero(med.cantidad),
+            prescripcion: med.prescripcion,
+            duracion: convertirAEntero(med.duracion),
+            frecuencia: convertirAEntero(med.frecuencia)
+        }));
+
+        // Recopilar servicios del formset
+        const servicios = this.recopilarDatosServicios();
+
+        return {
+            paciente: convertirAEntero(this.paciente),
+            signosVitales: {
+                presionArterial: this.presionArterial, // Se mantiene como string (ej: "120/80")
+                pulso: convertirAEntero(this.pulso),
+                temperatura: convertirANumero(this.temperatura),
+                frecuenciaRespiratoria: convertirAEntero(this.frecuenciaRespiratoria),
+                saturacionOxigeno: convertirANumero(this.saturacionOxigeno),
+                peso: convertirANumero(this.peso),
+                altura: convertirANumero(this.altura),
+                consultaControl: Boolean(this.consultaControl)
+            },
+            evaluacionClinica: {
+                motivoConsulta: this.motivoConsulta,
+                sintomas: this.sintomas,
+                examenFisico: this.examenFisico,
+                diagnostico: this.diagnostico
+            },
+            planTerapeutico: {
+                tratamiento: this.tratamiento,
+                examenesEnviados: this.examenesEnviados,
+                comentarioAdicional: this.comentarioAdicional
+            },
+            medicamentos: medicamentosProcesados,
+            servicios: servicios,
+            fechaAtencion: new Date().toISOString(),
+            totalMedicamentos: this.medicamentos.length,
+            totalDiagnosticos: this.diagnostico.length,
+            totalServicios: servicios.length
+        };
+     }
 
     /**
      * Método para mostrar datos
@@ -2547,6 +2841,31 @@ setTimeout(function() {
 // 9. EXPOSICIÓN DE FUNCIONES GLOBALES
 // ==============================
 
+// ==============================
+// 11. FUNCIONES GLOBALES PARA SERVICIOS
+// ==============================
+
+/**
+ * Función global para agregar formulario de servicio
+ */
+function agregarFormularioServicio() {
+    console.log('🔄 Función agregarFormularioServicio() llamada');
+
+    if (!atencionMedica) {
+        console.log('⚠️ Sistema no inicializado, intentando inicializar...');
+        if (!inicializarAtencion()) {
+            return;
+        }
+    }
+
+    try {
+        atencionMedica.agregarFormularioServicio();
+    } catch (error) {
+        console.error('❌ Error en agregarFormularioServicio:', error);
+        alert('Error al agregar formulario de servicio: ' + error.message);
+    }
+}
+
 // Hacer funciones disponibles globalmente para el HTML
 window.verificarSistema = verificarSistema;
 window.inicializarAtencion = inicializarAtencion;
@@ -2560,6 +2879,7 @@ window.mostrarFormularioNuevoPaciente = mostrarFormularioNuevoPaciente;
 window.cerrarModalPaciente = cerrarModalPaciente;
 window.toggleAccordion = toggleAccordion;
 window.limpiarSeleccion = limpiarSeleccion;
+window.agregarFormularioServicio = agregarFormularioServicio;
 
 console.log('📜 Sistema de Atención Médica - Código organizado cargado y esperando inicialización...');
 

@@ -217,7 +217,7 @@ Lista de Servicios - SaludTotal
                 <div class="flex items-center justify-end space-x-2">
                   {% if 'change_servicio' in permissions %}
                   <a
-                    href="{% url 'core:servicio_update' servicio.pk %}"
+                    href="{% url 'doctor:servicio_update' servicio.pk %}"
                     class="inline-flex items-center px-2 py-1.5 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 rounded-xl hover:from-amber-200 hover:to-yellow-200 transition-all duration-300 transform hover:scale-105 text-xs border border-amber-200 dark:border-amber-700"
                     title="Editar"
                   >
@@ -298,7 +298,7 @@ Lista de Servicios - SaludTotal
     
     if (modal && form && itemName) {
       itemName.textContent = servicioNombre;
-      form.action = `/core/servicio_delete/${servicioId}/`;
+      form.action = `/doctor/servicio_delete/${servicioId}/`;
       modal.classList.remove('hidden');
       modal.classList.add('show');
     }
