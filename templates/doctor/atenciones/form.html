@@ -6,7 +6,7 @@
 {%  endblock css %}
 
 {% block scripts %}
-    {% if modo_edicion and pago and PAYPAL_CLIENT_ID %}
+    {% if PAYPAL_CLIENT_ID %}
     <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
     {% endif %}
 {% endblock scripts %}
@@ -564,7 +564,7 @@
                 </form>
                 
                 <!-- Sección de Pago (Solo en modo edición) -->
-                {% if modo_edicion and pago %}
+                {% if modo_edicion and pago and pago.estado == 'pendiente' %}
                 <div id="payment-section" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mt-8 border border-gray-200/50 dark:border-gray-700/50">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                         <div class="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
@@ -591,19 +591,6 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Botón de PayPal y Mensajes -->
-                        <div id="paypal-container" class="text-center">
-                            {% if pago.estado == 'pendiente' %}
-                                <p class="text-gray-600 dark:text-gray-400 mb-4">Seleccione el método de pago para continuar.</p>
-                                <div id="paypal-button-container"></div>
-                                <div id="paypal-messages" class="mt-4 text-sm"></div>
-                            {% else %}
-                                <div class="text-center text-green-600 dark:text-green-400">
-                                    <i class="fas fa-check-circle fa-3x"></i>
-                                    <p class="mt-2 font-semibold">Este pago ya ha sido procesado.</p>
-                                </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -859,9 +846,6 @@ var modoEdicion = {{ modo_edicion|yesno:"true,false" }};
 
 // Contexto de servicios disponibles
 window.serviciosContext = {% if servicios_disponibles_json %}{{ servicios_disponibles_json|safe }}{% else %}[]{% endif %};
-
-// Variables para PayPal
-var atencionId = {{ atencion.id|default:"null" }};
 
 // ==============================
 // SISTEMA DE ATENCIÓN MÉDICA - CÓDIGO ORGANIZADO
@@ -3129,81 +3113,6 @@ function iniciarDictado(event, textareaId) {
 
 // Hacer la función disponible globalmente
 window.iniciarDictado = iniciarDictado;
-
-// ==============================
-// 11. LÓGICA DE PAGO CON PAYPAL
-// ==============================
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si estamos en modo edición y hay un contenedor de PayPal
-    if (modoEdicion && document.getElementById('paypal-button-container')) {
-        // Verificar si PayPal está disponible
-        if (typeof paypal === 'undefined') {
-            console.warn('PayPal SDK no está cargado. Verifique la configuración de PAYPAL_CLIENT_ID.');
-            const container = document.getElementById('paypal-button-container');
-            if (container) {
-                container.innerHTML = '<div class="text-yellow-600 text-center p-4">PayPal no está configurado. Contacte al administrador.</div>';
-            }
-            return;
-        }
-
-        const atencionId = {{ atencion.id|default:"null" }};
-        const pagoId = {{ pago.id|default:"null" }};
-        const montoTotal = parseFloat("{{ pago.monto_total|default:'0.00' }}");
-
-        if (atencionId && pagoId && montoTotal > 0) {
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    console.log('Creating PayPal order...');
-                    return fetch('/doctor/create-paypal-order/', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        body: JSON.stringify({ 'atencion_id': atencionId })
-                    }).then(function(res) {
-                        return res.json();
-                    }).then(function(orderData) {
-                        console.log('Order created:', orderData);
-                        return orderData.paypal_order_id;
-                    });
-                },
-                onApprove: function(data, actions) {
-                    console.log('Payment approved:', data);
-                    return fetch('/doctor/capture-paypal-payment/', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        body: JSON.stringify({
-                            'paypal_order_id': data.orderID,
-                            'payer_id': data.payerID,
-                            'atencion_id': atencionId
-                        })
-                    }).then(function(res) {
-                        return res.json();
-                    }).then(function(paymentData) {
-                        console.log('Payment captured:', paymentData);
-                        const messagesDiv = document.getElementById('paypal-messages');
-                        if (paymentData.status === 'success') {
-                            messagesDiv.innerHTML = '<div class="text-green-600">' + paymentData.message + '</div>';
-                            document.getElementById('pago-estado').textContent = 'Pagado';
-                            document.getElementById('pago-estado').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-                            document.getElementById('paypal-button-container').style.display = 'none';
-                        } else {
-                            messagesDiv.innerHTML = '<div class="text-red-600">Error: ' + paymentData.message + '</div>';
-                        }
-                    });
-                },
-                onError: function(err) {
-                    console.error('PayPal Error:', err);
-                    document.getElementById('paypal-messages').innerHTML = '<div class="text-red-600">Ocurrió un error con PayPal. Por favor, intente de nuevo.</div>';
-                }
-            }).render('#paypal-button-container');
-        }
-    }
-});
 </script>
 
 {% endblock content %}  
