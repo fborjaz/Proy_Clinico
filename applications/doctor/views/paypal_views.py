@@ -27,19 +27,13 @@ def create_paypal_order(request):
 
         try:
             atencion = Atencion.objects.get(pk=atencion_id)
+            pago = Pago.objects.get(atencion=atencion)
         except Atencion.DoesNotExist:
             return JsonResponse({'error': 'Atención no encontrada.'}, status=404)
+        except Pago.DoesNotExist:
+            return JsonResponse({'error': 'Pago no encontrado para esta atención.'}, status=404)
 
-        # Calcular el monto total de la atención
-        total_amount = Decimal(0)
-
-        # Sumar medicamentos
-        for detalle_medicamento in atencion.detalles.all():
-            total_amount += detalle_medicamento.medicamento.precio * detalle_medicamento.cantidad
-
-        # Sumar servicios adicionales
-        for detalle_servicio in atencion.servicios_adicionales.all():
-            total_amount += detalle_servicio.servicio.precio * detalle_servicio.cantidad
+        total_amount = pago.monto_total
 
         # Crear la orden de PayPal
         payment = paypalrestsdk.Payment({
